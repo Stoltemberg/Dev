@@ -22,10 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         applyTheme(newTheme);
     });
 
-    // --- LÓGICA DAS ABAS E FERRAMENTAS ---
-    const tabs = document.querySelectorAll('.tab-button');
-    const contents = document.querySelectorAll('.tab-content');
-
+    // --- FUNÇÕES AUXILIARES ---
     const copyToClipboard = (str, button) => {
         navigator.clipboard.writeText(str).then(() => {
             const originalText = button.innerHTML;
@@ -43,15 +40,23 @@ document.addEventListener('DOMContentLoaded', () => {
         resultBox.innerHTML = '';
         const textElement = document.createElement(isPreformatted ? 'pre' : 'span');
         textElement.textContent = content;
-        const copyButton = document.createElement('button');
-        copyButton.className = 'copy-btn';
-        copyButton.innerHTML = '📋';
-        copyButton.onclick = () => copyToClipboard(content, copyButton);
-        resultBox.appendChild(textElement);
-        if (content && !content.includes("...")) {
-             resultBox.appendChild(copyButton);
+        
+        const hasContent = content && !content.toLowerCase().includes("clique em") && !content.toLowerCase().includes("aguardando");
+
+        if (hasContent) {
+            const copyButton = document.createElement('button');
+            copyButton.className = 'copy-btn';
+            copyButton.innerHTML = '📋';
+            copyButton.onclick = () => copyToClipboard(content, copyButton);
+            resultBox.appendChild(copyButton);
         }
+        
+        resultBox.appendChild(textElement);
     };
+
+    // --- LÓGICA DAS ABAS ---
+    const tabs = document.querySelectorAll('.tab-button');
+    const contents = document.querySelectorAll('.tab-content');
 
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
@@ -63,21 +68,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- EVENT LISTENERS DAS FERRAMENTAS ---
+    // --- EVENT LISTENERS DE TODAS AS 12 FERRAMENTAS ---
 
-    // Gerador de CPF
+    // 1. Gerador de CPF
     document.getElementById('gerar-cpf').addEventListener('click', () => {
         const comPontos = document.getElementById('cpf-pontuacao').checked;
         renderResult('resultado-cpf', Cpf.generate(comPontos));
     });
 
-    // Gerador de CNPJ
+    // 2. Gerador de CNPJ (ATUALIZADO)
     document.getElementById('gerar-cnpj').addEventListener('click', () => {
         const comPontos = document.getElementById('cnpj-pontuacao').checked;
-        renderResult('resultado-cnpj', Cnpj.generate(comPontos));
+        const dadosEmpresa = Cnpj.generate(comPontos);
+        const resultadoFormatado = Object.entries(dadosEmpresa)
+            .map(([chave, valor]) => `${chave}: ${valor}`)
+            .join('\n');
+        renderResult('resultado-cnpj', resultadoFormatado, true);
     });
     
-    // Gerador de Pessoa
+    // 3. Gerador de Pessoa
     const idadeCheckbox = document.getElementById('pessoa-idade-especifica-check');
     const idadeInput = document.getElementById('pessoa-idade');
     idadeCheckbox.addEventListener('change', () => { idadeInput.disabled = !idadeCheckbox.checked; });
@@ -93,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderResult('resultado-pessoa', resultadoFormatado, true);
     });
     
-    // Gerador de Senha
+    // 4. Gerador de Senha
     document.getElementById('gerar-senha').addEventListener('click', () => {
         const length = document.getElementById('senha-tamanho').value;
         const useMaiusculas = document.getElementById('senha-maiusculas').checked;
@@ -103,39 +112,36 @@ document.addEventListener('DOMContentLoaded', () => {
         renderResult('resultado-senha', Senha.generate(length, useMaiusculas, useMinusculas, useNumeros, useSimbolos));
     });
 
-    // Gerador de UUID
+    // 5. Gerador de UUID
     document.getElementById('gerar-uuid').addEventListener('click', () => {
         renderResult('resultado-uuid', Uuid.generate());
     });
 
-// Gerador de Cartão de Crédito
-document.getElementById('gerar-cartao').addEventListener('click', () => {
-    const bandeira = document.getElementById('cartao-bandeira').value;
-    const dadosCartao = Cartao.generate(bandeira);
-
-    // Formata o objeto para exibição
-    const resultadoFormatado = 
+    // 6. Gerador de Cartão de Crédito
+    document.getElementById('gerar-cartao').addEventListener('click', () => {
+        const bandeira = document.getElementById('cartao-bandeira').value;
+        const dadosCartao = Cartao.generate(bandeira);
+        const resultadoFormatado = 
 `Número: ${dadosCartao.numero}
 Nome do Titular: ${dadosCartao.nome}
 Validade: ${dadosCartao.validade}
 CVV: ${dadosCartao.cvv}`;
+        renderResult('resultado-cartao', resultadoFormatado, true);
+    });
 
-    renderResult('resultado-cartao', resultadoFormatado, true);
-});
-
-    // Gerador de Lorem Ipsum
+    // 7. Gerador de Lorem Ipsum
     document.getElementById('gerar-lorem').addEventListener('click', () => {
         const count = document.getElementById('lorem-paragrafos').value;
         renderResult('resultado-lorem', Lorem.generate(count), true);
     });
     
-    // Gerador de QR Code
+    // 8. Gerador de QR Code
     document.getElementById('gerar-qrcode').addEventListener('click', () => {
         const text = document.getElementById('qrcode-texto').value;
         QrCodeGenerator.generate(text, 'resultado-qrcode');
     });
 
-    // Base64
+    // 9. Base64
     document.getElementById('base64-codificar').addEventListener('click', () => {
         const input = document.getElementById('base64-input').value;
         renderResult('resultado-base64', Base64.encode(input), true);
@@ -145,7 +151,7 @@ CVV: ${dadosCartao.cvv}`;
         renderResult('resultado-base64', Base64.decode(input), true);
     });
     
-    // Contador de Caracteres
+    // 10. Contador de Caracteres
     const contadorInput = document.getElementById('contador-input');
     const resultadoContador = document.querySelector('#resultado-contador span');
     contadorInput.addEventListener('input', () => {
@@ -153,7 +159,7 @@ CVV: ${dadosCartao.cvv}`;
         resultadoContador.textContent = `Caracteres: ${stats.caracteres} | Palavras: ${stats.palavras} | Linhas: ${stats.linhas}`;
     });
 
-    // Conversor de Imagem para PDF
+    // 11. Conversor de Imagem para PDF
     document.getElementById('convert-pdf').addEventListener('click', () => {
         const fileInput = document.getElementById('image-input');
         if (fileInput.files.length > 0) {
@@ -163,7 +169,7 @@ CVV: ${dadosCartao.cvv}`;
         }
     });
 
-    // Analisador de Vídeo
+    // 12. Analisador de Vídeo
     document.getElementById('analyze-video').addEventListener('click', () => {
         const fileInput = document.getElementById('video-input');
         if (fileInput.files.length > 0) {
