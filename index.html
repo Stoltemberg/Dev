@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DevTools - Gerador de CPF, CNPJ, CNH e +13 Ferramentas Online</title>
-    <meta name="description" content="Caixa de ferramentas online e gratuita para desenvolvedores. Gere CPF, CNPJ, CNH, senhas seguras, cartões de crédito para testes, UUIDs e muito mais.">
+    <meta name="description" content="Caixa de ferramentas online e gratuita para desenvolvedores. Gere e entenda como funcionam os dados de CPF, CNPJ, CNH, senhas seguras, cartões de crédito para testes e muito mais.">
     <meta name="keywords" content="gerador de cnh, gerador de cpf, gerador de cnpj, gerador de senha, gerador de cartão de crédito, devtools, ferramentas para desenvolvedores, online, gratuito, uuid, lorem ipsum, qrcode">
     <link rel="canonical" href="https://www.seusite.com.br/">
     <meta property="og:title" content="DevTools: Gerador de CPF, CNPJ, CNH e Ferramentas Online">
@@ -42,7 +42,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>Gabriel Tools</h1>
+            <h1>DevTools</h1>
             <p>Sua caixa de ferramentas para desenvolvimento e testes.</p>
             <button id="theme-switcher" class="theme-btn">☀️</button>
         </header>
@@ -68,36 +68,51 @@
                 <h2>Gerador de CPF</h2>
                 <p class="description">Gere números de CPF válidos, formatados ou não, para uso em testes de software e preenchimento de formulários em ambientes de desenvolvimento.</p>
                 <div class="options">
-                    <label>
-                        <input type="checkbox" id="cpf-pontuacao" checked>
-                        Usar pontuação (Ex: 123.456.789-00)
-                    </label>
+                    <label><input type="checkbox" id="cpf-pontuacao" checked> Usar pontuação</label>
                 </div>
                 <button id="gerar-cpf" class="btn-generate">Gerar CPF</button>
                 <div class="result-box" id="resultado-cpf"><span>Clique em "Gerar" para ver o resultado.</span></div>
+                <div class="explanation-container">
+                    <a href="#" class="explanation-toggle" data-target="cpf-explanation">Como isso funciona?</a>
+                    <div id="cpf-explanation" class="explanation-content">
+                        <h4>Por Dentro do Gerador de CPF</h4>
+                        <p>Um CPF válido não é apenas um número aleatório. Ele é composto por 9 dígitos base + 2 dígitos verificadores (DV). Nosso gerador cria os 9 dígitos base e, em seguida, calcula os DVs usando o algoritmo <strong>Módulo 11</strong>.</p>
+                        <ol>
+                            <li><strong>Cálculo do 1º DV:</strong> Multiplicamos os 9 dígitos por uma sequência de pesos (10, 9, 8, ..., 2), somamos tudo e calculamos o resto da divisão por 11. Se o resto for 0 ou 1, o DV é 0. Caso contrário, o DV é 11 menos o resto.</li>
+                            <li><strong>Cálculo do 2º DV:</strong> Repetimos o processo, mas desta vez usando os 9 dígitos base mais o 1º DV já calculado, e os pesos vão de 11 a 2.</li>
+                        </ol>
+                        <p>Esse processo garante que o CPF gerado passe em qualquer validação de sistema que verifique a autenticidade da estrutura do número.</p>
+                    </div>
+                </div>
             </div>
 
             <div id="cnpj" class="tab-content">
                 <h2>Gerador de CNPJ</h2>
                 <p class="description">Gere um perfil completo de empresa, incluindo CNPJ válido, Razão Social, Endereço e mais para testes de sistemas complexos.</p>
                 <div class="options">
-                     <label>
-                        <input type="checkbox" id="cnpj-pontuacao" checked>
-                        Usar pontuação (Ex: 12.345.678/0001-90)
-                    </label>
+                     <label><input type="checkbox" id="cnpj-pontuacao" checked> Usar pontuação</label>
                 </div>
                 <button id="gerar-cnpj" class="btn-generate">Gerar Empresa</button>
-                 <div class="result-box wide" id="resultado-cnpj"><span>Clique em "Gerar" para ver o resultado.</span></div>
+                <div class="result-box wide" id="resultado-cnpj"><span>Clique em "Gerar" para ver o resultado.</span></div>
+                 <div class="explanation-container">
+                    <a href="#" class="explanation-toggle" data-target="cnpj-explanation">Como isso funciona?</a>
+                    <div id="cnpj-explanation" class="explanation-content">
+                        <h4>Por Dentro do Gerador de CNPJ</h4>
+                        <p>Assim como o CPF, o CNPJ (12 dígitos base + 2 DVs) também usa o algoritmo <strong>Módulo 11</strong>, mas com uma sequência de pesos diferente para garantir a validade do número.</p>
+                        <ol>
+                            <li><strong>Cálculo do 1º DV:</strong> Multiplicamos os 12 dígitos base por uma sequência de pesos (5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2). O cálculo do resto e a definição do DV seguem a mesma regra do CPF.</li>
+                            <li><strong>Cálculo do 2º DV:</strong> O processo é repetido com os 12 dígitos base mais o 1º DV, usando uma nova sequência de pesos (6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2).</li>
+                        </ol>
+                        <p>Gerar um CNPJ com DVs corretos é essencial para testes de cadastro de pessoa jurídica.</p>
+                    </div>
+                </div>
             </div>
             
             <div id="cnh" class="tab-content">
                 <h2>Gerador de CNH</h2>
                 <p class="description">Gere dados de uma CNH brasileira válida, incluindo número de registro, categoria e datas, para uso em testes.</p>
                 <div class="options">
-                    <label>
-                        <input type="checkbox" id="cnh-formatacao" checked>
-                        Formatar número (Ex: 123456789 00)
-                    </label>
+                    <label><input type="checkbox" id="cnh-formatacao" checked> Formatar número</label>
                 </div>
                 <button id="gerar-cnh" class="btn-generate">Gerar CNH</button>
                 <div class="result-box wide" id="resultado-cnh"><span>Clique em "Gerar" para ver o resultado.</span></div>
@@ -107,10 +122,7 @@
                 <h2>Gerador de Pessoa</h2>
                 <p class="description">Crie um perfil completo de uma pessoa fictícia, incluindo nome, CPF, data de nascimento e idade.</p>
                 <div class="options">
-                    <label>
-                        <input type="checkbox" id="pessoa-idade-especifica-check">
-                        Idade específica:
-                    </label>
+                    <label><input type="checkbox" id="pessoa-idade-especifica-check"> Idade específica:</label>
                     <input type="number" id="pessoa-idade" min="1" max="120" value="25" disabled>
                 </div>
                 <button id="gerar-pessoa" class="btn-generate">Gerar Pessoa</button>
@@ -142,9 +154,21 @@
                         </select>
                     </label>
                 </div>
-                 <p class="warning">Atenção: Use estes números apenas para testes em ambientes de desenvolvimento. Eles são matematicamente válidos (Luhn), mas não são reais.</p>
+                <p class="warning">Atenção: Use estes números apenas para testes. Eles são matematicamente válidos (Luhn), mas não são reais.</p>
                 <button id="gerar-cartao" class="btn-generate">Gerar Cartão</button>
                 <div class="result-box wide" id="resultado-cartao"><span>Clique em "Gerar" para ver o resultado.</span></div>
+                <div class="explanation-container">
+                    <a href="#" class="explanation-toggle" data-target="cartao-explanation">Como isso funciona?</a>
+                    <div id="cartao-explanation" class="explanation-content">
+                        <h4>Por Dentro do Gerador de Cartão</h4>
+                        <p>Cartões de crédito válidos seguem o <strong>Algoritmo de Luhn (Módulo 10)</strong>. É um sistema de verificação diferente do CPF/CNPJ, usado mundialmente para validar números de identificação.</p>
+                        <ol>
+                            <li><strong>Prefixo (BIN):</strong> Os primeiros dígitos de um cartão identificam a bandeira (ex: 4 para Visa, 51-55 para Mastercard). Nós geramos o número a partir de um prefixo válido.</li>
+                            <li><strong>Cálculo do Dígito Verificador:</strong> Percorrendo o número da direita para a esquerda, dobramos o valor de cada segundo dígito. Se o resultado da duplicação for maior que 9, subtraímos 9. Somamos todos os dígitos. O dígito verificador final é o número que, somado ao total, resulta em um múltiplo de 10.</li>
+                        </ol>
+                        <p>É por isso que os números gerados aqui são aceitos por formulários online que possuem validação de front-end.</p>
+                    </div>
+                </div>
             </div>
 
             <div id="lorem" class="tab-content">

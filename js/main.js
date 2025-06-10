@@ -59,7 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const contents = document.querySelectorAll('.tab-content');
 
     tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
+        tab.addEventListener('click', (e) => {
+            e.preventDefault();
             tabs.forEach(item => item.classList.remove('active'));
             contents.forEach(content => content.classList.remove('active'));
             tab.classList.add('active');
@@ -70,33 +71,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- EVENT LISTENERS DE TODAS AS 13 FERRAMENTAS ---
 
-    // 1. Gerador de CPF
     document.getElementById('gerar-cpf').addEventListener('click', () => {
         const comPontos = document.getElementById('cpf-pontuacao').checked;
         renderResult('resultado-cpf', Cpf.generate(comPontos));
     });
 
-    // 2. Gerador de CNPJ
     document.getElementById('gerar-cnpj').addEventListener('click', () => {
         const comPontos = document.getElementById('cnpj-pontuacao').checked;
         const dadosEmpresa = Cnpj.generate(comPontos);
-        const resultadoFormatado = Object.entries(dadosEmpresa)
-            .map(([chave, valor]) => `${chave}: ${valor}`)
-            .join('\n');
+        const resultadoFormatado = Object.entries(dadosEmpresa).map(([chave, valor]) => `${chave}: ${valor}`).join('\n');
         renderResult('resultado-cnpj', resultadoFormatado, true);
     });
     
-    // 3. Gerador de CNH
     document.getElementById('gerar-cnh').addEventListener('click', () => {
         const comFormatacao = document.getElementById('cnh-formatacao').checked;
         const dadosCnh = Cnh.generate(comFormatacao);
-        const resultadoFormatado = Object.entries(dadosCnh)
-            .map(([chave, valor]) => `${chave}: ${valor}`)
-            .join('\n');
+        const resultadoFormatado = Object.entries(dadosCnh).map(([chave, valor]) => `${chave}: ${valor}`).join('\n');
         renderResult('resultado-cnh', resultadoFormatado, true);
     });
 
-    // 4. Gerador de Pessoa
     const idadeCheckbox = document.getElementById('pessoa-idade-especifica-check');
     const idadeInput = document.getElementById('pessoa-idade');
     idadeCheckbox.addEventListener('change', () => { idadeInput.disabled = !idadeCheckbox.checked; });
@@ -112,7 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderResult('resultado-pessoa', resultadoFormatado, true);
     });
     
-    // 5. Gerador de Senha
     document.getElementById('gerar-senha').addEventListener('click', () => {
         const length = document.getElementById('senha-tamanho').value;
         const useMaiusculas = document.getElementById('senha-maiusculas').checked;
@@ -122,31 +114,23 @@ document.addEventListener('DOMContentLoaded', () => {
         renderResult('resultado-senha', Senha.generate(length, useMaiusculas, useMinusculas, useNumeros, useSimbolos));
     });
 
-    // 6. Gerador de Cartão de Crédito
     document.getElementById('gerar-cartao').addEventListener('click', () => {
         const bandeira = document.getElementById('cartao-bandeira').value;
         const dadosCartao = Cartao.generate(bandeira);
-        const resultadoFormatado = 
-`Número: ${dadosCartao.numero}
-Nome do Titular: ${dadosCartao.nome}
-Validade: ${dadosCartao.validade}
-CVV: ${dadosCartao.cvv}`;
+        const resultadoFormatado = `Número: ${dadosCartao.numero}\nNome do Titular: ${dadosCartao.nome}\nValidade: ${dadosCartao.validade}\nCVV: ${dadosCartao.cvv}`;
         renderResult('resultado-cartao', resultadoFormatado, true);
     });
 
-    // 7. Gerador de Lorem Ipsum
     document.getElementById('gerar-lorem').addEventListener('click', () => {
         const count = document.getElementById('lorem-paragrafos').value;
         renderResult('resultado-lorem', Lorem.generate(count), true);
     });
     
-    // 8. Gerador de QR Code
     document.getElementById('gerar-qrcode').addEventListener('click', () => {
         const text = document.getElementById('qrcode-texto').value;
         QrCodeGenerator.generate(text, 'resultado-qrcode');
     });
 
-    // 9. Base64
     document.getElementById('base64-codificar').addEventListener('click', () => {
         const input = document.getElementById('base64-input').value;
         renderResult('resultado-base64', Base64.encode(input), true);
@@ -156,7 +140,6 @@ CVV: ${dadosCartao.cvv}`;
         renderResult('resultado-base64', Base64.decode(input), true);
     });
     
-    // 10. Contador de Caracteres
     const contadorInput = document.getElementById('contador-input');
     const resultadoContador = document.querySelector('#resultado-contador span');
     contadorInput.addEventListener('input', () => {
@@ -164,7 +147,6 @@ CVV: ${dadosCartao.cvv}`;
         resultadoContador.textContent = `Caracteres: ${stats.caracteres} | Palavras: ${stats.palavras} | Linhas: ${stats.linhas}`;
     });
 
-    // 11. Conversor de Imagem para PDF
     document.getElementById('convert-pdf').addEventListener('click', () => {
         const fileInput = document.getElementById('image-input');
         if (fileInput.files.length > 0) {
@@ -174,7 +156,6 @@ CVV: ${dadosCartao.cvv}`;
         }
     });
 
-    // 12. Analisador de Vídeo
     document.getElementById('analyze-video').addEventListener('click', () => {
         const fileInput = document.getElementById('video-input');
         if (fileInput.files.length > 0) {
@@ -184,8 +165,27 @@ CVV: ${dadosCartao.cvv}`;
         }
     });
 
-    // 13. Gerador de UUID
     document.getElementById('gerar-uuid').addEventListener('click', () => {
         renderResult('resultado-uuid', Uuid.generate());
+    });
+    
+    // --- LÓGICA PARA AS EXPLICAÇÕES "COMO FUNCIONA" ---
+    document.querySelectorAll('.explanation-toggle').forEach(toggle => {
+        toggle.addEventListener('click', (e) => {
+            e.preventDefault(); 
+            const targetId = e.target.dataset.target;
+            const content = document.getElementById(targetId);
+            
+            if (content) {
+                e.target.classList.toggle('active');
+                content.classList.toggle('visible');
+
+                if (content.classList.contains('visible')) {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                } else {
+                    content.style.maxHeight = "0px";
+                }
+            }
+        });
     });
 });

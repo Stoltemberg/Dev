@@ -305,3 +305,70 @@ footer {
     color: var(--on-surface-secondary-color);
     font-size: 0.9rem;
 }
+
+.explanation-container {
+    margin-top: 2rem;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1.5rem;
+}
+
+.explanation-toggle {
+    color: var(--on-surface-secondary-color);
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.explanation-toggle:hover {
+    color: var(--primary-color);
+}
+
+.explanation-toggle::after {
+    content: ' ▼';
+    font-size: 0.8em;
+}
+
+.explanation-toggle.active::after {
+    content: ' ▲';
+}
+
+.explanation-content {
+    display: none;
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background-color: var(--bg-color);
+    border-radius: 8px;
+    text-align: left;
+    color: var(--on-surface-color);
+    line-height: 1.6;
+    transition: max-height 0.3s ease-out;
+    overflow: hidden;
+    max-height: 0;
+}
+
+.explanation-content.visible {
+    display: block;
+}
+
+.explanation-content h4 {
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+}
+
+.explanation-content p, .explanation-content li {
+    font-size: 0.95rem;
+    color: var(--on-surface-secondary-color);
+}
+
+.explanation-content ol {
+    padding-left: 20px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.explanation-content strong {
+    color: var(--on-surface-color);
+    font-weight: 600;
+}
