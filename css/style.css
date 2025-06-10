@@ -1,0 +1,307 @@
+:root {
+    /* Tema Escuro (Padrão) */
+    --bg-color: #121212;
+    --surface-color: #1e1e1e;
+    --primary-color: #bb86fc;
+    --primary-variant-color: #3700b3;
+    --secondary-color: #03dac6;
+    --on-surface-color: #e0e0e0;
+    --on-surface-secondary-color: #a0a0a0;
+    --border-color: #2c2c2c;
+    --warning-color: #cf6679;
+    --btn-text-color: #121212;
+}
+
+body.light-mode {
+    /* Tema Claro */
+    --bg-color: #f5f5f5;
+    --surface-color: #ffffff;
+    --primary-color: #6200ee;
+    --primary-variant-color: #3700b3;
+    --secondary-color: #018786;
+    --on-surface-color: #000000;
+    --on-surface-secondary-color: #555555;
+    --border-color: #e0e0e0;
+    --warning-color: #b00020;
+    --btn-text-color: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--on-surface-color);
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+header h1 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    color: var(--on-surface-secondary-color);
+}
+
+.theme-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s, background-color 0.3s, color 0.3s;
+}
+
+.theme-btn:hover {
+    transform: scale(1.1) rotate(15deg);
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tab-button {
+    padding: 10px 15px;
+    cursor: pointer;
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--on-surface-secondary-color);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.tab-button:hover {
+    background-color: var(--surface-color);
+    color: var(--primary-color);
+}
+
+.tab-button.active {
+    background-color: var(--primary-color);
+    color: var(--btn-text-color);
+    border-color: var(--primary-color);
+}
+
+.tab-content {
+    display: none;
+    background-color: var(--surface-color);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-content h2 {
+    margin-bottom: 0.5rem;
+    text-align: center;
+    color: var(--secondary-color);
+}
+
+.tab-content .description {
+    text-align: center;
+    color: var(--on-surface-secondary-color);
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.options, .options-grid {
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.options label, .options-grid label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+input[type="number"], input[type="text"], select, textarea, input[type="file"] {
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    color: var(--on-surface-color);
+    padding: 8px;
+    border-radius: 4px;
+    font-family: 'Inter', sans-serif;
+}
+
+input[type="number"] {
+    width: 80px;
+}
+
+input[type="number"]:disabled {
+    background-color: #333;
+    cursor: not-allowed;
+}
+
+input[type="file"] {
+    width: 100%;
+}
+
+textarea {
+    width: 100%;
+    min-height: 120px;
+    resize: vertical;
+    margin-bottom: 1rem;
+}
+
+.btn-generate {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: var(--primary-color);
+    color: var(--btn-text-color);
+    border: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    margin-bottom: 1.5rem;
+}
+
+.btn-generate:hover {
+    background-color: var(--primary-variant-color);
+    color: var(--on-surface-color);
+}
+
+.btn-secondary {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: var(--bg-color);
+    color: var(--secondary-color);
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: var(--secondary-color);
+    color: var(--bg-color);
+}
+
+.result-box {
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    position: relative;
+    word-wrap: break-word;
+    min-height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.result-box.wide {
+    text-align: left;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.result-box span, .result-box pre {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--secondary-color);
+    white-space: pre-wrap;
+    text-align: left;
+    width: 100%;
+}
+
+#resultado-qrcode img {
+    background-color: white;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.result-box .copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    color: var(--on-surface-color);
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 1.2rem;
+    line-height: 1;
+    transition: all 0.2s ease;
+}
+
+.result-box .copy-btn:hover {
+    background: var(--primary-color);
+    color: var(--btn-text-color);
+}
+
+.result-box .copy-btn.copied {
+    background-color: var(--secondary-color);
+    color: var(--bg-color);
+}
+
+.warning {
+    background-color: rgba(207, 102, 121, 0.2);
+    color: var(--warning-color);
+    border: 1px solid var(--warning-color);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+footer {
+    text-align: center;
+    margin-top: 3rem;
+    color: var(--on-surface-secondary-color);
+    font-size: 0.9rem;
+}
