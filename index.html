@@ -1,345 +1,234 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>DevTools</title>
-
-    <meta
-      name="description"
-      content="Caixa de ferramentas online e gratuita para desenvolvedores. Gere CPF, CNPJ, senhas seguras, cartões de crédito para testes, UUIDs e muito mais."
-    />
-
-    <meta
-      name="keywords"
-      content="gerador de cpf, gerador de cnpj, gerador de senha, gerador de cartão de crédito, devtools, ferramentas para desenvolvedores, online, gratuito, uuid, lorem ipsum, qrcode"
-    />
-
-    <link rel="canonical" href="https://www.seusite.com.br/" />
-
-    <meta
-      property="og:title"
-      content="DevTools: Gerador de CPF, CNPJ e Ferramentas Online"
-    />
-    <meta
-      property="og:description"
-      content="Caixa de ferramentas online e gratuita para desenvolvedores. Gere dados para testes de forma rápida e fácil."
-    />
-    <meta
-      property="og:image"
-      content="https://www.seusite.com.br/og-image.jpg"
-    />
-    <meta property="og:url" content="https://www.seusite.com.br/" />
-    <meta property="og:type" content="website" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="DevTools: Gerador de CPF, CNPJ e Ferramentas Online"
-    />
-    <meta
-      name="twitter:description"
-      content="Caixa de ferramentas online e gratuita para desenvolvedores. Gere dados para testes de forma rápida e fácil."
-    />
-    <meta
-      name="twitter:image"
-      content="https://www.seusite.com.br/og-image.jpg"
-    />
-
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
-
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevTools - Gerador de CPF, CNPJ, CNH e +13 Ferramentas Online</title>
+    <meta name="description" content="Caixa de ferramentas online e gratuita para desenvolvedores. Gere CPF, CNPJ, CNH, senhas seguras, cartões de crédito para testes, UUIDs e muito mais.">
+    <meta name="keywords" content="gerador de cnh, gerador de cpf, gerador de cnpj, gerador de senha, gerador de cartão de crédito, devtools, ferramentas para desenvolvedores, online, gratuito, uuid, lorem ipsum, qrcode">
+    <link rel="canonical" href="https://www.seusite.com.br/">
+    <meta property="og:title" content="DevTools: Gerador de CPF, CNPJ, CNH e Ferramentas Online">
+    <meta property="og:description" content="Caixa de ferramentas online e gratuita para desenvolvedores. Gere dados para testes de forma rápida e fácil.">
+    <meta property="og:image" content="https://www.seusite.com.br/og-image.jpg">
+    <meta property="og:url" content="https://www.seusite.com.br/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="DevTools: Gerador de CPF, CNPJ, CNH e Ferramentas Online">
+    <meta name="twitter:description" content="Caixa de ferramentas online e gratuita para desenvolvedores. Gere dados para testes de forma rápida e fácil.">
+    <meta name="twitter:image" content="https://www.seusite.com.br/og-image.jpg">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script
-      type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.js"
-    ></script>
-
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.js"></script>
     <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "DevTools Online",
-        "description": "Uma coleção de ferramentas online gratuitas para desenvolvedores, incluindo geradores de dados (CPF, CNPJ, senha, cartão de crédito), conversores e utilitários de texto.",
-        "applicationCategory": "DeveloperApplication",
-        "operatingSystem": "All",
-        "browserRequirements": "Requires a modern web browser",
-        "offers": {
-          "@type": "Offer",
-          "price": "0"
-        }
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "DevTools Online",
+      "description": "Uma coleção de ferramentas online gratuitas para desenvolvedores, incluindo geradores de dados (CNH, CPF, CNPJ, senha, cartão de crédito), conversores e utilitários de texto.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0"
       }
+    }
     </script>
-  </head>
-  <body>
+</head>
+<body>
     <div class="container">
-      <header>
-        <h1>Gabriel Tools</h1>
-        <p>Sua caixa de ferramentas.</p>
-        <button id="theme-switcher" class="theme-btn">☀️</button>
-      </header>
+        <header>
+            <h1>DevTools</h1>
+            <p>Sua caixa de ferramentas para desenvolvimento e testes.</p>
+            <button id="theme-switcher" class="theme-btn">☀️</button>
+        </header>
 
-      <nav class="tabs">
-        <button class="tab-button active" data-tab="cpf">CPF</button>
-        <button class="tab-button" data-tab="cnpj">CNPJ</button>
-        <button class="tab-button" data-tab="pessoa">Pessoa</button>
-        <button class="tab-button" data-tab="senha">Senha</button>
-        <button class="tab-button" data-tab="uuid">UUID</button>
-        <button class="tab-button" data-tab="cartao">Cartão Crédito</button>
-        <button class="tab-button" data-tab="lorem">Lorem Ipsum</button>
-        <button class="tab-button" data-tab="qrcode">QR Code</button>
-        <button class="tab-button" data-tab="base64">Base64</button>
-        <button class="tab-button" data-tab="contador">Contador</button>
-        <button class="tab-button" data-tab="img-to-pdf">Imagem p/ PDF</button>
-        <button class="tab-button" data-tab="video-info">Info de Vídeo</button>
-      </nav>
+        <nav class="tabs">
+            <button class="tab-button active" data-tab="cpf">CPF</button>
+            <button class="tab-button" data-tab="cnpj">CNPJ</button>
+            <button class="tab-button" data-tab="cnh">CNH</button>
+            <button class="tab-button" data-tab="pessoa">Pessoa</button>
+            <button class="tab-button" data-tab="senha">Senha</button>
+            <button class="tab-button" data-tab="cartao">Cartão Crédito</button>
+            <button class="tab-button" data-tab="lorem">Lorem Ipsum</button>
+            <button class="tab-button" data-tab="qrcode">QR Code</button>
+            <button class="tab-button" data-tab="base64">Base64</button>
+            <button class="tab-button" data-tab="contador">Contador</button>
+            <button class="tab-button" data-tab="img-to-pdf">Imagem p/ PDF</button>
+            <button class="tab-button" data-tab="video-info">Info de Vídeo</button>
+            <button class="tab-button" data-tab="uuid">UUID</button>
+        </nav>
 
-      <main class="content">
-        <div id="cpf" class="tab-content active">
-          <h2>Gerador de CPF</h2>
-          <div class="options">
-            <label>
-              <input type="checkbox" id="cpf-pontuacao" checked />
-              Usar pontuação (Ex: 123.456.789-00)
-            </label>
-          </div>
-          <button id="gerar-cpf" class="btn-generate">Gerar CPF</button>
-          <div class="result-box" id="resultado-cpf">
-            <span>Clique em "Gerar" para ver o resultado.</span>
-          </div>
-        </div>
+        <main class="content">
+            <div id="cpf" class="tab-content active">
+                <h2>Gerador de CPF</h2>
+                <p class="description">Gere números de CPF válidos, formatados ou não, para uso em testes de software e preenchimento de formulários em ambientes de desenvolvimento.</p>
+                <div class="options">
+                    <label>
+                        <input type="checkbox" id="cpf-pontuacao" checked>
+                        Usar pontuação (Ex: 123.456.789-00)
+                    </label>
+                </div>
+                <button id="gerar-cpf" class="btn-generate">Gerar CPF</button>
+                <div class="result-box" id="resultado-cpf"><span>Clique em "Gerar" para ver o resultado.</span></div>
+            </div>
 
-        <div id="cnpj" class="tab-content">
-          <h2>Gerador de CNPJ</h2>
-          <div class="options">
-            <label>
-              <input type="checkbox" id="cnpj-pontuacao" checked />
-              Usar pontuação (Ex: 12.345.678/0001-90)
-            </label>
-          </div>
-          <button id="gerar-cnpj" class="btn-generate">Gerar CNPJ</button>
-          <div class="result-box" id="resultado-cnpj">
-            <span>Clique em "Gerar" para ver o resultado.</span>
-          </div>
-        </div>
+            <div id="cnpj" class="tab-content">
+                <h2>Gerador de CNPJ</h2>
+                <p class="description">Gere um perfil completo de empresa, incluindo CNPJ válido, Razão Social, Endereço e mais para testes de sistemas complexos.</p>
+                <div class="options">
+                     <label>
+                        <input type="checkbox" id="cnpj-pontuacao" checked>
+                        Usar pontuação (Ex: 12.345.678/0001-90)
+                    </label>
+                </div>
+                <button id="gerar-cnpj" class="btn-generate">Gerar Empresa</button>
+                 <div class="result-box wide" id="resultado-cnpj"><span>Clique em "Gerar" para ver o resultado.</span></div>
+            </div>
+            
+            <div id="cnh" class="tab-content">
+                <h2>Gerador de CNH</h2>
+                <p class="description">Gere dados de uma CNH brasileira válida, incluindo número de registro, categoria e datas, para uso em testes.</p>
+                <div class="options">
+                    <label>
+                        <input type="checkbox" id="cnh-formatacao" checked>
+                        Formatar número (Ex: 123456789 00)
+                    </label>
+                </div>
+                <button id="gerar-cnh" class="btn-generate">Gerar CNH</button>
+                <div class="result-box wide" id="resultado-cnh"><span>Clique em "Gerar" para ver o resultado.</span></div>
+            </div>
 
-        <div id="pessoa" class="tab-content">
-          <h2>Gerador de Pessoa</h2>
-          <div class="options">
-            <label>
-              <input type="checkbox" id="pessoa-idade-especifica-check" />
-              Idade específica:
-            </label>
-            <input
-              type="number"
-              id="pessoa-idade"
-              min="1"
-              max="120"
-              value="25"
-              disabled
-            />
-          </div>
-          <button id="gerar-pessoa" class="btn-generate">Gerar Pessoa</button>
-          <div class="result-box wide" id="resultado-pessoa">
-            <span>Clique em "Gerar" para ver o resultado.</span>
-          </div>
-        </div>
+            <div id="pessoa" class="tab-content">
+                <h2>Gerador de Pessoa</h2>
+                <p class="description">Crie um perfil completo de uma pessoa fictícia, incluindo nome, CPF, data de nascimento e idade.</p>
+                <div class="options">
+                    <label>
+                        <input type="checkbox" id="pessoa-idade-especifica-check">
+                        Idade específica:
+                    </label>
+                    <input type="number" id="pessoa-idade" min="1" max="120" value="25" disabled>
+                </div>
+                <button id="gerar-pessoa" class="btn-generate">Gerar Pessoa</button>
+                <div class="result-box wide" id="resultado-pessoa"><span>Clique em "Gerar" para ver o resultado.</span></div>
+            </div>
+            
+            <div id="senha" class="tab-content">
+                <h2>Gerador de Senha Segura</h2>
+                <p class="description">Crie senhas fortes e personalizadas com controle de tamanho, uso de maiúsculas, minúsculas, números e símbolos.</p>
+                <div class="options-grid">
+                    <label>Tamanho: <input type="number" id="senha-tamanho" value="16" min="4" max="128"></label>
+                    <label><input type="checkbox" id="senha-maiusculas" checked> Maiúsculas (ABC)</label>
+                    <label><input type="checkbox" id="senha-minusculas" checked> Minúsculas (abc)</label>
+                    <label><input type="checkbox" id="senha-numeros" checked> Números (123)</label>
+                    <label><input type="checkbox" id="senha-simbolos" checked> Símbolos (!@#)</label>
+                </div>
+                <button id="gerar-senha" class="btn-generate">Gerar Senha</button>
+                <div class="result-box" id="resultado-senha"><span>Clique em "Gerar" para ver o resultado.</span></div>
+            </div>
 
-        <div id="senha" class="tab-content">
-          <h2>Gerador de Senha Segura</h2>
-          <div class="options-grid">
-            <label
-              >Tamanho:
-              <input
-                type="number"
-                id="senha-tamanho"
-                value="16"
-                min="4"
-                max="128"
-            /></label>
-            <label
-              ><input type="checkbox" id="senha-maiusculas" checked />
-              Maiúsculas (ABC)</label
-            >
-            <label
-              ><input type="checkbox" id="senha-minusculas" checked />
-              Minúsculas (abc)</label
-            >
-            <label
-              ><input type="checkbox" id="senha-numeros" checked /> Números
-              (123)</label
-            >
-            <label
-              ><input type="checkbox" id="senha-simbolos" checked /> Símbolos
-              (!@#)</label
-            >
-          </div>
-          <button id="gerar-senha" class="btn-generate">Gerar Senha</button>
-          <div class="result-box" id="resultado-senha">
-            <span>Clique em "Gerar" para ver o resultado.</span>
-          </div>
-        </div>
+            <div id="cartao" class="tab-content">
+                <h2>Gerador de Cartão de Crédito (Teste)</h2>
+                <p class="description">Gere dados completos de cartão de crédito (número, nome, validade, CVV) para testar formulários de pagamento.</p>
+                <div class="options">
+                    <label>Bandeira:
+                        <select id="cartao-bandeira">
+                            <option value="visa">Visa</option>
+                            <option value="mastercard">Mastercard</option>
+                        </select>
+                    </label>
+                </div>
+                 <p class="warning">Atenção: Use estes números apenas para testes em ambientes de desenvolvimento. Eles são matematicamente válidos (Luhn), mas não são reais.</p>
+                <button id="gerar-cartao" class="btn-generate">Gerar Cartão</button>
+                <div class="result-box wide" id="resultado-cartao"><span>Clique em "Gerar" para ver o resultado.</span></div>
+            </div>
 
-        <div id="uuid" class="tab-content">
-          <h2>Gerador de UUID (v4)</h2>
-          <button id="gerar-uuid" class="btn-generate">Gerar UUID</button>
-          <div class="result-box" id="resultado-uuid">
-            <span>Clique em "Gerar" para ver o resultado.</span>
-          </div>
-        </div>
+            <div id="lorem" class="tab-content">
+                <h2>Gerador de Lorem Ipsum</h2>
+                <p class="description">Gere parágrafos de texto "Lorem Ipsum" para usar como preenchimento em layouts e designs.</p>
+                <div class="options">
+                    <label>Número de parágrafos: <input type="number" id="lorem-paragrafos" value="3" min="1" max="50"></label>
+                </div>
+                <button id="gerar-lorem" class="btn-generate">Gerar Texto</button>
+                <div class="result-box wide" id="resultado-lorem"><span>Clique em "Gerar" para ver o resultado.</span></div>
+            </div>
+            
+            <div id="qrcode" class="tab-content">
+                <h2>Gerador de QR Code</h2>
+                <p class="description">Converta qualquer texto ou URL em uma imagem de QR Code escaneável instantaneamente.</p>
+                <textarea id="qrcode-texto" placeholder="Digite o texto ou URL aqui..."></textarea>
+                <button id="gerar-qrcode" class="btn-generate">Gerar QR Code</button>
+                <div class="result-box" id="resultado-qrcode"><span>Digite um texto e clique em "Gerar".</span></div>
+            </div>
 
-        <div id="cartao" class="tab-content">
-          <h2>Gerador de Cartão de Crédito</h2>
-          <div class="options">
-            <label
-              >Bandeira:
-              <select id="cartao-bandeira">
-                <option value="visa">Visa</option>
-                <option value="mastercard">Mastercard</option>
-              </select>
-            </label>
-          </div>
-          <p class="warning">
-            Atenção: Use estes números apenas para testes em ambientes de
-            desenvolvimento. Eles são matematicamente válidos (Luhn), mas não
-            são reais.
-          </p>
-          <button id="gerar-cartao" class="btn-generate">Gerar Cartão</button>
-          <div class="result-box" id="resultado-cartao">
-            <span>Clique em "Gerar" para ver o resultado.</span>
-          </div>
-        </div>
+            <div id="base64" class="tab-content">
+                <h2>Codificador / Decodificador Base64</h2>
+                <p class="description">Codifique texto para o formato Base64 ou decodifique uma string Base64 de volta para texto puro.</p>
+                <textarea id="base64-input" placeholder="Digite o texto aqui..."></textarea>
+                <div class="options">
+                    <button id="base64-codificar" class="btn-secondary">Codificar</button>
+                    <button id="base64-decodificar" class="btn-secondary">Decodificar</button>
+                </div>
+                <div class="result-box wide" id="resultado-base64"><span>O resultado aparecerá aqui.</span></div>
+            </div>
+            
+            <div id="contador" class="tab-content">
+                 <h2>Contador de Caracteres e Palavras</h2>
+                 <p class="description">Cole qualquer texto para obter uma contagem instantânea de caracteres, palavras e linhas.</p>
+                 <textarea id="contador-input" placeholder="Cole seu texto aqui..."></textarea>
+                 <div class="result-box wide" id="resultado-contador"><span>Caracteres: 0 | Palavras: 0 | Linhas: 1</span></div>
+            </div>
+            
+            <div id="img-to-pdf" class="tab-content">
+                <h2>Conversor de Imagem para PDF</h2>
+                <p class="description">Selecione uma imagem (JPG, PNG) para convertê-la em um arquivo PDF.</p>
+                <div class="options">
+                    <input type="file" id="image-input" accept="image/png, image/jpeg">
+                </div>
+                <button id="convert-pdf" class="btn-generate">Converter para PDF</button>
+                <div class="result-box" id="resultado-pdf"><span>Aguardando arquivo...</span></div>
+            </div>
 
-        <div id="lorem" class="tab-content">
-          <h2>Gerador de Lorem Ipsum</h2>
-          <div class="options">
-            <label
-              >Número de parágrafos:
-              <input
-                type="number"
-                id="lorem-paragrafos"
-                value="3"
-                min="1"
-                max="50"
-            /></label>
-          </div>
-          <button id="gerar-lorem" class="btn-generate">Gerar Texto</button>
-          <div class="result-box wide" id="resultado-lorem">
-            <span>Clique em "Gerar" para ver o resultado.</span>
-          </div>
-        </div>
+            <div id="video-info" class="tab-content">
+                <h2>Analisador de Metadados de Vídeo</h2>
+                <p class="description">Selecione um arquivo de vídeo (MP4, WEBM) para ver suas informações, como resolução e duração.</p>
+                <div class="options">
+                    <input type="file" id="video-input" accept="video/mp4, video/webm, video/ogg">
+                </div>
+                <button id="analyze-video" class="btn-generate">Analisar Vídeo</button>
+                <div class="result-box wide" id="resultado-video-info"><span>Aguardando arquivo...</span></div>
+            </div>
 
-        <div id="qrcode" class="tab-content">
-          <h2>Gerador de QR Code</h2>
-          <textarea
-            id="qrcode-texto"
-            placeholder="Digite o texto ou URL aqui..."
-          ></textarea>
-          <button id="gerar-qrcode" class="btn-generate">Gerar QR Code</button>
-          <div class="result-box" id="resultado-qrcode">
-            <span>Digite um texto e clique em "Gerar".</span>
-          </div>
-        </div>
+             <div id="uuid" class="tab-content">
+                <h2>Gerador de UUID (v4)</h2>
+                <p class="description">Gere um Identificador Único Universal (UUID) versão 4, ideal para bancos de dados e identificadores de sistema.</p>
+                <button id="gerar-uuid" class="btn-generate">Gerar UUID</button>
+                <div class="result-box" id="resultado-uuid"><span>Clique em "Gerar" para ver o resultado.</span></div>
+            </div>
+        </main>
 
-        <div id="base64" class="tab-content">
-          <h2>Codificador / Decodificador Base64</h2>
-          <textarea
-            id="base64-input"
-            placeholder="Digite o texto aqui..."
-          ></textarea>
-          <div class="options">
-            <button id="base64-codificar" class="btn-secondary">
-              Codificar
-            </button>
-            <button id="base64-decodificar" class="btn-secondary">
-              Decodificar
-            </button>
-          </div>
-          <div class="result-box wide" id="resultado-base64">
-            <span>O resultado aparecerá aqui.</span>
-          </div>
-        </div>
-
-        <div id="contador" class="tab-content">
-          <h2>Contador de Caracteres e Palavras</h2>
-          <textarea
-            id="contador-input"
-            placeholder="Cole seu texto aqui..."
-          ></textarea>
-          <div class="result-box wide" id="resultado-contador">
-            <span>Caracteres: 0 | Palavras: 0 | Linhas: 1</span>
-          </div>
-        </div>
-
-        <div id="img-to-pdf" class="tab-content">
-          <h2>Conversor de Imagem para PDF</h2>
-          <p class="description">
-            Selecione uma imagem (JPG, PNG) para convertê-la em um arquivo PDF.
-          </p>
-          <div class="options">
-            <input
-              type="file"
-              id="image-input"
-              accept="image/png, image/jpeg"
-            />
-          </div>
-          <button id="convert-pdf" class="btn-generate">
-            Converter para PDF
-          </button>
-          <div class="result-box" id="resultado-pdf">
-            <span>Aguardando arquivo...</span>
-          </div>
-        </div>
-
-        <div id="video-info" class="tab-content">
-          <h2>Analisador de Metadados de Vídeo</h2>
-          <p class="description">
-            Selecione um arquivo de vídeo (MP4, WEBM) para ver suas informações.
-          </p>
-          <div class="options">
-            <input
-              type="file"
-              id="video-input"
-              accept="video/mp4, video/webm, video/ogg"
-            />
-          </div>
-          <button id="analyze-video" class="btn-generate">
-            Analisar Vídeo
-          </button>
-          <div class="result-box wide" id="resultado-video-info">
-            <span>Aguardando arquivo...</span>
-          </div>
-        </div>
-      </main>
-
-      <footer>
-        <p>
-          Criado para fins de estudo e teste. Não use dados gerados em cadastros
-          reais.
-        </p>
-      </footer>
+        <footer>
+            <p>Criado para fins de estudo e teste. Não use dados gerados em cadastros reais.</p>
+        </footer>
     </div>
-
+    
     <script src="js/tools/cpf.js"></script>
     <script src="js/tools/cnpj.js"></script>
+    <script src="js/tools/cnh.js"></script>
     <script src="js/tools/pessoa.js"></script>
     <script src="js/tools/senha.js"></script>
-    <script src="js/tools/uuid.js"></script>
-    <script src="js/tools/lorem.js"></script>
     <script src="js/tools/cartao.js"></script>
+    <script src="js/tools/lorem.js"></script>
     <script src="js/tools/qrcode.js"></script>
     <script src="js/tools/base64.js"></script>
     <script src="js/tools/contador.js"></script>
     <script src="js/tools/image_to_pdf.js"></script>
     <script src="js/tools/video_info.js"></script>
+    <script src="js/tools/uuid.js"></script>
     <script src="js/main.js"></script>
-  </body>
+</body>
 </html>

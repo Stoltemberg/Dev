@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const textElement = document.createElement(isPreformatted ? 'pre' : 'span');
         textElement.textContent = content;
         
-        const hasContent = content && !content.toLowerCase().includes("clique em") && !content.toLowerCase().includes("aguardando");
+        const hasContent = content && !content.toLowerCase().includes("clique em") && !content.toLowerCase().includes("aguardando")  && !content.toLowerCase().includes("selecione um arquivo");
 
         if (hasContent) {
             const copyButton = document.createElement('button');
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- EVENT LISTENERS DE TODAS AS 12 FERRAMENTAS ---
+    // --- EVENT LISTENERS DE TODAS AS 13 FERRAMENTAS ---
 
     // 1. Gerador de CPF
     document.getElementById('gerar-cpf').addEventListener('click', () => {
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderResult('resultado-cpf', Cpf.generate(comPontos));
     });
 
-    // 2. Gerador de CNPJ (ATUALIZADO)
+    // 2. Gerador de CNPJ
     document.getElementById('gerar-cnpj').addEventListener('click', () => {
         const comPontos = document.getElementById('cnpj-pontuacao').checked;
         const dadosEmpresa = Cnpj.generate(comPontos);
@@ -86,7 +86,17 @@ document.addEventListener('DOMContentLoaded', () => {
         renderResult('resultado-cnpj', resultadoFormatado, true);
     });
     
-    // 3. Gerador de Pessoa
+    // 3. Gerador de CNH
+    document.getElementById('gerar-cnh').addEventListener('click', () => {
+        const comFormatacao = document.getElementById('cnh-formatacao').checked;
+        const dadosCnh = Cnh.generate(comFormatacao);
+        const resultadoFormatado = Object.entries(dadosCnh)
+            .map(([chave, valor]) => `${chave}: ${valor}`)
+            .join('\n');
+        renderResult('resultado-cnh', resultadoFormatado, true);
+    });
+
+    // 4. Gerador de Pessoa
     const idadeCheckbox = document.getElementById('pessoa-idade-especifica-check');
     const idadeInput = document.getElementById('pessoa-idade');
     idadeCheckbox.addEventListener('change', () => { idadeInput.disabled = !idadeCheckbox.checked; });
@@ -102,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderResult('resultado-pessoa', resultadoFormatado, true);
     });
     
-    // 4. Gerador de Senha
+    // 5. Gerador de Senha
     document.getElementById('gerar-senha').addEventListener('click', () => {
         const length = document.getElementById('senha-tamanho').value;
         const useMaiusculas = document.getElementById('senha-maiusculas').checked;
@@ -110,11 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const useNumeros = document.getElementById('senha-numeros').checked;
         const useSimbolos = document.getElementById('senha-simbolos').checked;
         renderResult('resultado-senha', Senha.generate(length, useMaiusculas, useMinusculas, useNumeros, useSimbolos));
-    });
-
-    // 5. Gerador de UUID
-    document.getElementById('gerar-uuid').addEventListener('click', () => {
-        renderResult('resultado-uuid', Uuid.generate());
     });
 
     // 6. Gerador de Cartão de Crédito
@@ -165,7 +170,7 @@ CVV: ${dadosCartao.cvv}`;
         if (fileInput.files.length > 0) {
             ImageToPdf.convert(fileInput.files[0], 'resultado-pdf');
         } else {
-            document.getElementById('resultado-pdf').innerHTML = '<span>Por favor, selecione um arquivo primeiro.</span>';
+            renderResult('resultado-pdf', 'Por favor, selecione um arquivo primeiro.');
         }
     });
 
@@ -175,7 +180,12 @@ CVV: ${dadosCartao.cvv}`;
         if (fileInput.files.length > 0) {
             VideoInfo.analyze(fileInput.files[0], 'resultado-video-info');
         } else {
-            document.getElementById('resultado-video-info').innerHTML = '<span>Por favor, selecione um arquivo primeiro.</span>';
+            renderResult('resultado-video-info', 'Por favor, selecione um arquivo primeiro.');
         }
+    });
+
+    // 13. Gerador de UUID
+    document.getElementById('gerar-uuid').addEventListener('click', () => {
+        renderResult('resultado-uuid', Uuid.generate());
     });
 });
