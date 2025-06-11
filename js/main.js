@@ -1,7 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // =================================================================================
-    // ESTADO GLOBAL E INICIALIZAÇÃO
-    // =================================================================================
     let state = { currentScenario: {}, history: [], savedScenarios: [] };
     let lastGeneratedData = {};
 
@@ -13,9 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
         loadState();
     }
 
-    // =================================================================================
-    // LÓGICA DE TEMA
-    // =================================================================================
     function setupTheme() {
         const themeSwitcher = document.getElementById('theme-switcher');
         const body = document.body;
@@ -33,14 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // =================================================================================
-    // WORKSPACE E PERSISTÊNCIA
-    // =================================================================================
     function setupWorkspaceUI() {
         const workspace = document.getElementById('workspace');
         document.getElementById('workspace-toggle-btn').addEventListener('click', () => workspace.classList.add('open'));
         document.getElementById('workspace-close-btn').addEventListener('click', () => workspace.classList.remove('open'));
-
         document.querySelectorAll('.workspace-tab-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 document.querySelectorAll('.workspace-tab-btn, .workspace-pane').forEach(el => el.classList.remove('active'));
@@ -48,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById(e.currentTarget.dataset.target).classList.add('active');
             });
         });
-
         document.getElementById('clear-cenario-btn').addEventListener('click', () => {
             if (Object.keys(state.currentScenario).length > 0 && confirm("Tem certeza que deseja limpar o cenário atual?")) {
                 state.currentScenario = {};
@@ -56,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderAll();
             }
         });
-
         document.getElementById('save-cenario-btn').addEventListener('click', () => {
             if (Object.keys(state.currentScenario).length > 0) {
                 const scenarioName = prompt("Digite um nome para este cenário:", "Cenário " + (state.savedScenarios.length + 1));
@@ -68,12 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } else { alert("O cenário atual está vazio."); }
         });
-
         document.getElementById('export-cenario-btn').addEventListener('click', () => {
-            if (Object.keys(state.currentScenario).length === 0) {
-                alert("O cenário atual está vazio. Adicione itens antes de exportar.");
-                return;
-            }
+            if (Object.keys(state.currentScenario).length === 0) { alert("O cenário atual está vazio."); return; }
             const dataStr = JSON.stringify(state.currentScenario, null, 2);
             const blob = new Blob([dataStr], { type: "application/json" });
             const url = URL.createObjectURL(blob);
@@ -83,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
             a.click();
             URL.revokeObjectURL(url);
         });
-
         const importFileInput = document.getElementById('import-file-input');
         document.getElementById('import-cenario-btn').addEventListener('click', () => importFileInput.click());
         importFileInput.addEventListener('change', (event) => {
@@ -106,24 +89,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function saveState() { localStorage.setItem('devtools_state', JSON.stringify(state)); }
-    function loadState() {
-        const savedState = localStorage.getItem('devtools_state');
-        if (savedState) {
-            try { state = JSON.parse(savedState); if(!state.savedScenarios) state.savedScenarios = []; } catch { state = { currentScenario: {}, history: [], savedScenarios: [] }; }
-        }
-        renderAll();
-    }
-
-    // =================================================================================
-    // LÓGICA DE NAVEGAÇÃO PRINCIPAL
-    // =================================================================================
     function setupNavigation() {
         const toolLinks = document.querySelectorAll('[data-tool]');
         const toolPanes = document.querySelectorAll('.tool-pane');
         const navMenu = document.getElementById('nav-menu');
         const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-
         const showTool = (toolId) => {
             toolPanes.forEach(pane => pane.classList.remove('active'));
             const paneToShow = document.getElementById(`${toolId}-pane`);
@@ -131,11 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
             navMenu.classList.remove('active');
             document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
         };
-
-        toolLinks.forEach(link => {
-            link.addEventListener('click', (e) => { e.preventDefault(); showTool(link.dataset.tool); });
-        });
-
+        toolLinks.forEach(link => { link.addEventListener('click', (e) => { e.preventDefault(); showTool(link.dataset.tool); }); });
         mobileMenuToggle.addEventListener('click', (e) => { e.stopPropagation(); navMenu.classList.toggle('active'); });
         document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
             toggle.addEventListener('click', (e) => { if (window.innerWidth <= 768) e.currentTarget.parentElement.classList.toggle('active'); });
@@ -148,9 +114,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // =================================================================================
-    // RENDERIZAÇÃO DA UI
-    // =================================================================================
+    function saveState() { localStorage.setItem('devtools_state', JSON.stringify(state)); }
+    function loadState() {
+        const savedState = localStorage.getItem('devtools_state');
+        if (savedState) {
+            try { state = JSON.parse(savedState); if(!state.savedScenarios) state.savedScenarios = []; } catch { state = { currentScenario: {}, history: [], savedScenarios: [] }; }
+        }
+        renderAll();
+    }
+
     function renderAll() { renderCurrentScenario(); renderHistory(); }
     function formatTimeAgo(date) {
         const now = new Date(); const seconds = Math.floor((now - new Date(date)) / 1000);
@@ -193,14 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let historyHtml = `<h4 style="margin-top: 1.5rem;">Últimos Itens Gerados</h4>`;
             state.history.forEach((item, index) => {
                 const content = typeof item.data === 'object' ? Object.entries(item.data).map(([k,v])=>`${k}: ${v}`).join('\n') : item.data;
-                historyHtml += `<div class="history-card">
-                    <div class="history-card-header"><span class="type">${item.type}</span><span class="timestamp">${formatTimeAgo(item.timestamp)}</span></div>
-                    <div class="history-card-body"><pre>${content}</pre></div>
-                    <div class="history-card-actions">
-                        <button class="btn-icon" data-history-copy-index="${index}">Copiar</button>
-                        ${item.isScenarioData ? `<button class="btn-icon" data-history-add-index="${index}">+ Cenário</button>` : ''}
-                    </div>
-                </div>`;
+                historyHtml += `<div class="history-card"><div class="history-card-header"><span class="type">${item.type}</span><span class="timestamp">${formatTimeAgo(item.timestamp)}</span></div><div class="history-card-body"><pre>${content}</pre></div><div class="history-card-actions"><button class="btn-icon" data-history-copy-index="${index}">Copiar</button>${item.isScenarioData ? `<button class="btn-icon" data-history-add-index="${index}">+ Cenário</button>` : ''}</div></div>`;
             });
             container.innerHTML += historyHtml;
         }
@@ -215,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function addToHistory(type, data, isScenarioData = false) {
         if(!state.history) state.history = [];
         state.history.unshift({ type, data, isScenarioData, timestamp: new Date() });
-        if (state.history.length > 15) state.history.pop();
+        if (state.history.length > 20) state.history.pop();
         saveState();
         renderHistory();
     }
@@ -252,6 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
             copyButton.className = 'copy-btn';
             copyButton.innerHTML = '📋';
             copyButton.title = "Copiar";
+            copyButton.setAttribute('aria-label', 'Copiar para a área de transferência');
             copyButton.onclick = () => copyToClipboard(content, copyButton);
             resultBox.appendChild(copyButton);
         }
@@ -294,7 +260,16 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('add-cnh-to-cenario').addEventListener('click', () => addToScenario('cnh'));
         document.getElementById('add-cartao-to-cenario').addEventListener('click', () => addToScenario('cartao'));
 
-        document.getElementById('gerar-cpf').addEventListener('click', () => handleSimpleGeneration('CPF', () => Cpf.generate(document.getElementById('cpf-pontuacao').checked), 'resultado-cpf'));
+        document.getElementById('gerar-cpf').addEventListener('click', () => handleSimpleGeneration('CPF', () => Cpf.generate(document.getElementById('cpf-pontuacao').checked), 'resultado-cpf', true));
+        document.getElementById('gerar-cpf-massa').addEventListener('click', () => {
+            const quantity = parseInt(document.getElementById('cpf-bulk-quantity').value, 10) || 1;
+            const comPontos = document.getElementById('cpf-pontuacao').checked;
+            const bulkResults = Array.from({length: quantity}, () => Cpf.generate(comPontos));
+            const resultString = bulkResults.join('\n');
+            renderResult('resultado-cpf', resultString, true);
+            addToHistory(`${quantity} CPFs Gerados`, resultString, false);
+        });
+
         document.getElementById('gerar-senha').addEventListener('click', () => handleSimpleGeneration('Senha', () => Senha.generate(document.getElementById('senha-tamanho').value, document.getElementById('senha-maiusculas').checked, document.getElementById('senha-minusculas').checked, document.getElementById('senha-numeros').checked, document.getElementById('senha-simbolos').checked), 'resultado-senha'));
         document.getElementById('gerar-uuid').addEventListener('click', () => handleSimpleGeneration('UUID', Uuid.generate, 'resultado-uuid'));
         document.getElementById('gerar-lorem').addEventListener('click', () => handleSimpleGeneration('Lorem Ipsum', () => Lorem.generate(document.getElementById('lorem-paragrafos').value), 'resultado-lorem', true));
@@ -348,7 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 matchesBox.textContent = 'Erro na expressão.';
             } else {
                 highlightBox.innerHTML = result.highlightedHtml || '<span>Aguardando texto...</span>';
-                matchesBox.textContent = `Correspondências encontradas: ${result.matchCount}\n\n${result.matches.slice(0, 100).join('\n')}`; // Limita matches
+                matchesBox.textContent = `Correspondências encontradas: ${result.matchCount}\n\n${result.matches.slice(0, 100).join('\n')}`;
             }
         }
         regexPattern.addEventListener('input', runRegexTest);
@@ -358,18 +333,26 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('url-encode-btn').addEventListener('click', () => { const input = document.getElementById('url-encoder-input').value; renderResult('resultado-url-encoder', UrlEncoder.encode(input), true); addToHistory('URL (Codificado)', input); });
         document.getElementById('url-decode-btn').addEventListener('click', () => { const input = document.getElementById('url-encoder-input').value; renderResult('resultado-url-encoder', UrlEncoder.decode(input), true); addToHistory('URL (Decodificado)', input); });
 
-        document.querySelectorAll('.explanation-toggle').forEach(toggle => {
-            toggle.addEventListener('click', (e) => {
-                e.preventDefault(); 
-                const content = document.getElementById(e.target.dataset.target);
-                if (content) {
-                    e.target.classList.toggle('active');
-                    const isVisible = content.style.maxHeight && content.style.maxHeight !== "0px";
-                    content.style.maxHeight = isVisible ? "0px" : content.scrollHeight + "px";
-                }
-            });
-        });
-        
+        const cronInput = document.getElementById('cron-input');
+        function runCronParser() {
+            const expression = cronInput.value;
+            const descResultBox = document.getElementById('resultado-cron-desc');
+            const nextResultBox = document.getElementById('resultado-cron-next');
+            const parsed = CronParser.parse(expression);
+            if(parsed.error) {
+                descResultBox.innerHTML = `<span class="jwt-error">${parsed.error}</span>`;
+                nextResultBox.innerHTML = '<span>Inválido</span>';
+            } else {
+                renderResult('resultado-cron-desc', parsed.description);
+                const nextExecutions = CronParser.getNextExecutions(expression);
+                const nextDatesString = nextExecutions.length > 0 ? nextExecutions.map(date => date.toLocaleString('pt-BR')).join('\n') : "Não foi possível calcular as próximas execuções.";
+                renderResult('resultado-cron-next', nextDatesString, true);
+                addToHistory('Expressão Cron', expression);
+            }
+        }
+        cronInput.addEventListener('input', runCronParser);
+        if(cronInput.value) runCronParser();
+
         document.getElementById('historico-content').addEventListener('click', (e) => {
             const copyBtn = e.target.closest('[data-history-copy-index]');
             const addBtn = e.target.closest('[data-history-add-index]');
