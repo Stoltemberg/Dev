@@ -1,48 +1,148 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DevTools Pro - Ferramentas Rápidas para Desenvolvedores</title>
-    <meta name="description" content="A suíte de ferramentas otimizada para desenvolvedores. Gere CPF, formate JSON, analise expressões Cron, decodifique JWT e utilize nosso Workspace para otimizar seus testes.">
-    <meta name="keywords" content="performance, rápido, formatador json, formatador sql, gerador de hash, conversor timestamp, conversor de cores, gerador cpf, devtools, ferramentas desenvolvedores, jwt, regex, cron">
-    
-    <link rel="preload" href="css/style.css" as="style">
-    <link rel="stylesheet" href="css/style.css">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
-    </head>
-<body>
+    <meta
+      name="description"
+      content="A suíte de ferramentas otimizada para desenvolvedores. Gere CPF, formate JSON, analise expressões Cron, decodifique JWT e utilize nosso Workspace para otimizar seus testes."
+    />
+    <meta
+      name="keywords"
+      content="performance, rápido, formatador json, formatador sql, gerador de hash, conversor timestamp, conversor de cores, gerador cpf, devtools, ferramentas desenvolvedores, jwt, regex, cron"
+    />
+
+    <link rel="preload" href="css/style.css" as="style" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <nav id="main-nav" class="main-nav">
-        <div class="nav-content">
-            <a href="#" class="nav-brand" data-tool="home">DevTools</a>
-            <div id="nav-menu" class="nav-menu" role="menu">
-                <div class="nav-item dropdown"><button class="dropdown-toggle">Documentos</button><div class="dropdown-menu"><a href="#" class="dropdown-item" data-tool="pessoa">Pessoa</a><a href="#" class="dropdown-item" data-tool="cpf">CPF</a><a href="#" class="dropdown-item" data-tool="cnpj">CNPJ</a><a href="#" class="dropdown-item" data-tool="cnh">CNH</a></div></div>
-                <div class="nav-item dropdown"><button class="dropdown-toggle">Desenvolvimento</button><div class="dropdown-menu"><a href="#" class="dropdown-item" data-tool="senha">Senha</a><a href="#" class="dropdown-item" data-tool="cartao">Cartão de Crédito</a><a href="#" class="dropdown-item" data-tool="uuid">UUID</a><a href="#" class="dropdown-item" data-tool="jwt">Debugador de JWT</a><a href="#" class="dropdown-item" data-tool="regex">Testador de Regex</a><a href="#" class="dropdown-item" data-tool="url-encoder">Codificador de URL</a><a href="#" class="dropdown-item" data-tool="cron">Analisador de Cron</a></div></div>
-                <div class="nav-item dropdown"><button class="dropdown-toggle">Web & Texto</button><div class="dropdown-menu"><a href="#" class="dropdown-item" data-tool="lorem">Lorem Ipsum</a><a href="#" class="dropdown-item" data-tool="qrcode">QR Code</a><a href="#" class="dropdown-item" data-tool="base64">Base64</a><a href="#" class="dropdown-item" data-tool="contador">Contador de Texto</a><a href="#" class="dropdown-item" data-tool="code-formatter">Formatador de Código</a></div></div>
-                <div class="nav-item dropdown"><button class="dropdown-toggle">Utilitários</button><div class="dropdown-menu"><a href="#" class="dropdown-item" data-tool="hash-generator">Gerador de Hash</a><a href="#" class="dropdown-item" data-tool="timestamp-converter">Conversor de Timestamp</a><a href="#" class="dropdown-item" data-tool="color-converter">Conversor de Cores</a><a href="#" class="dropdown-item" data-tool="img-to-pdf">Imagem para PDF</a><a href="#" class="dropdown-item" data-tool="video-info">Info de Vídeo</a></div></div>
+      <div class="nav-content">
+        <a href="#" class="nav-brand" data-tool="home">DevTools</a>
+        <div id="nav-menu" class="nav-menu" role="menu">
+          <div class="nav-item dropdown">
+            <button class="dropdown-toggle">Documentos</button>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item" data-tool="pessoa">Pessoa</a
+              ><a href="#" class="dropdown-item" data-tool="cpf">CPF</a
+              ><a href="#" class="dropdown-item" data-tool="cnpj">CNPJ</a
+              ><a href="#" class="dropdown-item" data-tool="cnh">CNH</a>
             </div>
-            <div class="nav-actions">
-                <button id="workspace-toggle-btn" class="nav-icon-btn" title="Área de Trabalho" aria-label="Abrir área de trabalho">💼</button>
-                <button id="theme-switcher" class="nav-icon-btn" title="Mudar Tema" aria-label="Mudar tema de cores">☀️</button>
+          </div>
+          <div class="nav-item dropdown">
+            <button class="dropdown-toggle">Desenvolvimento</button>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item" data-tool="senha">Senha</a
+              ><a href="#" class="dropdown-item" data-tool="cartao"
+                >Cartão de Crédito</a
+              ><a href="#" class="dropdown-item" data-tool="uuid">UUID</a
+              ><a href="#" class="dropdown-item" data-tool="jwt"
+                >Debugador de JWT</a
+              ><a href="#" class="dropdown-item" data-tool="regex"
+                >Testador de Regex</a
+              ><a href="#" class="dropdown-item" data-tool="url-encoder"
+                >Codificador de URL</a
+              ><a href="#" class="dropdown-item" data-tool="cron"
+                >Analisador de Cron</a
+              >
             </div>
-             <button id="mobile-menu-toggle" class="nav-icon-btn mobile-only" aria-label="Abrir menu de navegação">☰</button>
+          </div>
+          <div class="nav-item dropdown">
+            <button class="dropdown-toggle">Web & Texto</button>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item" data-tool="lorem">Lorem Ipsum</a
+              ><a href="#" class="dropdown-item" data-tool="qrcode">QR Code</a
+              ><a href="#" class="dropdown-item" data-tool="base64">Base64</a
+              ><a href="#" class="dropdown-item" data-tool="contador"
+                >Contador de Texto</a
+              ><a href="#" class="dropdown-item" data-tool="code-formatter"
+                >Formatador de Código</a
+              >
+            </div>
+          </div>
+          <div class="nav-item dropdown">
+            <button class="dropdown-toggle">Utilitários</button>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item" data-tool="hash-generator"
+                >Gerador de Hash</a
+              ><a href="#" class="dropdown-item" data-tool="timestamp-converter"
+                >Conversor de Timestamp</a
+              ><a href="#" class="dropdown-item" data-tool="color-converter"
+                >Conversor de Cores</a
+              ><a href="#" class="dropdown-item" data-tool="img-to-pdf"
+                >Imagem para PDF</a
+              ><a href="#" class="dropdown-item" data-tool="video-info"
+                >Info de Vídeo</a
+              >
+            </div>
+          </div>
         </div>
+        <div class="nav-actions">
+          <button
+            id="workspace-toggle-btn"
+            class="nav-icon-btn"
+            title="Área de Trabalho"
+            aria-label="Abrir área de trabalho"
+          >
+            💼
+          </button>
+          <button
+            id="theme-switcher"
+            class="nav-icon-btn"
+            title="Mudar Tema"
+            aria-label="Mudar tema de cores"
+          >
+            ☀️
+          </button>
+        </div>
+        <button
+          id="mobile-menu-toggle"
+          class="nav-icon-btn mobile-only"
+          aria-label="Abrir menu de navegação"
+        >
+          ☰
+        </button>
+      </div>
     </nav>
 
-    <div id="workspace" class="workspace" role="complementary" aria-labelledby="workspace-title">
-        </div>
-    
-    <main class="container" role="main">
-        </main>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" defer></script>
-    <script src="https://unpkg.com/jwt-decode/build/jwt-decode.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.js" defer></script>
-    <script src="https://unpkg.com/sql-formatter@latest/dist/sql-formatter.min.js" defer></script>
+    <div
+      id="workspace"
+      class="workspace"
+      role="complementary"
+      aria-labelledby="workspace-title"
+    ></div>
+
+    <main class="container" role="main"></main>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/jwt-decode/build/jwt-decode.js"
+      defer
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+      defer
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.js"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/sql-formatter@latest/dist/sql-formatter.min.js"
+      defer
+    ></script>
 
     <script src="js/tools/cpf.js" defer></script>
     <script src="js/tools/cnpj.js" defer></script>
@@ -65,7 +165,7 @@
     <script src="js/tools/hash_generator.js" defer></script>
     <script src="js/tools/timestamp_converter.js" defer></script>
     <script src="js/tools/color_converter.js" defer></script>
-    
+
     <script src="js/main.js" defer></script>
-</body>
+  </body>
 </html>
