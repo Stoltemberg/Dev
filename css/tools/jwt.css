@@ -1,0 +1,60 @@
+.jwt-container {
+    display: grid;
+    grid-template-columns: 1fr; /* Uma única coluna para esta ferramenta */
+    gap: 2rem;
+}
+
+.jwt-input-area textarea {
+    min-height: 200px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1rem;
+}
+
+.jwt-output-area .result-box {
+    align-items: flex-start; /* Alinha o conteúdo ao topo */
+    padding: 0;
+    background-color: transparent;
+    border: none;
+}
+
+.jwt-part {
+    margin-bottom: 1.5rem;
+}
+
+.jwt-part-title {
+    font-family: 'Roboto Mono', monospace;
+    color: var(--secondary-color);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.jwt-part-content {
+    background-color: var(--surface-color);
+    padding: 1.5rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    white-space: pre-wrap;
+    word-break: break-all;
+    font-size: 1rem;
+    color: var(--on-surface-color);
+}
+
+.jwt-status {
+    font-weight: 700;
+}
+
+.jwt-status.valido {
+    color: #2ecc71;
+}
+
+.jwt-status.expirado {
+    color: var(--danger-color);
+}
+
+.jwt-error {
+    color: var(--danger-color);
+    font-weight: 500;
+}

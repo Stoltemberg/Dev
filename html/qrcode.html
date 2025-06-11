@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de QR Code Online | NextDevs</title>
+    <meta name="description" content="Crie e baixe códigos QR customizados. Converta qualquer texto ou URL em uma imagem de QR Code com opções de tamanho e qualidade.">
+    
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/tools/qrcode.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    </head>
+<body data-page-id="qrcode">
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
+
+    <main class="container">
+        <div class="tool-header">
+            <h2>Gerador de QR Code</h2>
+            <p>Converta qualquer texto ou URL em uma imagem de QR Code escaneável.</p>
+        </div>
+        <div class="tool-grid">
+            <div class="tool-controls">
+                <label for="qrcode-texto" class="sr-only">Texto para QR Code</label>
+                <textarea id="qrcode-texto" placeholder="Digite o texto ou URL aqui..." rows="8"></textarea>
+                <div class="options">
+                    <label for="qrcode-size">Tamanho da Imagem:</label>
+                    <select id="qrcode-size">
+                        <option value="4">Pequeno (140px)</option>
+                        <option value="6" selected>Médio (210px)</option>
+                        <option value="8">Grande (280px)</option>
+                        <option value="10">Extra Grande (350px)</option>
+                    </select>
+                </div>
+                <div class="options">
+                    <label for="qrcode-error-level">Nível de Correção de Erros:</label>
+                    <select id="qrcode-error-level" title="Um nível maior permite que o QR code seja lido mesmo se estiver danificado.">
+                        <option value="L">Baixo (L)</option>
+                        <option value="M" selected>Médio (M)</option>
+                        <option value="Q">Quartil (Q)</option>
+                        <option value="H">Alto (H)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="tool-results">
+                <div class="result-box" id="resultado-qrcode">
+                    <span>Digite algo para gerar o QR Code.</span>
+                </div>
+                <button id="qrcode-download-btn" class="btn-generate" style="display: none;">Baixar PNG</button>
+            </div>
+        </div>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.js"></script>
+    <script src="../js/shared/main-controller.js" type="module"></script>
+    <script src="../js/pages/qrcode.js" type="module"></script>
+</body>
+</html>

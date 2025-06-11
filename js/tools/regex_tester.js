@@ -1,4 +1,4 @@
-const RegexTester = {
+export const RegexTester = {
     test: function(pattern, flags, testString) {
         if (!pattern) {
             return {
@@ -17,6 +17,9 @@ const RegexTester = {
                 // Para destacar, iteramos de trás para frente para não bagunçar os índices
                 for (let i = matches.length - 1; i >= 0; i--) {
                     const match = matches[i];
+                    // Ignora matches vazios que podem causar loops infinitos com certas regex
+                    if (match[0] === '') continue; 
+                    
                     const startIndex = match.index;
                     const endIndex = startIndex + match[0].length;
                     

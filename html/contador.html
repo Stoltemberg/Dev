@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contador de Palavras, Caracteres e Sentenças Online | NextDevs</title>
+    <meta name="description" content="Analise seus textos com nosso contador avançado. Veja a contagem de palavras, caracteres, sentenças, parágrafos, e estime o tempo de leitura.">
+    
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/tools/contador.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    </head>
+<body data-page-id="contador">
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
+
+    <main class="container">
+        <div class="tool-header">
+            <h2>Contador de Texto Avançado</h2>
+            <p>Obtenha estatísticas detalhadas do seu texto em tempo real.</p>
+        </div>
+        <div class="contador-container">
+            <label for="contador-input" class="sr-only">Texto para Contar</label>
+            <textarea id="contador-input" placeholder="Cole seu texto aqui..."></textarea>
+            
+            <div id="resultado-contador" class="stats-grid">
+                </div>
+        </div>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+
+    <script src="../js/shared/main-controller.js" type="module"></script>
+    <script src="../js/pages/contador.js" type="module"></script>
+</body>
+</html>

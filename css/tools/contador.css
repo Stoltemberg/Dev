@@ -1,0 +1,38 @@
+.contador-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+#contador-input {
+    min-height: 250px;
+    font-size: 1.1rem;
+    line-height: 1.7;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.stat-card .stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    font-family: 'Roboto Mono', monospace;
+}
+
+.stat-card .stat-label {
+    font-size: 1rem;
+    color: var(--on-surface-secondary-color);
+    margin-top: 0.5rem;
+}

@@ -1,0 +1,33 @@
+.converter-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+@media (min-width: 768px) {
+    .converter-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.converter-pane textarea {
+    min-height: 400px;
+    font-size: 1rem;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.converter-pane label {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--on-surface-secondary-color);
+    margin-bottom: 0.75rem;
+    display: block;
+}
+
+.char-counter {
+    text-align: right;
+    font-size: 0.9rem;
+    color: var(--on-surface-secondary-color);
+    margin-top: 0.5rem;
+    font-family: 'Roboto Mono', monospace;
+}

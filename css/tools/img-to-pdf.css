@@ -1,0 +1,124 @@
+.file-input-label {
+    display: block;
+    padding: 2rem;
+    border: 2px dashed var(--border-color);
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+.file-input-label:hover {
+    background-color: var(--surface-color);
+    border-color: var(--primary-color);
+}
+.file-input-label span {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--primary-color);
+}
+.file-input-label p {
+    font-size: 0.9rem;
+    color: var(--on-surface-secondary-color);
+}
+
+#file-preview-area {
+    margin-top: 1.5rem;
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: var(--bg-color);
+    border-radius: 8px;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+}
+.file-preview-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    border-radius: 6px;
+}
+.file-preview-card:nth-child(odd) {
+    background-color: var(--surface-color);
+}
+.file-preview-card img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+.file-preview-card .file-name {
+    font-size: 0.9rem;
+    color: var(--on-surface-secondary-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#conversion-progress {
+    margin-top: 1rem;
+    font-family: 'Roboto Mono', monospace;
+    color: var(--secondary-color);
+    text-align: center;
+    height: 20px;
+}
+
+/* NOVOS ESTILOS PARA AS OPÇÕES */
+.option-section {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+}
+.option-section-title {
+    font-weight: 600;
+    color: var(--on-surface-secondary-color);
+    margin-bottom: 1.5rem;
+    display: block;
+    font-size: 1rem;
+}
+.option-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.option-row + .option-row {
+    margin-top: 1rem;
+}
+.option-row label {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+.option-row select, .option-row .radio-group {
+    flex-basis: 50%;
+}
+
+.radio-group {
+    display: flex;
+    gap: 0.5rem;
+    background-color: var(--input-bg-color);
+    padding: 0.5rem;
+    border-radius: 10px;
+    border: 1px solid var(--input-border-color);
+}
+.radio-group label {
+    flex: 1;
+    text-align: center;
+    padding: 0.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--on-surface-secondary-color);
+}
+.radio-group input[type="radio"] {
+    display: none;
+}
+.radio-group input[type="radio"]:checked + label {
+    background-color: var(--primary-color);
+    color: var(--btn-text-color);
+}
+
+#convert-pdf-btn {
+    margin-top: 1.5rem;
+}

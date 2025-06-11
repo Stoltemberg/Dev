@@ -1,0 +1,20 @@
+.tool-controls .options {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--surface-color);
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+}
+
+.tool-controls .options label {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.tool-controls .options input[type="number"] {
+    width: 100px;
+    padding: 10px;
+    font-size: 1.1rem;
+}

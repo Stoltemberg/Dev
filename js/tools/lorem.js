@@ -1,182 +1,84 @@
-const Lorem = {
-  // Um vocabulário expandido de palavras pseudo-latinas.
+export const Lorem = {
   wordCorpus: [
-    "lorem",
-    "ipsum",
-    "dolor",
-    "sit",
-    "amet",
-    "consectetur",
-    "adipiscing",
-    "elit",
-    "curabitur",
-    "vitae",
-    "hendrerit",
-    "dignissim",
-    "sed",
-    "erat",
-    "et",
-    "nunc",
-    "aliquam",
-    "mauris",
-    "aenean",
-    "vel",
-    "libero",
-    "praesent",
-    "quis",
-    "urna",
-    "eget",
-    "eros",
-    "interdum",
-    "laoreet",
-    "donec",
-    "velit",
-    "pede",
-    "malesuada",
-    "in",
-    "imperdiet",
-    "et",
-    "venenatis",
-    "at",
-    "turpis",
-    "nullam",
-    "ultricies",
-    "pellentesque",
-    "auctor",
-    "semper",
-    "aliquet",
-    "nibh",
-    "varius",
-    "facilisis",
-    "maecenas",
-    "gravida",
-    "ullamcorper",
-    "ligula",
-    "eu",
-    "tempor",
-    "congue",
-    "est",
-    "bibendum",
-    "nec",
-    "luctus",
-    "magna",
-    "felis",
-    "sollicitudin",
-    "integer",
-    "faucibus",
-    "accumsan",
-    "odio",
-    "nulla",
-    "pharetra",
-    "vestibulum",
-    "sodales",
-    "ante",
-    "ipsum",
-    "primis",
-    "in",
-    "faucibus",
-    "orci",
-    "luctus",
-    "et",
-    "ultrices",
-    "posuere",
-    "cubilia",
-    "curae",
-    "phasellus",
-    "a",
-    "tellus",
-    "mollis",
-    "placerat",
-    "euismod",
-    "suscipit",
-    "non",
-    "sapien",
-    "nam",
-    "ac",
-    "urna",
-    "rhoncus",
-    "eleifend",
-    "quam",
-    "quis",
-    "lectus",
-    "morbi",
-    "eget",
-    "neque",
-    "ut",
-    "tellus",
-    "elementum",
-    "vulputate",
-    "duis",
-    "ornare",
-    "lectus",
-    "id",
-    "nisl",
-    "vivamus",
-    "rhoncus",
-    "consequat",
-    "purus",
+      'lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit', 'curabitur', 'vitae',
+      'hendrerit', 'dignissim', 'sed', 'erat', 'et', 'nunc', 'aliquam', 'mauris', 'aenean', 'vel', 'libero',
+      'praesent', 'quis', 'urna', 'eget', 'eros', 'interdum', 'laoreet', 'donec', 'velit', 'pede',
+      'malesuada', 'in', 'imperdiet', 'et', 'venenatis', 'at', 'turpis', 'nullam', 'ultricies',
+      'pellentesque', 'auctor', 'semper', 'aliquet', 'nibh', 'varius', 'facilisis', 'maecenas', 'gravida',
+      'ullamcorper', 'ligula', 'eu', 'tempor', 'congue', 'est', 'bibendum', 'nec', 'luctus', 'magna',
+      'felis', 'sollicitudin', 'integer', 'faucibus', 'accumsan', 'odio', 'nulla', 'pharetra',
+      'vestibulum', 'sodales', 'ante', 'ipsum', 'primis', 'in', 'faucibus', 'orci', 'luctus', 'et',
+      'ultrices', 'posuere', 'cubilia', 'curae', 'phasellus', 'a', 'tellus', 'mollis', 'placerat',
+      'euismod', 'suscipit', 'non', 'sapien', 'nam', 'ac', 'urna', 'rhoncus', 'eleifend', 'quam',
+      'quis', 'lectus', 'morbi', 'eget', 'neque', 'ut', 'tellus', 'elementum', 'vulputate', 'duis',
+      'ornare', 'lectus', 'id', 'nisl', 'vivamus', 'rhoncus', 'consequat', 'purus'
   ],
+  
+  randItem: (arr) => arr[Math.floor(Math.random() * arr.length)],
+  randRange: (min, max) => Math.floor(Math.random() * (max - min + 1)) + min,
 
-  // Função para pegar um item aleatório de uma lista.
-  randItem: function (arr) {
-    return arr[Math.floor(Math.random() * arr.length)];
-  },
-
-  // Gera um número aleatório dentro de um intervalo.
-  randRange: function (min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  },
-
-  // Gera uma sentença aleatória.
-  generateSentence: function () {
-    const sentenceLength = this.randRange(8, 20); // Sentenças terão entre 8 e 20 palavras.
-    let words = [];
-    for (let i = 0; i < sentenceLength; i++) {
-      words.push(this.randItem(this.wordCorpus));
-    }
-
-    // Adiciona vírgulas de forma aleatória para mais naturalidade.
-    for (let i = 0; i < words.length - 2; i++) {
-      if (Math.random() < 0.15) {
-        // 15% de chance de adicionar uma vírgula.
-        words[i] += ",";
+  generateSentence: function() {
+      const sentenceLength = this.randRange(8, 20);
+      let words = [];
+      for (let i = 0; i < sentenceLength; i++) {
+          words.push(this.randItem(this.wordCorpus));
       }
-    }
-
-    let sentence = words.join(" ");
-
-    // Começa com letra maiúscula e termina com um ponto.
-    sentence = sentence.charAt(0).toUpperCase() + sentence.slice(1) + ".";
-    return sentence;
+      for (let i = 0; i < words.length - 2; i++) {
+          if (Math.random() < 0.15) words[i] += ',';
+      }
+      let sentence = words.join(' ');
+      return sentence.charAt(0).toUpperCase() + sentence.slice(1) + '.';
   },
 
-  // Gera um parágrafo aleatório.
-  generateParagraph: function () {
-    const paragraphLength = this.randRange(4, 7); // Parágrafos terão entre 4 e 7 sentenças.
-    let sentences = [];
-    for (let i = 0; i < paragraphLength; i++) {
-      sentences.push(this.generateSentence());
-    }
-    return sentences.join(" ");
+  generateParagraph: function() {
+      const paragraphLength = this.randRange(4, 7);
+      let sentences = [];
+      for (let i = 0; i < paragraphLength; i++) {
+          sentences.push(this.generateSentence());
+      }
+      return sentences.join(' ');
   },
 
-  // Função principal que é chamada pelo main.js.
-  generate: function (count) {
-    // Garante que o count seja um número válido.
-    const numParagraphs = parseInt(count, 10) || 1;
-    let paragraphs = [];
-    for (let i = 0; i < numParagraphs; i++) {
-      paragraphs.push(this.generateParagraph());
-    }
+  generate: function(options = {}) {
+      const {
+          type = 'paragraphs',
+          count = 3,
+          startWithLorem = true,
+          wrapInPTags = false
+      } = options;
 
-    // Adiciona "Lorem ipsum dolor sit amet..." no início do primeiro parágrafo por tradição.
-    if (paragraphs.length > 0) {
-      paragraphs[0] =
-        "Lorem ipsum dolor sit amet, " +
-        paragraphs[0].charAt(0).toLowerCase() +
-        paragraphs[0].slice(1);
-    }
+      const numCount = parseInt(count, 10) || 1;
+      
+      switch (type) {
+          case 'words':
+              let words = [];
+              for (let i = 0; i < numCount; i++) {
+                  words.push(this.randItem(this.wordCorpus));
+              }
+              let wordResult = words.join(' ');
+              return startWithLorem ? 'Lorem ipsum ' + wordResult : wordResult;
 
-    return paragraphs.join("\n\n");
-  },
+          case 'sentences':
+              let sentences = [];
+              for (let i = 0; i < numCount; i++) {
+                  sentences.push(this.generateSentence());
+              }
+              let sentenceResult = sentences.join(' ');
+              return startWithLorem ? 'Lorem ipsum dolor sit amet. ' + sentenceResult : sentenceResult;
+
+          case 'paragraphs':
+          default:
+              let paragraphs = [];
+              for (let i = 0; i < numCount; i++) {
+                  paragraphs.push(this.generateParagraph());
+              }
+              if (startWithLorem && paragraphs.length > 0) {
+                  paragraphs[0] = 'Lorem ipsum dolor sit amet, ' + paragraphs[0].charAt(0).toLowerCase() + paragraphs[0].slice(1);
+              }
+              if (wrapInPTags) {
+                  return paragraphs.map(p => `<p>${p}</p>`).join('\n\n');
+              }
+              return paragraphs.join('\n\n');
+      }
+  }
 };

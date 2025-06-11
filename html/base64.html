@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codificador e Decodificador Base64 Online | NextDevs</title>
+    <meta name="description" content="Ferramenta online e interativa para codificar (encode) e decodificar (decode) texto para o formato Base64 em tempo real.">
+    
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/tools/base64.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    </head>
+<body data-page-id="base64">
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
+
+    <main class="container">
+        <div class="tool-header">
+            <h2>Codificador / Decodificador Base64</h2>
+            <p>Converta texto de e para Base64 instantaneamente enquanto você digita.</p>
+        </div>
+        <div class="converter-grid">
+            <div class="converter-pane">
+                <label for="base64-decoded-input">Texto Puro (Decodificado)</label>
+                <textarea id="base64-decoded-input" placeholder="Digite ou cole seu texto aqui..."></textarea>
+                <div id="decoded-char-count" class="char-counter">Tamanho: 0</div>
+            </div>
+            <div class="converter-pane">
+                <label for="base64-encoded-input">Base64 (Codificado)</label>
+                <textarea id="base64-encoded-input" placeholder="Cole o código Base64 aqui..."></textarea>
+                <div id="encoded-char-count" class="char-counter">Tamanho: 0</div>
+            </div>
+        </div>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+
+    <script src="../js/shared/main-controller.js" type="module"></script>
+    <script src="../js/pages/base64.js" type="module"></script>
+</body>
+</html>

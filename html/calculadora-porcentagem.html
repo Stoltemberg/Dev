@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Porcentagem Online | NextDevs</title>
+    <meta name="description" content="Calcule porcentagens, variações percentuais e proporções de forma rápida e fácil com nossa calculadora online. A ferramenta ideal para desenvolvedores e uso diário.">
+    
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/tools/calculadora.css">
+    
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
+
+    <main class="container">
+        <div class="tool-header">
+            <h2>Calculadora de Porcentagem</h2>
+            <p>Uma ferramenta versátil para todos os seus cálculos de porcentagem.</p>
+        </div>
+
+        <section class="calculator-section">
+            <h3>Calcular uma porcentagem de um valor</h3>
+            <div class="calc-row">
+                <input type="number" id="p1-percent" placeholder="20" aria-label="Porcentagem">
+                <label>% de</label>
+                <input type="number" id="p1-total" placeholder="150" aria-label="Valor total">
+                <label>=</label>
+                <span id="p1-result" class="calc-result">?</span>
+            </div>
+        </section>
+
+        <section class="calculator-section">
+            <h3>Um valor em relação a outro</h3>
+            <div class="calc-row">
+                <input type="number" id="p2-partial" placeholder="30" aria-label="Valor parcial">
+                <label>é qual porcentagem de</label>
+                <input type="number" id="p2-total" placeholder="150" aria-label="Valor total">
+                <label>?</label>
+                <span id="p2-result" class="calc-result">?</span>
+            </div>
+        </section>
+        
+        <section class="calculator-section">
+            <h3>Calcular variação percentual</h3>
+            <div class="calc-row">
+                <label for="p3-old">De</label>
+                <input type="number" id="p3-old" placeholder="150" aria-label="Valor antigo">
+                <label for="p3-new">para</label>
+                <input type="number" id="p3-new" placeholder="180" aria-label="Valor novo">
+                <label>a variação é:</label>
+                <span id="p3-result" class="calc-result">?</span>
+            </div>
+        </section>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+
+    <script src="../js/shared/main-controller.js" type="module"></script>
+    <script src="../js/pages/calculadora.js" type="module"></script>
+</body>
+</html>

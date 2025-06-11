@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Cartão de Crédito Válido (para Testes) | NextDevs</title>
+    <meta name="description" content="Gere dados completos e válidos de cartão de crédito (Visa, Mastercard) com número, nome, validade e CVV para testes de sistemas de e-commerce e checkout.">
+    
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    </head>
+<body data-page-id="cartao">
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
+
+    <main class="container">
+        <div class="tool-header">
+            <h2>Gerador de Cartão de Crédito</h2>
+            <p>Gere dados completos de cartão de crédito para testes.</p>
+        </div>
+        <div class="tool-grid">
+            <div class="tool-controls">
+                <div class="options">
+                    <label for="cartao-bandeira">Bandeira:</label>
+                    <select id="cartao-bandeira" aria-label="Bandeira do cartão">
+                        <option value="visa">Visa</option>
+                        <option value="mastercard">Mastercard</option>
+                    </select>
+                </div>
+                <p class="warning">Atenção: Use estes números apenas para testes em ambientes de desenvolvimento. Eles são matematicamente válidos (Luhn), mas não são reais.</p>
+                <button id="gerar-cartao" class="btn-generate">Gerar Cartão</button>
+                <button id="add-cartao-to-cenario" class="btn-add-to-cenario" style="display: none;">Adicionar ao Cenário</button>
+            </div>
+            <div class="tool-results">
+                <div class="result-box wide" id="resultado-cartao">
+                    <span>Clique em "Gerar" para começar.</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+
+    <script src="../js/shared/main-controller.js" type="module"></script>
+    <script src="../js/pages/cartao.js" type="module"></script>
+</body>
+</html>

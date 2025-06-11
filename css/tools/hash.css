@@ -1,0 +1,55 @@
+.hash-results-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.hash-result-item {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+}
+.hash-result-item .algo-name {
+    font-family: 'Roboto Mono', monospace;
+    color: var(--secondary-color);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+.hash-result-item .hash-value {
+    font-family: 'Roboto Mono', monospace;
+    color: var(--on-surface-color);
+    word-break: break-all;
+    position: relative;
+    padding-right: 40px;
+}
+.hash-result-item .copy-btn {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--on-surface-secondary-color);
+    padding: 5px;
+}
+.file-input-area {
+    text-align: center;
+    border: 2px dashed var(--border-color);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 1rem 0;
+}
+.file-input-area .btn-secondary {
+    display: inline-block;
+    width: auto;
+    flex-grow: 0;
+}
+.file-name-display {
+    margin-top: 1rem;
+    color: var(--on-surface-secondary-color);
+    font-style: italic;
+    font-size: 0.9rem;
+}

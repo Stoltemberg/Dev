@@ -1,6 +1,16 @@
-const Cartao = {
-    nomes: ["Maria R.", "Joao P.", "Ana C.", "Pedro H.", "Sofia G.", "Carlos E.", "Laura M.", "Marcos A."],
-    sobrenomes: ["Silva", "Santos", "Oliveira", "Souza", "Rodrigues", "Ferreira", "Alves", "Pereira"],
+export const Cartao = {
+    // LISTAS EXPANDIDAS PARA MAIOR VARIEDADE
+    nomes: [
+        "Maria R.", "Joao P.", "Ana C.", "Pedro H.", "Sofia G.", "Carlos E.", "Laura M.", "Marcos A.",
+        "Beatriz V.", "Lucas F.", "Gabriela N.", "Matheus L.", "Isabela T.", "Rafael B.", "Julia S.",
+        "Bruno M.", "Livia O.", "Felipe A.", "Manuela D.", "Gustavo P.", "Helena C.", "Enzo G.",
+        "Valentina R.", "Thiago M.", "Mariana F.", "Leonardo S.", "Larissa C.", "Daniel O."
+    ],
+    sobrenomes: [
+        "Silva", "Santos", "Oliveira", "Souza", "Rodrigues", "Ferreira", "Alves", "Pereira", "Lima", 
+        "Gomes", "Ribeiro", "Martins", "Carvalho", "Almeida", "Melo", "Costa", "Nunes", "Marques",
+        "Fernandes", "Correia", "Barbosa", "Pinto", "Moura", "Dias", "Castro", "Campos"
+    ],
 
     // Gera um nome aleatório para o titular
     geraNome: function() {

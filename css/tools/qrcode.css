@@ -1,0 +1,26 @@
+#resultado-qrcode {
+    background-color: white;
+    padding: 1rem;
+    /* Garante que a imagem gerada se ajuste ao container */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#resultado-qrcode img {
+    max-width: 100%;
+    height: auto;
+}
+
+#qrcode-download-btn {
+    width: 100%;
+    margin-top: -1rem; /* Aproxima do resultado */
+    background-color: var(--secondary-color);
+    color: var(--bg-color); /* Garante contraste no hover */
+    border: none;
+    transition: background-color 0.2s;
+}
+
+#qrcode-download-btn:hover {
+    background-color: #38b2ac;
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testador de Regex (Expressão Regular) Online | NextDevs</title>
+    <meta name="description" content="Teste e valide suas expressões regulares (Regex) em tempo real com destaque de correspondências e uma lista de resultados. Ferramenta essencial para desenvolvedores.">
+    
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/tools/regex.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    </head>
+<body data-page-id="regex">
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
+
+    <main class="container">
+        <div class="tool-header">
+            <h2>Testador de Regex</h2>
+            <p>Valide suas Expressões Regulares de forma interativa e em tempo real.</p>
+        </div>
+        <div class="regex-grid">
+            <div class="regex-inputs">
+                <label for="regex-pattern" class="sr-only">Expressão Regular</label>
+                <input type="text" id="regex-pattern" placeholder="/sua-expressao/aqui">
+                <label for="regex-flags" class="sr-only">Flags</label>
+                <input type="text" id="regex-flags" placeholder="flags (ex: gi)">
+            </div>
+            <label for="regex-test-string" class="sr-only">Texto para Teste</label>
+            <textarea id="regex-test-string" placeholder="Cole o seu texto de teste aqui..."></textarea>
+            <div class="result-box wide" id="resultado-regex-highlight"><span>O texto destacado aparecerá aqui.</span></div>
+            <div class="result-box wide" id="resultado-regex-matches"><span>Nenhuma correspondência encontrada.</span></div>
+        </div>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+
+    <script src="../js/shared/main-controller.js" type="module"></script>
+    <script src="../js/pages/regex.js" type="module"></script>
+</body>
+</html>

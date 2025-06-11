@@ -1,0 +1,49 @@
+.regex-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.regex-inputs {
+    display: grid;
+    grid-template-columns: 1fr 120px;
+    gap: 1rem;
+}
+
+#regex-pattern, #regex-flags {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.2rem;
+}
+
+#regex-test-string {
+    min-height: 250px;
+    font-size: 1.1rem;
+    line-height: 1.7;
+}
+
+#resultado-regex-highlight {
+    background-color: var(--input-bg-color);
+    color: var(--on-surface-color);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    min-height: 150px;
+}
+
+.regex-match {
+    background-color: rgba(163, 122, 234, 0.4); /* Destaque com a cor primária */
+    color: var(--on-surface-color);
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+#resultado-regex-matches {
+    background-color: var(--surface-light);
+}
+
+.regex-error {
+    color: var(--danger-color);
+    font-weight: 500;
+}

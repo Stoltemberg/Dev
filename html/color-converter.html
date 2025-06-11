@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Cores (HEX, RGB, HSL) Online | NextDevs</title>
+    <meta name="description" content="Converta cores entre múltiplos formatos (HEX, RGB, HSL) em tempo real. Use nosso seletor de cor visual e descubra o nome da cor.">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/tools/color-converter.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+</head>
+<body data-page-id="color-converter">
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
+
+    <main class="container">
+        <div class="tool-header">
+            <h2>Conversor de Cores</h2>
+            <p>Converta cores entre os formatos HEX, RGB e HSL em tempo real.</p>
+        </div>
+        <div class="color-converter-grid">
+            <div class="tool-controls color-inputs">
+                <div>
+                    <label for="color-picker-input">Seletor Visual</label>
+                    <input type="color" id="color-picker-input" value="#A380EC">
+                </div>
+                <div>
+                    <label for="hex-color-input">HEX</label>
+                    <input type="text" id="hex-color-input" placeholder="#FFFFFF">
+                </div>
+                <div>
+                    <label for="rgb-color-input">RGB</label>
+                    <input type="text" id="rgb-color-input" placeholder="rgb(255, 255, 255)">
+                </div>
+                <div>
+                    <label for="hsl-color-input">HSL</label>
+                    <input type="text" id="hsl-color-input" placeholder="hsl(360, 100%, 100%)">
+                </div>
+            </div>
+            <div class="tool-results">
+                <div id="color-swatch" class="color-swatch"></div>
+                <div id="color-details" class="color-details">
+                    <p class="color-name">...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+
+    <script src="../js/shared/main-controller.js" type="module"></script>
+    <script src="../js/pages/color-converter.js" type="module"></script>
+</body>
+</html>

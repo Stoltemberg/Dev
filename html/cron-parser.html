@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisador de Expressão Cron Online | NextDevs</title>
+    <meta name="description" content="Traduza expressões Cron para uma linguagem humana e fácil de entender. Veja as próximas datas e horários de execução agendados.">
+    
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/tools/cron.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    </head>
+<body data-page-id="cron">
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
+
+    <main class="container">
+        <div class="tool-header">
+            <h2>Analisador de Expressão Cron</h2>
+            <p>Traduza uma expressão Cron e veja as próximas execuções.</p>
+        </div>
+        <div class="tool-grid">
+            <div class="tool-controls">
+                <label for="cron-input">Expressão Cron:</label>
+                <input type="text" id="cron-input" placeholder="* * * * *" value="*/15 * * * 1-5">
+            </div>
+            <div class="tool-results">
+                <div class="result-box wide" id="resultado-cron-desc">
+                    <span>Aguardando expressão...</span>
+                </div>
+                <div class="result-box wide" id="resultado-cron-next" style="margin-top: 1rem;">
+                    <span>Próximas execuções aparecerão aqui.</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+
+    <script src="../js/shared/main-controller.js" type="module"></script>
+    <script src="../js/pages/cron.js" type="module"></script>
+</body>
+</html>

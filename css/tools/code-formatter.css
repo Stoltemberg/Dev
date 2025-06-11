@@ -1,0 +1,44 @@
+/* Estilos para o container das caixas de texto */
+.formatter-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Coluna única por padrão */
+    gap: 2rem;
+    height: 65vh; /* Ocupa uma boa parte da altura da tela */
+}
+
+@media (min-width: 900px) {
+    .formatter-grid {
+        grid-template-columns: 1fr 1fr; /* Duas colunas em telas maiores */
+    }
+}
+
+.formatter-pane {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.formatter-pane label {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--on-surface-secondary-color);
+    margin-bottom: 0.75rem;
+    display: block;
+}
+
+.formatter-pane textarea,
+.formatter-pane .result-box {
+    flex-grow: 1; /* Faz com que ocupem todo o espaço vertical disponível */
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* O resultado agora é um <pre> com um <code> dentro para o highlight.js */
+.result-box pre {
+    margin: 0;
+    height: 100%;
+}
+.result-box code {
+    height: 100%;
+    text-align: left;
+}

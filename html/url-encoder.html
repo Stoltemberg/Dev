@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codificador e Decodificador de URL Online | NextDevs</title>
+    <meta name="description" content="Ferramenta online para codificar (encode) e decodificar (decode) strings e URLs de forma segura para uso na web, seguindo o padrão RFC 3986.">
+    
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    </head>
+<body data-page-id="url-encoder">
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
+
+    <main class="container">
+        <div class="tool-header">
+            <h2>Codificador/Decodificador de URL</h2>
+            <p>Codifique texto para uso seguro em URLs ou decodifique de volta.</p>
+        </div>
+        <div class="tool-grid">
+            <div class="tool-controls">
+                <label for="url-encoder-input" class="sr-only">Entrada</label>
+                <textarea id="url-encoder-input" placeholder="Digite ou cole o texto aqui..." rows="8"></textarea>
+                <div class="options horizontal">
+                    <button id="url-encode-btn" class="btn-secondary">Codificar</button>
+                    <button id="url-decode-btn" class="btn-secondary">Decodificar</button>
+                </div>
+            </div>
+            <div class="tool-results">
+                <div class="result-box wide" id="resultado-url-encoder">
+                    <span>O resultado aparecerá aqui.</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+
+    <script src="../js/shared/main-controller.js" type="module"></script>
+    <script src="../js/pages/url-encoder.js" type="module"></script>
+</body>
+</html>

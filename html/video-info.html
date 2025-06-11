@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisador de Vídeo e Metadados Online | NextDevs</title>
+    <meta name="description" content="Analise arquivos de vídeo locais. Veja o preview, obtenha metadados como resolução e duração, e capture frames (thumbnails) do vídeo.">
+    
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/tools/video-info.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+</head>
+<body data-page-id="video-info">
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
+
+    <main class="container">
+        <div class="tool-header">
+            <h2>Analisador de Vídeo e Metadados</h2>
+            <p>Selecione um arquivo de vídeo local para ver seus detalhes e capturar frames.</p>
+        </div>
+
+        <div class="options" style="max-width: 500px; margin: 0 auto 2rem auto;">
+            <label for="video-file-input" class="file-input-label">
+                <span>Clique para selecionar um vídeo</span>
+                <p>(Seu arquivo não será enviado, o processamento é local)</p>
+            </label>
+            <input type="file" id="video-file-input" class="sr-only" accept="video/mp4, video/webm, video/ogg">
+        </div>
+
+        <div id="video-analysis-section" class="video-info-layout" style="display: none;">
+            <div class="video-player-container">
+                <div id="video-preview"></div>
+                <div id="capture-section" style="display: none;">
+                     <button id="capture-frame-btn" class="btn-generate">Capturar Frame Atual</button>
+                     <a id="download-thumb-link" style="display:none;"></a>
+                     <img id="thumbnail-preview" style="display:none;" alt="Thumbnail capturada">
+                </div>
+            </div>
+            <div class="metadata-container">
+                <h3>Metadados do Arquivo</h3>
+                <div id="metadata-output" class="metadata-grid">
+                    <p class="empty-state">Carregando dados...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+
+    <script src="../js/shared/main-controller.js" type="module"></script>
+    <script src="../js/pages/video-info.js" type="module"></script>
+</body>
+</html>

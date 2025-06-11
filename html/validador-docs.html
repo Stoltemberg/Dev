@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validador de CPF e CNPJ Online | NextDevs</title>
+    <meta name="description" content="Valide números de CPF e CNPJ de forma rápida e segura. Nossa ferramenta verifica se os dígitos verificadores estão corretos de acordo com o algoritmo.">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/tools/validator.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+</head>
+<body data-page-id="validator">
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
+
+    <main class="container">
+        <div class="tool-header">
+            <h2>Validador de Documentos</h2>
+            <p>Verifique se um número de CPF ou CNPJ é matematicamente válido.</p>
+        </div>
+        <div class="tool-grid">
+            <div class="tool-controls">
+                <div class="options">
+                    <label for="validator-type-select">Tipo de Documento:</label>
+                    <select id="validator-type-select">
+                        <option value="cpf">CPF</option>
+                        <option value="cnpj">CNPJ</option>
+                    </select>
+                </div>
+                <label for="validator-input" class="sr-only">Número do Documento</label>
+                <textarea id="validator-input" placeholder="Digite ou cole o número do documento aqui..." rows="5"></textarea>
+            </div>
+            <div class="tool-results">
+                <div class="result-box" id="resultado-validator">
+                    <span>Aguardando um número para validar...</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+
+    <script src="../js/shared/main-controller.js" type="module"></script>
+</body>
+</html>

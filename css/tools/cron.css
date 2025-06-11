@@ -1,0 +1,23 @@
+#cron-input {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.5rem;
+    text-align: center;
+    letter-spacing: 2px;
+}
+
+#resultado-cron-desc {
+    font-size: 1.2rem;
+    font-weight: 500;
+    line-height: 1.8;
+    text-align: left;
+}
+
+#resultado-cron-next pre {
+    font-size: 1.1rem;
+    line-height: 2;
+}
+
+.cron-error {
+    color: var(--danger-color);
+    font-weight: 500;
+}

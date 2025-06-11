@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Hash (MD5, SHA-256) Online | NextDevs</title>
+    <meta name="description" content="Calcule hashes MD5, SHA-1, SHA-256 e SHA-512 para texto ou arquivos. Ferramenta online para verificar a integridade e segurança de dados.">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/tools/hash.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+</head>
+<body data-page-id="hash-generator">
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
+
+    <main class="container">
+        <div class="tool-header">
+            <h2>Gerador de Hash</h2>
+            <p>Calcule os hashes mais comuns para texto ou arquivos locais.</p>
+        </div>
+        <div class="tool-grid">
+            <div class="tool-controls">
+                <div>
+                    <label for="hash-text-input">Entrada de Texto:</label>
+                    <textarea id="hash-text-input" placeholder="Digite ou cole o texto aqui para gerar o hash em tempo real..." rows="8"></textarea>
+                </div>
+                <div style="text-align: center; color: var(--on-surface-secondary-color); font-weight: 600; margin: 1rem 0;">OU</div>
+                <div>
+                    <label>Entrada de Arquivo:</label>
+                    <div class="file-input-area">
+                        <label for="hash-file-input" class="btn-secondary" style="width: 100%; text-align: center;">Clique aqui para selecionar um arquivo</label>
+                        <input type="file" id="hash-file-input" class="sr-only">
+                        <div id="file-name-display">Nenhum arquivo selecionado.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="tool-results">
+                <div id="resultado-hash" class="hash-results-container">
+                    <p class="empty-state">O resultado dos hashes aparecerá aqui.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="../js/shared/main-controller.js" type="module"></script>
+    <script src="../js/pages/hash-generator.js" type="module"></script>
+</body>
+</html>

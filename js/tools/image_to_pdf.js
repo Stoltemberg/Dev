@@ -1,36 +1,78 @@
-const ImageToPdf = {
-    convert: (file, resultContainerId, onComplete) => {
-        const resultContainer = document.getElementById(resultContainerId);
-        resultContainer.innerHTML = '<span>Processando imagem...</span>';
-        if (!file || !file.type.startsWith('image/')) {
-            resultContainer.innerHTML = '<span>Por favor, selecione um arquivo de imagem válido.</span>';
-            if (onComplete) onComplete();
-            return;
+export const ImageToPdf = {
+    // Função assíncrona para lidar com múltiplas imagens e opções
+    generate: async function(options = {}) {
+        const {
+            files = [],
+            pageSize = 'a4',
+            orientation = 'portrait',
+            imageFit = 'contain',
+            onProgress = () => {} // Callback para reportar o progresso
+        } = options;
+
+        if (files.length === 0) {
+            return Promise.reject(new Error("Nenhum arquivo de imagem foi selecionado."));
         }
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const img = new Image();
-            img.onload = function() {
-                try {
-                    const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
-                    const pageWidth = pdf.internal.pageSize.getWidth();
-                    const pageHeight = pdf.internal.pageSize.getHeight();
-                    const ratio = Math.min(pageWidth / img.width, pageHeight / img.height);
-                    const x = (pageWidth - img.width * ratio) / 2;
-                    const y = (pageHeight - img.height * ratio) / 2;
-                    pdf.addImage(img, 'JPEG', x, y, img.width * ratio, img.height * ratio);
-                    pdf.save('convertido.pdf');
-                    resultContainer.innerHTML = '<span>PDF gerado com sucesso!</span>';
-                } catch (e) {
-                     resultContainer.innerHTML = `<span>Ocorreu um erro: ${e.message}</span>`;
-                } finally {
-                    if (onComplete) onComplete();
-                }
-            };
-            img.onerror = () => { resultContainer.innerHTML = '<span>Erro ao carregar a imagem.</span>'; if (onComplete) onComplete(); };
-            img.src = event.target.result;
-        };
-        reader.onerror = () => { resultContainer.innerHTML = '<span>Erro ao ler o arquivo.</span>'; if (onComplete) onComplete(); };
-        reader.readAsDataURL(file);
+
+        // A biblioteca jsPDF é carregada via CDN
+        const pdf = new jspdf.jsPDF(orientation, 'mm', pageSize);
+        const totalFiles = files.length;
+
+        for (let i = 0; i < totalFiles; i++) {
+            const file = files[i];
+            
+            // Adiciona uma nova página a partir da segunda imagem
+            if (i > 0) {
+                pdf.addPage(pageSize, orientation);
+            }
+
+            // Atualiza o progresso
+            onProgress(i, totalFiles, `Processando imagem ${i + 1}...`);
+
+            // Usa uma Promise para carregar cada imagem
+            await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const pageWidth = pdf.internal.pageSize.getWidth();
+                        const pageHeight = pdf.internal.pageSize.getHeight();
+                        const imgWidth = img.width;
+                        const imgHeight = img.height;
+                        
+                        let finalWidth, finalHeight, x, y;
+
+                        // Calcula as dimensões com base na opção de ajuste
+                        if (imageFit === 'cover') { // Cobrir a página
+                            const pageRatio = pageWidth / pageHeight;
+                            const imgRatio = imgWidth / imgHeight;
+                            if (pageRatio > imgRatio) {
+                                finalWidth = pageWidth;
+                                finalHeight = pageWidth / imgRatio;
+                            } else {
+                                finalHeight = pageHeight;
+                                finalWidth = pageHeight * imgRatio;
+                            }
+                        } else { // Conter na página (padrão)
+                            const ratio = Math.min(pageWidth / imgWidth, pageHeight / imgHeight);
+                            finalWidth = imgWidth * ratio;
+                            finalHeight = imgHeight * ratio;
+                        }
+                        
+                        x = (pageWidth - finalWidth) / 2;
+                        y = (pageHeight - finalHeight) / 2;
+
+                        pdf.addImage(img, 'JPEG', x, y, finalWidth, finalHeight);
+                        resolve();
+                    };
+                    img.onerror = reject;
+                    img.src = event.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+        
+        onProgress(totalFiles, totalFiles, "PDF pronto para download!");
+        return pdf;
     }
 };

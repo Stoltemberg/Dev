@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Senha Segura e Forte | NextDevs</title>
+    <meta name="description" content="Crie senhas fortes e personalizadas com nosso gerador. Controle o tamanho, e o uso de letras maiúsculas, minúsculas, números e símbolos.">
+    
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/tools/senha.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    </head>
+<body data-page-id="senha">
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
+
+    <main class="container">
+        <div class="tool-header">
+            <h2>Gerador de Senha Segura</h2>
+            <p>Crie senhas fortes e personalizadas para proteger suas contas.</p>
+        </div>
+        <div class="tool-grid">
+            <div class="tool-controls">
+                <div class="options-grid">
+                    <div class="option-item">
+                        <label for="senha-tamanho">Tamanho:</label>
+                        <input type="number" id="senha-tamanho" value="16" min="4" max="128" aria-label="Tamanho da senha">
+                    </div>
+                    <div class="option-item">
+                        <input type="checkbox" id="senha-maiusculas" checked>
+                        <label for="senha-maiusculas">Maiúsculas (ABC)</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="checkbox" id="senha-minusculas" checked>
+                        <label for="senha-minusculas">Minúsculas (abc)</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="checkbox" id="senha-numeros" checked>
+                        <label for="senha-numeros">Números (123)</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="checkbox" id="senha-simbolos" checked>
+                        <label for="senha-simbolos">Símbolos (!@#)</label>
+                    </div>
+                </div>
+                <button id="gerar-senha" class="btn-generate">Gerar Senha</button>
+                <button id="save-password-options" class="btn-secondary">Salvar Opções</button>
+            </div>
+            <div class="tool-results">
+                <div class="result-box" id="resultado-senha">
+                    <span>Configure as opções e clique em "Gerar".</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+
+    <script src="../js/shared/main-controller.js" type="module"></script>
+    <script src="../js/pages/senha.js" type="module"></script>
+</body>
+</html>

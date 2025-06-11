@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de CNH Válido Online | NextDevs</title>
+    <meta name="description" content="Gere dados de CNH (Carteira Nacional de Habilitação) válidos, incluindo número de registro, categoria e datas, para testes e desenvolvimento.">
+    
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
+
+    <main class="container">
+        <div class="tool-header">
+            <h2>Gerador de CNH</h2>
+            <p>Gere dados de uma CNH brasileira válida para uso em testes.</p>
+        </div>
+        <div class="tool-grid">
+            <div class="tool-controls">
+                <div class="options">
+                    <label for="cnh-formatacao">
+                        <input type="checkbox" id="cnh-formatacao" checked> Formatar número de registro
+                    </label>
+                </div>
+                <button id="gerar-cnh" class="btn-generate">Gerar CNH</button>
+                <button id="add-cnh-to-cenario" class="btn-add-to-cenario" style="display: none;">Adicionar ao Cenário</button>
+            </div>
+            <div class="tool-results">
+                <div class="result-box wide" id="resultado-cnh">
+                    <span>Clique em "Gerar" para começar.</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+
+    <script src="../js/shared/main-controller.js" type="module"></script>
+    <script src="../js/pages/cnh.js" type="module"></script>
+</body>
+</html>

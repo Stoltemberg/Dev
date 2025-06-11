@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Pessoas Fictícias | NextDevs</title>
+    <meta name="description" content="Gere listas de pessoas fictícias com nomes, CPFs e endereços brasileiros para seus testes. Exporte para CSV ou JSON.">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/tools/pessoa.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
+
+    <main class="container">
+        <div class="tool-header">
+            <h2>Gerador de Pessoas</h2>
+            <p>Crie dados de pessoas em massa para popular bases de dados de teste.</p>
+        </div>
+        <div class="tool-grid">
+            <div class="tool-controls">
+                <div class="options">
+                    <label for="pessoa-quantidade">Quantidade:</label>
+                    <input type="number" id="pessoa-quantidade" value="10" min="1" max="100">
+                </div>
+                <div class="options">
+                    <label for="pessoa-genero">Gênero:</label>
+                    <select id="pessoa-genero">
+                        <option value="aleatorio">Aleatório</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="feminino">Feminino</option>
+                    </select>
+                </div>
+                <div class="options">
+                    <label for="pessoa-uf">Estado (UF):</label>
+                    <select id="pessoa-uf">
+                        <option value="">Aleatório</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="BA">Bahia</option>
+                        <option value="PR">Paraná</option>
+                        <option value="RS">Rio Grande do Sul</option>
+                    </select>
+                </div>
+                <button id="gerar-pessoas" class="btn-generate">Gerar Pessoas</button>
+                <div id="export-buttons" class="export-buttons" style="display: none;">
+                    <button id="export-csv" class="btn-secondary">Exportar para CSV</button>
+                    <button id="export-json" class="btn-secondary">Exportar para JSON</button>
+                </div>
+            </div>
+            <div class="tool-results">
+                <div id="resultado-pessoa-tabela" class="pessoa-results-container">
+                    <p class="empty-state">Configure as opções e clique em "Gerar".</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+
+    <script src="../js/shared/main-controller.js" type="module"></script>
+    <script src="../js/pages/pessoa.js" type="module"></script>
+</body>
+</html>

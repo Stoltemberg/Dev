@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debugador de JWT (JSON Web Token) Online | NextDevs</title>
+    <meta name="description" content="Decodifique e analise JSON Web Tokens em tempo real. Cole seu token para ver o Header e o Payload de forma clara e formatada.">
+    
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/tools/jwt.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    </head>
+<body data-page-id="jwt">
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
+
+    <main class="container">
+        <div class="tool-header">
+            <h2>Debugador de JWT</h2>
+            <p>Cole um JSON Web Token para decodificar e analisar seu Header e Payload.</p>
+        </div>
+        <div class="jwt-container">
+            <div class="jwt-input-area">
+                <label for="jwt-input" class="sr-only">Token JWT Codificado</label>
+                <textarea id="jwt-input" placeholder="Cole o seu token JWT aqui..."></textarea>
+            </div>
+            <div class="jwt-output-area">
+                <div class="result-box wide" id="resultado-jwt">
+                    <span>Aguardando um token...</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+
+    <script src="https://unpkg.com/jwt-decode/build/jwt-decode.js"></script>
+    <script src="../js/shared/main-controller.js" type="module"></script>
+    <script src="../js/pages/jwt.js" type="module"></script>
+</body>
+</html>

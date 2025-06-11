@@ -1,21 +1,42 @@
-const CodeFormatter = {
-    format: function(code, language) {
+export const CodeFormatter = {
+    // A função agora é assíncrona para lidar com o Prettier
+    format: async function(code, language) {
         if (!code.trim()) {
-            return { error: "O campo de código está vazio." };
+            return { formattedCode: '' }; // Retorna vazio se não houver código
         }
 
         try {
-            if (language === 'json') {
-                const jsonObj = JSON.parse(code);
-                return { formattedCode: JSON.stringify(jsonObj, null, 2) };
-            }
+            // Se a linguagem for SQL, usa a biblioteca sqlFormatter
             if (language === 'sql') {
-                // A biblioteca sqlFormatter será importada via CDN no index.html
-                return { formattedCode: sqlFormatter.format(code, { language: 'sql', tabWidth: 2 }) };
+                // Acessa o objeto global sqlFormatter carregado via CDN
+                const formattedCode = sqlFormatter.format(code, { language: 'sql', tabWidth: 2 });
+                return { formattedCode };
+            } 
+            
+            // Para todas as outras linguagens, usa a biblioteca Prettier
+            else {
+                // Mapeia o valor do select para o parser correto do Prettier
+                const parserMap = {
+                    'javascript': 'babel',
+                    'json': 'json',
+                    'html': 'html',
+                    'css': 'css',
+                    'java': 'java'
+                };
+                const parser = parserMap[language];
+
+                // Acessa os objetos globais prettier e prettierPlugins carregados via CDN
+                const formattedCode = await prettier.format(code, {
+                    parser: parser,
+                    plugins: prettierPlugins,
+                    tabWidth: 2,
+                    printWidth: 80,
+                });
+                return { formattedCode };
             }
-            return { error: "Linguagem não suportada." };
         } catch (e) {
-            return { error: `Erro ao formatar ${language.toUpperCase()}: ${e.message}` };
+            // Retorna uma mensagem de erro clara se a formatação falhar
+            return { error: `Erro ao formatar ${language.toUpperCase()}:\n${e.message}` };
         }
     }
 };

@@ -1,4 +1,4 @@
-const Cnpj = {
+export const Cnpj = {
     // Funções base para gerar o número do CNPJ
     rand: (min = 0, max = 9) => Math.floor(Math.random() * (max - min + 1)) + min,
     geraDigito: function(n) {
@@ -34,25 +34,20 @@ const Cnpj = {
         { cidade: "Porto Alegre", uf: "RS" }
     ],
 
-    // Função para pegar um item aleatório de uma lista
     randItem: (arr) => arr[Math.floor(Math.random() * arr.length)],
 
-    // Função principal que gera o perfil completo da empresa
     generate: function(comPontos = true) {
-        // Gera o número do CNPJ
         const n = Array.from({ length: 8 }, () => this.rand());
         n.push(0, 0, 0, 1);
         n.push(this.geraDigito([...n]));
         n.push(this.geraDigito([...n]));
         const cnpjString = n.join('');
 
-        // Gera os dados da empresa
         const nomeFantasia = `${this.randItem(this.nomes_fantasia)} ${this.randItem(this.segmentos)}`;
         const razaoSocial = `${nomeFantasia} ${this.randItem(this.sufixos)}`;
         const cidadeInfo = this.randItem(this.cidades);
-        const dataAbertura = new Date(Date.now() - Math.random() * 3e11).toLocaleDateString('pt-BR'); // Data nos últimos ~10 anos
+        const dataAbertura = new Date(Date.now() - Math.random() * 3e11).toLocaleDateString('pt-BR');
 
-        // Monta o objeto final
         const dadosEmpresa = {
             "CNPJ": comPontos ? this.format(cnpjString) : cnpjString,
             "Razão Social": razaoSocial,

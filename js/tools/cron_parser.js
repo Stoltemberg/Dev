@@ -1,4 +1,4 @@
-const CronParser = {
+export const CronParser = {
     parse: function(cronString) {
         if (!cronString || cronString.trim() === '') {
             return { error: "Expressão vazia." };
@@ -11,19 +11,19 @@ const CronParser = {
         try {
             const [min, hour, dayOfMonth, month, dayOfWeek] = parts;
             const description = [
-                this.describePart(min, "minuto", 0, 59),
-                this.describePart(hour, "hora", 0, 23),
-                this.describePart(dayOfMonth, "dia do mês", 1, 31),
-                this.describePart(month, "mês", 1, 12, ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]),
-                this.describePart(dayOfWeek, "dia da semana", 0, 6, ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"])
-            ].join('. ');
+                this.describePart(min, "minuto", "aos", "minutos"),
+                this.describePart(hour, "hora", "às", "horas"),
+                this.describePart(dayOfMonth, "dia do mês", "no dia", "nos dias"),
+                this.describePart(month, "mês", "em", "em"),
+                this.describePart(dayOfWeek, "dia da semana", "no(a)", "nos(as)")
+            ].join(', ');
             return { description: `Executa ${description}.` };
         } catch (e) {
             return { error: e.message };
         }
     },
 
-    describePart: function(part, unit, min, max, names) {
+    describePart: function(part, unit, singular, plural) {
         if (/[^0-9*,/-]/.test(part)) throw new Error(`Caractere inválido na parte de ${unit}`);
         if (part === '*') return `a cada ${unit}`;
         
@@ -33,26 +33,17 @@ const CronParser = {
         for (const segment of segments) {
             if (segment.includes('/')) {
                 const [base, step] = segment.split('/');
-                if (base === '*') {
-                    description.push(`a cada ${step} ${unit}s`);
-                } else {
-                    description.push(`a cada ${step} ${unit}s, começando de ${base}`);
-                }
+                if (base === '*') description.push(`a cada ${step} ${unit}s`);
+                else description.push(`a cada ${step} ${unit}s, começando de ${base}`);
             } else if (segment.includes('-')) {
                 const [start, end] = segment.split('-');
-                description.push(`do ${unit} ${this.formatName(start, names)} até ${this.formatName(end, names)}`);
+                description.push(`de ${start} a ${end}`);
             } else {
-                description.push(`no ${unit} ${this.formatName(segment, names)}`);
+                description.push(segment);
             }
         }
-        return description.join(', ');
-    },
-    
-    formatName: function(value, names) {
-        if (names) {
-            return names[parseInt(value, 10) % names.length];
-        }
-        return value;
+        const prefix = segments.length > 1 || segments[0].includes('-') ? plural : singular;
+        return `${prefix} ${description.join(' e ')}`;
     },
     
     getNextExecutions: function(cronString, count = 5) {
@@ -86,7 +77,7 @@ const CronParser = {
         for (const segment of segments) {
             if (segment.includes('/')) {
                 const [, step] = segment.split('/');
-                if (value % parseInt(step, 10) === 0) return true;
+                if ((value % parseInt(step, 10)) === 0) return true;
             } else if (segment.includes('-')) {
                 const [start, end] = segment.split('-').map(Number);
                 if (value >= start && value <= end) return true;

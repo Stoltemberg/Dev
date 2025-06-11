@@ -1,0 +1,40 @@
+.pessoa-results-container {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0.5rem;
+    overflow-x: auto;
+    max-height: 500px;
+}
+.pessoa-results-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+.pessoa-results-table th, .pessoa-results-table td {
+    border-bottom: 1px solid var(--border-color);
+    padding: 14px 16px;
+    text-align: left;
+    white-space: nowrap;
+}
+.pessoa-results-table thead th {
+    background-color: var(--surface-light);
+    color: var(--secondary-color);
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+}
+.pessoa-results-table tr:nth-child(even) {
+    background-color: var(--surface-light);
+}
+.pessoa-results-table tr:hover {
+    background-color: var(--border-color);
+}
+.export-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+.export-buttons .btn-secondary {
+    flex-grow: 1;
+}

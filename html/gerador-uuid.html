@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de UUID (v4) Online | NextDevs</title>
+    <meta name="description" content="Gere UUIDs v4 únicos, em massa, com opções de formatação (maiúsculas, sem hifens). Ferramenta essencial para bancos de dados e sistemas distribuídos.">
+    
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/tools/uuid.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    </head>
+<body data-page-id="uuid">
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
+
+    <main class="container">
+        <div class="tool-header">
+            <h2>Gerador de UUID (v4)</h2>
+            <p>Crie identificadores únicos universais para seus projetos.</p>
+        </div>
+        <div class="tool-grid">
+            <div class="tool-controls">
+                <div class="uuid-options">
+                    <div class="option-group">
+                        <label for="uuid-quantidade">Quantidade:</label>
+                        <input type="number" id="uuid-quantidade" value="1" min="1" max="100">
+                    </div>
+                    <div class="option-group">
+                        <label for="uuid-uppercase">Letras Maiúsculas</label>
+                        <input type="checkbox" id="uuid-uppercase">
+                    </div>
+                    <div class="option-group">
+                        <label for="uuid-no-hyphens">Sem Hifens</label>
+                        <input type="checkbox" id="uuid-no-hyphens">
+                    </div>
+                </div>
+                <button id="gerar-uuid" class="btn-generate">Gerar UUID</button>
+            </div>
+            <div class="tool-results">
+                <div class="result-box wide" id="resultado-uuid">
+                    <span>Configure as opções e clique em "Gerar".</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+
+    <script src="../js/shared/main-controller.js" type="module"></script>
+    <script src="../js/pages/uuid.js" type="module"></script>
+</body>
+</html>

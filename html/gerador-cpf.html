@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de CPF Válido Online | NextDevs</title>
+    <meta name="description" content="Gere números de CPF válidos, únicos ou em massa, com ou sem pontuação. A ferramenta ideal para testes de desenvolvimento e preenchimento de formulários.">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/tools/cpf.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
+
+    <main class="container">
+        <div class="tool-header">
+            <h2>Gerador de CPF</h2>
+            <p>Gere números de CPF válidos, únicos ou em massa, para testes de software.</p>
+        </div>
+        <div class="tool-grid">
+            <div class="tool-controls">
+                <div class="options">
+                    <label for="cpf-pontuacao">
+                        <input type="checkbox" id="cpf-pontuacao" checked> Usar pontuação
+                    </label>
+                </div>
+                <div class="options">
+                    <label for="cpf-quantidade">Quantidade:</label>
+                    <input type="number" id="cpf-quantidade" value="1" min="1" max="100" aria-label="Quantidade de CPFs para gerar">
+                </div>
+                <button id="gerar-cpf" class="btn-generate">Gerar 1 CPF</button>
+            </div>
+            <div class="tool-results">
+                <div class="result-box wide" id="resultado-cpf">
+                    <span>Configure as opções e clique em "Gerar".</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+
+    <script src="../js/shared/main-controller.js" type="module"></script>
+    <script src="../js/pages/cpf.js" type="module"></script>
+</body>
+</html>

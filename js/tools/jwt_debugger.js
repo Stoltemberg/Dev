@@ -1,7 +1,7 @@
-const JwtDebugger = {
+export const JwtDebugger = {
     decode: function(token) {
-        if (!token || token.split('.').length !== 3) {
-            return { error: "Token JWT inválido. Ele deve conter três partes separadas por pontos." };
+        if (!token || token.split('.').length < 2) { // JWT pode ter 2 ou 3 partes
+            return { error: "Token JWT inválido ou incompleto. Ele deve conter pelo menos duas partes separadas por pontos." };
         }
         try {
             // A biblioteca jwt_decode será importada via CDN no index.html
@@ -13,11 +13,12 @@ const JwtDebugger = {
                 payload: decodedPayload
             };
 
+            // Adiciona informações de expiração se existirem
             if (decodedPayload.exp) {
                 const expirationDate = new Date(decodedPayload.exp * 1000);
                 const now = new Date();
                 result.extra = {
-                    expiracao: expirationDate.toLocaleString('pt-BR'),
+                    expiracao: expirationDate.toLocaleString('pt-BR', { dateStyle: 'full', timeStyle: 'long' }),
                     status: now > expirationDate ? "Expirado" : "Válido"
                 };
             }

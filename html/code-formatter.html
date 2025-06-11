@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formatador de Código (JSON, SQL, HTML, CSS, JS, Java) | NextDevs</title>
+    <meta name="description" content="Embeleze e organize seu código com nosso formatador online. Suporte em tempo real para JSON, SQL, HTML, CSS, JavaScript e Java com destaque de sintaxe.">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/tools/code-formatter.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+</head>
+<body data-page-id="code-formatter">
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
+
+    <main class="container">
+        <div class="tool-header">
+            <h2>Formatador de Código</h2>
+            <p>Cole seu código para formatá-lo e destacá-lo instantaneamente.</p>
+        </div>
+        <div class="options" style="margin-bottom: 1rem;">
+            <label for="code-language-select">Linguagem:</label>
+            <select id="code-language-select">
+                <option value="json">JSON</option>
+                <option value="sql">SQL</option>
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+                <option value="javascript">JavaScript</option>
+                <option value="java">Java</option>
+            </select>
+        </div>
+        <div class="formatter-grid">
+            <div class="formatter-pane">
+                <label for="code-input">Entrada</label>
+                <textarea id="code-input" placeholder="Cole seu código mal formatado aqui..."></textarea>
+            </div>
+            <div class="formatter-pane">
+                <label>Saída Formatada</label>
+                <div class="result-box wide">
+                    <pre><code id="resultado-code-formatter" class="language-json"></code></pre>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+
+    <script src="https://unpkg.com/prettier@2.8.4/standalone.js"></script>
+    <script src="https://unpkg.com/prettier@2.8.4/parser-babel.js"></script>
+    <script src="https://unpkg.com/prettier@2.8.4/parser-html.js"></script>
+    <script src="https://unpkg.com/prettier@2.8.4/parser-postcss.js"></script>
+    <script src="https://unpkg.com/sql-formatter@latest/dist/sql-formatter.min.js"></script>
+    <script src="https://unpkg.com/prettier-plugin-java/dist/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/xml.min.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/java.min.js"></script>
+    
+    <script src="../js/shared/main-controller.js" type="module"></script>
+    <script src="../js/pages/code-formatter.js" type="module"></script>
+</body>
+</html>

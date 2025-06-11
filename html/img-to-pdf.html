@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Imagens para PDF Online | NextDevs</title>
+    <meta name="description" content="Junte múltiplas imagens (JPG, PNG) em um único arquivo PDF. Controle o tamanho da página, orientação e ajuste da imagem.">
+    
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/tools/img-to-pdf.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+</head>
+<body data-page-id="img-to-pdf">
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
+
+    <main class="container">
+        <div class="tool-header">
+            <h2>Conversor de Imagem para PDF</h2>
+            <p>Junte várias imagens em um único arquivo PDF com opções customizadas.</p>
+        </div>
+        <div class="tool-grid">
+            <div class="tool-controls">
+                
+                <label for="image-files-input" class="file-input-label">
+                    <span>Clique aqui para selecionar as imagens</span>
+                    <p>(Você pode selecionar múltiplos arquivos JPG ou PNG)</p>
+                </label>
+                <input type="file" id="image-files-input" class="sr-only" accept="image/png, image/jpeg" multiple>
+                
+                <div class="option-section">
+                    <h4 class="option-section-title">Opções da Página</h4>
+                    <div class="option-row">
+                        <label for="pdf-page-size">Tamanho:</label>
+                        <select id="pdf-page-size">
+                            <option value="a4" selected>A4</option>
+                            <option value="a3">A3</option>
+                            <option value="letter">Carta (Letter)</option>
+                            <option value="legal">Ofício (Legal)</option>
+                        </select>
+                    </div>
+                    <div class="option-row">
+                        <label>Orientação:</label>
+                        <div class="radio-group">
+                            <input type="radio" id="orientation-portrait" name="pdf-orientation" value="portrait" checked><label for="orientation-portrait">Retrato</label>
+                            <input type="radio" id="orientation-landscape" name="pdf-orientation" value="landscape"><label for="orientation-landscape">Paisagem</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="option-section">
+                     <h4 class="option-section-title">Ajuste da Imagem na Página</h4>
+                     <div class="radio-group">
+                        <input type="radio" id="fit-contain" name="pdf-image-fit" value="contain" checked><label for="fit-contain">Conter</label>
+                        <input type="radio" id="fit-cover" name="pdf-image-fit" value="cover"><label for="fit-cover">Cobrir</label>
+                    </div>
+                </div>
+
+                <div class="option-section">
+                    <h4 class="option-section-title">Arquivo de Saída</h4>
+                     <div class="option-row">
+                        <label for="pdf-filename">Nome do Arquivo:</label>
+                        <input type="text" id="pdf-filename" value="nextdevs-documento">
+                    </div>
+                </div>
+
+                <button id="convert-pdf-btn" class="btn-generate" disabled>Converter para PDF</button>
+            </div>
+            <div class="tool-results">
+                <div id="file-preview-area" class="result-box wide">
+                    <p class="empty-state">Aguardando arquivos...</p>
+                </div>
+                <div id="conversion-progress"></div>
+            </div>
+        </div>
+    </main>
+    
+    <footer id="footer-placeholder"></footer>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="../js/shared/main-controller.js" type="module"></script>
+    <script src="../js/pages/img-to-pdf.js" type="module"></script>
+</body>
+</html>
