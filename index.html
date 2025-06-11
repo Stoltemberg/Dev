@@ -4,15 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DevTools Pro - Geradores e Ferramentas para Desenvolvedores</title>
-    <meta name="description" content="Suíte de ferramentas minimalista para desenvolvedores. Gere CPF, CNPJ, Senhas e use nosso Workspace para acelerar seus testes.">
+    <meta name="description" content="Suíte de ferramentas minimalista para desenvolvedores. Gere CPF, CNPJ, teste Regex, decodifique JWT e use nosso Workspace para acelerar seus testes.">
     <link rel="canonical" href="https://www.seusite.com.br/">
+    <meta property="og:title" content="DevTools Pro: Geradores, Testadores e Utilitários Online">
+    <meta property="og:description" content="Plataforma completa com 16 ferramentas para desenvolvedores, incluindo Workspace, Histórico e Cenários de Teste.">
+    <meta property="og:image" content="https://www.seusite.com.br/og-image.jpg">
+    <meta property="og:url" content="https://www.seusite.com.br/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="DevTools Pro: Geradores, Testadores e Utilitários Online">
+    <meta name="twitter:description" content="Plataforma completa com 16 ferramentas para desenvolvedores, incluindo Workspace, Histórico e Cenários de Teste.">
+    <meta name="twitter:image" content="https://www.seusite.com.br/og-image.jpg">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-
     <nav id="main-nav" class="main-nav">
         <div class="nav-content">
             <a href="#" class="nav-brand" data-tool="home">DevTools</a>
@@ -32,15 +41,23 @@
                         <a href="#" class="dropdown-item" data-tool="senha">Senha</a>
                         <a href="#" class="dropdown-item" data-tool="cartao">Cartão de Crédito</a>
                         <a href="#" class="dropdown-item" data-tool="uuid">UUID</a>
+                        <a href="#" class="dropdown-item" data-tool="jwt">Debugador de JWT</a>
+                        <a href="#" class="dropdown-item" data-tool="regex">Testador de Regex</a>
+                        <a href="#" class="dropdown-item" data-tool="url-encoder">Codificador de URL</a>
+                    </div>
+                </div>
+                <div class="nav-item dropdown">
+                    <button class="dropdown-toggle">Web & Texto</button>
+                    <div class="dropdown-menu">
                         <a href="#" class="dropdown-item" data-tool="lorem">Lorem Ipsum</a>
                         <a href="#" class="dropdown-item" data-tool="qrcode">QR Code</a>
                         <a href="#" class="dropdown-item" data-tool="base64">Base64</a>
+                        <a href="#" class="dropdown-item" data-tool="contador">Contador de Texto</a>
                     </div>
                 </div>
                 <div class="nav-item dropdown">
                     <button class="dropdown-toggle">Utilitários</button>
                     <div class="dropdown-menu">
-                        <a href="#" class="dropdown-item" data-tool="contador">Contador de Texto</a>
                         <a href="#" class="dropdown-item" data-tool="img-to-pdf">Imagem para PDF</a>
                         <a href="#" class="dropdown-item" data-tool="video-info">Info de Vídeo</a>
                     </div>
@@ -69,24 +86,28 @@
     
     <main class="container">
         <div id="home-pane" class="tool-pane active">
-            <div class="welcome-card"><h1>Bem-vindo ao DevTools</h1><p>Sua suíte de ferramentas para acelerar o desenvolvimento e testes.</p><p>Selecione uma ferramenta no menu de navegação para começar.</p><div class="popular-tools"><a href="#" data-tool="cpf">Gerador de CPF</a><a href="#" data-tool="senha">Gerador de Senha</a><a href="#" data-tool="cartao">Gerador de Cartão</a></div></div>
+            <div class="welcome-card"><h1>Bem-vindo ao DevTools</h1><p>Sua suíte de ferramentas para acelerar o desenvolvimento e testes.</p><p>Selecione uma ferramenta no menu de navegação para começar.</p><div class="popular-tools"><a href="#" data-tool="cpf">Gerador de CPF</a><a href="#" data-tool="jwt">Debugador de JWT</a><a href="#" data-tool="regex">Testador de Regex</a></div></div>
         </div>
 
         <div id="cpf-pane" class="tool-pane"><div class="tool-header"><h2>Gerador de CPF</h2><p>Gere números de CPF válidos para testes de software.</p></div><div class="tool-grid"><div class="tool-controls"><div class="options"><label><input type="checkbox" id="cpf-pontuacao" checked> Usar pontuação</label></div><button id="gerar-cpf" class="btn-generate">Gerar CPF</button></div><div class="tool-results"><div class="result-box" id="resultado-cpf"><span>...</span></div></div></div></div>
         <div id="cnpj-pane" class="tool-pane"><div class="tool-header"><h2>Gerador de CNPJ</h2><p>Gere um perfil completo de empresa para testes de sistemas.</p></div><div class="tool-grid"><div class="tool-controls"><div class="options"><label><input type="checkbox" id="cnpj-pontuacao" checked> Usar pontuação</label></div><button id="gerar-cnpj" class="btn-generate">Gerar Empresa</button><button id="add-cnpj-to-cenario" class="btn-add-to-cenario" style="display: none;">Adicionar ao Cenário</button></div><div class="tool-results"><div class="result-box wide" id="resultado-cnpj"><span>...</span></div></div></div></div>
         <div id="cnh-pane" class="tool-pane"><div class="tool-header"><h2>Gerador de CNH</h2><p>Gere dados de uma CNH brasileira válida para uso em testes.</p></div><div class="tool-grid"><div class="tool-controls"><div class="options"><label><input type="checkbox" id="cnh-formatacao" checked> Formatar número</label></div><button id="gerar-cnh" class="btn-generate">Gerar CNH</button><button id="add-cnh-to-cenario" class="btn-add-to-cenario" style="display: none;">Adicionar ao Cenário</button></div><div class="tool-results"><div class="result-box wide" id="resultado-cnh"><span>...</span></div></div></div></div>
         <div id="pessoa-pane" class="tool-pane"><div class="tool-header"><h2>Gerador de Pessoa</h2><p>Crie um perfil completo de uma pessoa fictícia.</p></div><div class="tool-grid"><div class="tool-controls"><div class="options"><label><input type="checkbox" id="pessoa-idade-especifica-check"> Idade específica:</label><input type="number" id="pessoa-idade" min="1" max="120" value="25" disabled></div><button id="gerar-pessoa" class="btn-generate">Gerar Pessoa</button><button id="add-pessoa-to-cenario" class="btn-add-to-cenario" style="display: none;">Adicionar ao Cenário</button></div><div class="tool-results"><div class="result-box wide" id="resultado-pessoa"><span>...</span></div></div></div></div>
-        <div id="senha-pane" class="tool-pane"><div class="tool-header"><h2>Gerador de Senha Segura</h2><p>Crie senhas fortes e personalizadas.</p></div><div class="tool-grid"><div class="tool-controls"><div class="options-grid"><label>Tamanho: <input type="number" id="senha-tamanho" value="16" min="4" max="128"></label><label><input type="checkbox" id="senha-maiusculas" checked> Maiúsculas</label><label><input type="checkbox" id="senha-minusculas" checked> Minúsculas</label><label><input type="checkbox" id="senha-numeros" checked> Números</label><label><input type="checkbox" id="senha-simbolos" checked> Símbolos</label></div><button id="gerar-senha" class="btn-generate">Gerar Senha</button></div><div class="tool-results"><div class="result-box" id="resultado-senha"><span>...</span></div></div></div></div>
+        <div id="senha-pane" class="tool-pane"><div class="tool-header"><h2>Gerador de Senha Segura</h2><p>Crie senhas fortes e personalizadas.</p></div><div class="tool-grid"><div class="tool-controls"><div class="options-grid"><label>Tamanho: <input type="number" id="senha-tamanho" value="16" min="4" max="128"></label><label><input type="checkbox" id="senha-maiusculas" checked> Maiúsculas (ABC)</label><label><input type="checkbox" id="senha-minusculas" checked> Minúsculas (abc)</label><label><input type="checkbox" id="senha-numeros" checked> Números (123)</label><label><input type="checkbox" id="senha-simbolos" checked> Símbolos (!@#)</label></div><button id="gerar-senha" class="btn-generate">Gerar Senha</button></div><div class="tool-results"><div class="result-box" id="resultado-senha"><span>...</span></div></div></div></div>
         <div id="cartao-pane" class="tool-pane"><div class="tool-header"><h2>Gerador de Cartão de Crédito</h2><p>Gere dados completos de cartão de crédito para testes.</p></div><div class="tool-grid"><div class="tool-controls"><div class="options"><label>Bandeira: <select id="cartao-bandeira"><option value="visa">Visa</option><option value="mastercard">Mastercard</option></select></label></div><p class="warning">Atenção: Use estes números apenas para testes.</p><button id="gerar-cartao" class="btn-generate">Gerar Cartão</button><button id="add-cartao-to-cenario" class="btn-add-to-cenario" style="display: none;">Adicionar ao Cenário</button></div><div class="tool-results"><div class="result-box wide" id="resultado-cartao"><span>...</span></div></div></div></div>
         <div id="lorem-pane" class="tool-pane"><div class="tool-header"><h2>Gerador de Lorem Ipsum</h2><p>Gere parágrafos de texto para preenchimento de layouts.</p></div><div class="tool-grid"><div class="tool-controls"><div class="options"><label>Parágrafos: <input type="number" id="lorem-paragrafos" value="3" min="1" max="50"></label></div><button id="gerar-lorem" class="btn-generate">Gerar Texto</button></div><div class="tool-results"><div class="result-box wide" id="resultado-lorem"><span>...</span></div></div></div></div>
         <div id="qrcode-pane" class="tool-pane"><div class="tool-header"><h2>Gerador de QR Code</h2><p>Converta texto ou URL em uma imagem de QR Code.</p></div><div class="tool-grid"><div class="tool-controls"><textarea id="qrcode-texto" placeholder="Digite o texto ou URL aqui..."></textarea><button id="gerar-qrcode" class="btn-generate">Gerar QR Code</button></div><div class="tool-results"><div class="result-box" id="resultado-qrcode"><span>...</span></div></div></div></div>
-        <div id="base64-pane" class="tool-pane"><div class="tool-header"><h2>Codificador / Decodificador Base64</h2><p>Codifique ou decodifique texto no formato Base64.</p></div><div class="tool-grid"><div class="tool-controls"><textarea id="base64-input" placeholder="Digite o texto aqui..."></textarea><div class="options"><button id="base64-codificar" class="btn-secondary">Codificar</button><button id="base64-decodificar" class="btn-secondary">Decodificar</button></div></div><div class="tool-results"><div class="result-box wide" id="resultado-base64"><span>...</span></div></div></div></div>
+        <div id="base64-pane" class="tool-pane"><div class="tool-header"><h2>Codificador / Decodificador Base64</h2><p>Codifique ou decodifique texto no formato Base64.</p></div><div class="tool-grid"><div class="tool-controls"><textarea id="base64-input" placeholder="Digite o texto aqui..."></textarea><div class="options horizontal"><button id="base64-codificar" class="btn-secondary">Codificar</button><button id="base64-decodificar" class="btn-secondary">Decodificar</button></div></div><div class="tool-results"><div class="result-box wide" id="resultado-base64"><span>...</span></div></div></div></div>
         <div id="contador-pane" class="tool-pane"><div class="tool-header"><h2>Contador de Texto</h2><p>Contagem instantânea de caracteres, palavras e linhas.</p></div><div class="tool-grid"><div class="tool-controls"><textarea id="contador-input" placeholder="Cole seu texto aqui..."></textarea></div><div class="tool-results"><div class="result-box wide" id="resultado-contador"><span>Caracteres: 0 | Palavras: 0 | Linhas: 1</span></div></div></div></div>
         <div id="img-to-pdf-pane" class="tool-pane"><div class="tool-header"><h2>Conversor de Imagem para PDF</h2><p>Selecione uma imagem (JPG, PNG) para convertê-la em um PDF.</p></div><div class="tool-grid"><div class="tool-controls"><div class="options"><input type="file" id="image-input" accept="image/png, image/jpeg"></div><button id="convert-pdf" class="btn-generate">Converter para PDF</button></div><div class="tool-results"><div class="result-box" id="resultado-pdf"><span>...</span></div></div></div></div>
         <div id="video-info-pane" class="tool-pane"><div class="tool-header"><h2>Analisador de Vídeo</h2><p>Veja informações como resolução e duração de um vídeo.</p></div><div class="tool-grid"><div class="tool-controls"><div class="options"><input type="file" id="video-input" accept="video/mp4, video/webm, video/ogg"></div><button id="analyze-video" class="btn-generate">Analisar Vídeo</button></div><div class="tool-results"><div class="result-box wide" id="resultado-video-info"><span>...</span></div></div></div></div>
         <div id="uuid-pane" class="tool-pane"><div class="tool-header"><h2>Gerador de UUID (v4)</h2><p>Gere um Identificador Único Universal (UUID) v4.</p></div><div class="tool-grid"><div class="tool-controls"><button id="gerar-uuid" class="btn-generate">Gerar UUID</button></div><div class="tool-results"><div class="result-box" id="resultado-uuid"><span>...</span></div></div></div></div>
+        <div id="jwt-pane" class="tool-pane"><div class="tool-header"><h2>Debugador de JWT</h2><p>Cole um JSON Web Token para decodificar e analisar seu Header e Payload.</p></div><div class="tool-grid"><div class="tool-controls"><textarea id="jwt-input" placeholder="Cole o seu token JWT aqui..."></textarea></div><div class="tool-results"><div class="result-box wide" id="resultado-jwt"><span>Aguardando um token...</span></div></div></div></div>
+        <div id="regex-pane" class="tool-pane"><div class="tool-header"><h2>Testador de Regex</h2><p>Valide suas Expressões Regulares em tempo real.</p></div><div class="regex-grid"><div class="regex-inputs"><input type="text" id="regex-pattern" placeholder="/sua-expressao/aqui"><input type="text" id="regex-flags" placeholder="flags (ex: gi)"></div><textarea id="regex-test-string" placeholder="Cole o seu texto de teste aqui..."></textarea><div class="result-box wide" id="resultado-regex-highlight"><span>O texto destacado aparecerá aqui.</span></div><div class="result-box wide" id="resultado-regex-matches"><span>Nenhuma correspondência encontrada.</span></div></div></div>
+        <div id="url-encoder-pane" class="tool-pane"><div class="tool-header"><h2>Codificador/Decodificador de URL</h2><p>Codifique texto para uso seguro em URLs ou decodifique de volta.</p></div><div class="tool-grid"><div class="tool-controls"><textarea id="url-encoder-input" placeholder="Digite ou cole o texto aqui..."></textarea><div class="options horizontal"><button id="url-encode-btn" class="btn-secondary">Codificar</button><button id="url-decode-btn" class="btn-secondary">Decodificar</button></div></div><div class="tool-results"><div class="result-box wide" id="resultado-url-encoder"><span>O resultado aparecerá aqui.</span></div></div></div></div>
     </main>
     
+    <script src="https://unpkg.com/jwt-decode/build/jwt-decode.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.js"></script>
     <script src="js/tools/cpf.js"></script>
@@ -102,6 +123,9 @@
     <script src="js/tools/image_to_pdf.js"></script>
     <script src="js/tools/video_info.js"></script>
     <script src="js/tools/uuid.js"></script>
+    <script src="js/tools/jwt_debugger.js"></script>
+    <script src="js/tools/regex_tester.js"></script>
+    <script src="js/tools/url_encoder.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
