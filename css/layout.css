@@ -330,24 +330,105 @@ body.dark-mode select { background-image: url("data:image/svg+xml,%3Csvg xmlns='
     .tool-grid, .color-converter-grid, .video-info-layout { grid-template-columns: 1fr; }
     .tool-results { margin-top: 2.5rem; }
 }
+@media (max-width: 900px) {
+    .tool-grid,
+    .color-converter-grid,
+    .video-info-layout,
+    .converter-grid,
+    .regex-grid { /* Garante que todos os layouts de grid quebrem */
+        grid-template-columns: 1fr;
+    }
+    .tool-results {
+        margin-top: 2.5rem;
+    }
+}
+
 @media (max-width: 768px) {
-    body { padding-top: 70px; font-size: 15px; }
-    .container { padding: 0 1rem; margin-top: 2rem; }
-    .nav-content { padding: 0 1rem; }
-    .nav-brand { font-size: 1.6rem; }
-    .nav-menu { display: none; position: absolute; top: 70px; left: 0; width: 100%; background-color: var(--surface-color); flex-direction: column; padding: 1rem 0; box-shadow: 0 8px 16px rgba(0,0,0,0.2); border-bottom: 1px solid var(--border-color); }
-    .nav-menu.active { display: flex; }
-    .nav-item { width: 100%; }
+    body {
+        padding-top: 60px; /* Reduz o padding para a navbar mais baixa */
+        font-size: 15px;
+    }
+
+    .container {
+        padding: 0 1.25rem; /* Ajusta o padding lateral */
+        margin-top: 2rem;
+    }
+    
+    /* Navbar mais compacta */
+    .nav-content {
+        padding: 0 1rem;
+        height: 60px;
+    }
+    .nav-brand {
+        font-size: 1.5rem;
+    }
+    .nav-menu {
+        top: 60px;
+    }
+
+    /* O restante da lógica do menu mobile permanece a mesma */
+    .nav-menu.active { display: flex; } 
+    .nav-item { width: 100%; } 
     .dropdown { padding-bottom: 0; margin-bottom: 0; }
-    .dropdown-toggle { width: 100%; text-align: left; padding: 1rem 1.5rem; }
-    .dropdown:hover .dropdown-menu { display: none; }
+    .dropdown-toggle { width: 100%; text-align: left; padding: 1rem 1.5rem; } 
+    .dropdown:hover .dropdown-menu { display: none; } 
     .dropdown.active .dropdown-menu { display: block; }
-    .dropdown-menu { position: static; box-shadow: none; border: none; padding-left: 2.5rem; background-color: transparent; }
-    .mobile-only { display: flex; }
-    .tool-header { margin-bottom: 2.5rem; }
-    .tool-header h2 { font-size: 2.25rem; }
-    .tool-header p { font-size: 1.1rem; }
-    .welcome-card { padding: 2.5rem 1.5rem; }
-    #tool-search-bar { padding: 16px 20px; font-size: 1rem; }
-    .workspace { width: 90vw; }
+    .dropdown-menu { position: static; box-shadow: none; border: none; padding-left: 2rem; background-color: transparent; } 
+    .mobile-only { display: flex; } 
+
+    /* Cabeçalhos e Títulos Mais Compactos */
+    .tool-header {
+        margin-bottom: 2rem;
+    }
+    .tool-header h2 {
+        font-size: 2rem; /* Fonte do título principal reduzida */
+        line-height: 1.2;
+    }
+    .tool-header p {
+        font-size: 1rem; /* Fonte da descrição reduzida */
+    }
+    
+    /* Card da Home Page mais compacto */
+    .welcome-card {
+        padding: 2.5rem 1.5rem;
+    }
+    .welcome-card h1 {
+        font-size: 2.2rem;
+    }
+    .welcome-card p {
+        font-size: 1.1rem;
+    }
+    #tool-search-bar {
+        padding: 16px 20px;
+        font-size: 1rem;
+    }
+    .popular-tools {
+        margin-top: 2rem;
+        gap: 0.75rem;
+    }
+    .popular-tools a {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+    
+    /* Ajustes finos nos controles das ferramentas */
+    .tool-grid {
+        gap: 2rem; /* Reduz o espaço entre controles e resultados */
+    }
+    .options-grid {
+        grid-template-columns: 1fr; /* Força uma única coluna para as opções da senha */
+    }
+
+    /* Workspace */
+    .workspace {
+        width: 95vw; /* Ocupa mais da tela no mobile */
+        font-size: 15px;
+    }
+    .workspace-header h3 {
+        font-size: 1.25rem;
+    }
+    .workspace-tab-btn {
+        padding: 1rem;
+        font-size: 0.95rem;
+    }
 }
