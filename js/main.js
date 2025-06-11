@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setupTheme();
         setupWorkspaceUI();
         setupNavigation();
+        loadPasswordOptions();
         setupEventListeners();
         loadState();
     }
@@ -39,21 +40,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         document.getElementById('clear-cenario-btn').addEventListener('click', () => {
-            if (Object.keys(state.currentScenario).length > 0 && confirm("Tem certeza que deseja limpar o cenário atual?")) {
-                state.currentScenario = {};
-                saveState();
-                renderAll();
-            }
+            if (Object.keys(state.currentScenario).length > 0 && confirm("Tem certeza que deseja limpar o cenário atual?")) { state.currentScenario = {}; saveState(); renderAll(); }
         });
         document.getElementById('save-cenario-btn').addEventListener('click', () => {
             if (Object.keys(state.currentScenario).length > 0) {
                 const scenarioName = prompt("Digite um nome para este cenário:", "Cenário " + (state.savedScenarios.length + 1));
-                if (scenarioName) {
-                    state.savedScenarios.unshift({ name: scenarioName, data: { ...state.currentScenario } });
-                    state.currentScenario = {};
-                    saveState();
-                    renderAll();
-                }
+                if (scenarioName) { state.savedScenarios.unshift({ name: scenarioName, data: { ...state.currentScenario } }); state.currentScenario = {}; saveState(); renderAll(); }
             } else { alert("O cenário atual está vazio."); }
         });
         document.getElementById('export-cenario-btn').addEventListener('click', () => {
@@ -61,45 +53,31 @@ document.addEventListener('DOMContentLoaded', () => {
             const dataStr = JSON.stringify(state.currentScenario, null, 2);
             const blob = new Blob([dataStr], { type: "application/json" });
             const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `cenario-devtools-${Date.now()}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
+            const a = document.createElement('a'); a.href = url; a.download = `cenario-devtools-${Date.now()}.json`; a.click(); URL.revokeObjectURL(url);
         });
         const importFileInput = document.getElementById('import-file-input');
         document.getElementById('import-cenario-btn').addEventListener('click', () => importFileInput.click());
         importFileInput.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
+            const file = event.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = (e) => {
                 try {
                     const importedScenario = JSON.parse(e.target.result);
-                    if (confirm("Isso substituirá seu cenário atual. Deseja continuar?")) {
-                        state.currentScenario = importedScenario;
-                        saveState();
-                        renderAll();
-                        workspace.classList.add('open');
-                    }
+                    if (confirm("Isso substituirá seu cenário atual. Deseja continuar?")) { state.currentScenario = importedScenario; saveState(); renderAll(); workspace.classList.add('open'); }
                 } catch (error) { alert("Erro ao ler o arquivo. Por favor, verifique se é um arquivo JSON válido."); }
             };
-            reader.readAsText(file);
-            event.target.value = '';
+            reader.readAsText(file); event.target.value = '';
         });
     }
 
     function setupNavigation() {
-        const toolLinks = document.querySelectorAll('[data-tool]');
-        const toolPanes = document.querySelectorAll('.tool-pane');
-        const navMenu = document.getElementById('nav-menu');
-        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const toolLinks = document.querySelectorAll('[data-tool]'); const toolPanes = document.querySelectorAll('.tool-pane');
+        const navMenu = document.getElementById('nav-menu'); const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
         const showTool = (toolId) => {
             toolPanes.forEach(pane => pane.classList.remove('active'));
             const paneToShow = document.getElementById(`${toolId}-pane`);
             if (paneToShow) paneToShow.classList.add('active');
-            navMenu.classList.remove('active');
-            document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+            navMenu.classList.remove('active'); document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
         };
         toolLinks.forEach(link => { link.addEventListener('click', (e) => { e.preventDefault(); showTool(link.dataset.tool); }); });
         mobileMenuToggle.addEventListener('click', (e) => { e.stopPropagation(); navMenu.classList.toggle('active'); });
@@ -108,18 +86,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         document.addEventListener('click', (e) => {
             if (window.innerWidth <= 768 && !navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
-                navMenu.classList.remove('active');
-                document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+                navMenu.classList.remove('active'); document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
             }
         });
+    }
+
+    function savePasswordOptions() {
+        const options = { length: document.getElementById('senha-tamanho').value, useMaiusculas: document.getElementById('senha-maiusculas').checked, useMinusculas: document.getElementById('senha-minusculas').checked, useNumeros: document.getElementById('senha-numeros').checked, useSimbolos: document.getElementById('senha-simbolos').checked };
+        localStorage.setItem('devtools_password_options', JSON.stringify(options));
+        const saveBtn = document.getElementById('save-password-options'); saveBtn.textContent = 'Opções Salvas!';
+        setTimeout(() => { saveBtn.textContent = 'Salvar Opções'; }, 2000);
+    }
+    function loadPasswordOptions() {
+        const savedOptions = localStorage.getItem('devtools_password_options');
+        if (savedOptions) {
+            const options = JSON.parse(savedOptions);
+            document.getElementById('senha-tamanho').value = options.length;
+            document.getElementById('senha-maiusculas').checked = options.useMaiusculas;
+            document.getElementById('senha-minusculas').checked = options.useMinusculas;
+            document.getElementById('senha-numeros').checked = options.useNumeros;
+            document.getElementById('senha-simbolos').checked = options.useSimbolos;
+        }
     }
     
     function saveState() { localStorage.setItem('devtools_state', JSON.stringify(state)); }
     function loadState() {
         const savedState = localStorage.getItem('devtools_state');
-        if (savedState) {
-            try { state = JSON.parse(savedState); if(!state.savedScenarios) state.savedScenarios = []; } catch { state = { currentScenario: {}, history: [], savedScenarios: [] }; }
-        }
+        if (savedState) { try { state = JSON.parse(savedState); if(!state.savedScenarios) state.savedScenarios = []; } catch { state = { currentScenario: {}, history: [], savedScenarios: [] }; } }
         renderAll();
     }
 
@@ -134,10 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderCurrentScenario() {
         const container = document.getElementById('cenario-content');
         container.innerHTML = '';
-        if (Object.keys(state.currentScenario).length === 0) {
-            container.innerHTML = '<p class="empty-state">Gere dados e clique em "Adicionar ao Cenário" para começar.</p>';
-            return;
-        }
+        if (Object.keys(state.currentScenario).length === 0) { container.innerHTML = '<p class="empty-state">Gere dados e clique em "Adicionar ao Cenário" para começar.</p>'; return; }
         for (const [key, data] of Object.entries(state.currentScenario)) {
             const itemDiv = document.createElement('div'); itemDiv.className = 'cenario-item';
             const title = key.charAt(0).toUpperCase() + key.slice(1);
@@ -149,10 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderHistory() {
         const container = document.getElementById('historico-content');
         container.innerHTML = '';
-        if ((!state.history || state.history.length === 0) && (!state.savedScenarios || state.savedScenarios.length === 0)) {
-            container.innerHTML = '<p class="empty-state">Seu histórico e cenários salvos aparecerão aqui.</p>';
-            return;
-        }
+        if ((!state.history || state.history.length === 0) && (!state.savedScenarios || state.savedScenarios.length === 0)) { container.innerHTML = '<p class="empty-state">Seu histórico e cenários salvos aparecerão aqui.</p>'; return; }
         if (state.savedScenarios && state.savedScenarios.length > 0) {
             let savedHtml = `<h4>Cenários Salvos</h4>`;
             state.savedScenarios.forEach((scenario, index) => {
@@ -170,13 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
             container.innerHTML += historyHtml;
         }
     }
-    window.removeScenario = function(index) {
-        if (confirm(`Tem certeza que deseja excluir o cenário "${state.savedScenarios[index].name}"?`)) {
-            state.savedScenarios.splice(index, 1);
-            saveState();
-            renderHistory();
-        }
-    }
+    window.removeScenario = function(index) { if (confirm(`Tem certeza que deseja excluir o cenário "${state.savedScenarios[index].name}"?`)) { state.savedScenarios.splice(index, 1); saveState(); renderHistory(); } }
     function addToHistory(type, data, isScenarioData = false) {
         if(!state.history) state.history = [];
         state.history.unshift({ type, data, isScenarioData, timestamp: new Date() });
@@ -271,6 +252,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.getElementById('gerar-senha').addEventListener('click', () => handleSimpleGeneration('Senha', () => Senha.generate(document.getElementById('senha-tamanho').value, document.getElementById('senha-maiusculas').checked, document.getElementById('senha-minusculas').checked, document.getElementById('senha-numeros').checked, document.getElementById('senha-simbolos').checked), 'resultado-senha'));
+        document.getElementById('save-password-options').addEventListener('click', savePasswordOptions);
+        
         document.getElementById('gerar-uuid').addEventListener('click', () => handleSimpleGeneration('UUID', Uuid.generate, 'resultado-uuid'));
         document.getElementById('gerar-lorem').addEventListener('click', () => handleSimpleGeneration('Lorem Ipsum', () => Lorem.generate(document.getElementById('lorem-paragrafos').value), 'resultado-lorem', true));
         
@@ -283,18 +266,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const convertPdfBtn = document.getElementById('convert-pdf');
         convertPdfBtn.addEventListener('click', () => {
             const fileInput = document.getElementById('image-input');
-            if (fileInput.files.length > 0) {
-                showSpinner(convertPdfBtn);
-                setTimeout(() => ImageToPdf.convert(fileInput.files[0], 'resultado-pdf', () => hideSpinner(convertPdfBtn)), 50);
-            } else { renderResult('resultado-pdf', 'Por favor, selecione um arquivo primeiro.'); }
+            if (fileInput.files.length > 0) { showSpinner(convertPdfBtn); setTimeout(() => ImageToPdf.convert(fileInput.files[0], 'resultado-pdf', () => hideSpinner(convertPdfBtn)), 50); } else { renderResult('resultado-pdf', 'Por favor, selecione um arquivo primeiro.'); }
         });
         const analyzeVideoBtn = document.getElementById('analyze-video');
         analyzeVideoBtn.addEventListener('click', () => {
             const fileInput = document.getElementById('video-input');
-            if (fileInput.files.length > 0) {
-                showSpinner(analyzeVideoBtn);
-                setTimeout(() => VideoInfo.analyze(fileInput.files[0], 'resultado-video-info', () => hideSpinner(analyzeVideoBtn)), 50);
-            } else { renderResult('resultado-video-info', 'Por favor, selecione um arquivo primeiro.'); }
+            if (fileInput.files.length > 0) { showSpinner(analyzeVideoBtn); setTimeout(() => VideoInfo.analyze(fileInput.files[0], 'resultado-video-info', () => hideSpinner(analyzeVideoBtn)), 50); } else { renderResult('resultado-video-info', 'Por favor, selecione um arquivo primeiro.'); }
         });
         
         const jwtInput = document.getElementById('jwt-input');
@@ -302,33 +279,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const token = jwtInput.value; const resultBox = document.getElementById('resultado-jwt');
             if (!token) { renderResult('resultado-jwt', 'Aguardando um token...'); return; }
             const result = JwtDebugger.decode(token);
-            if (result.error) {
-                renderResult('resultado-jwt', result.error); resultBox.querySelector('span').classList.add('jwt-error');
-            } else {
+            if (result.error) { renderResult('resultado-jwt', result.error); resultBox.querySelector('span').classList.add('jwt-error'); } 
+            else {
                 let html = `<div class="jwt-part"><h4 class="jwt-part-title">Header</h4><pre class="jwt-part-content">${JSON.stringify(result.header, null, 2)}</pre></div><div class="jwt-part"><h4 class="jwt-part-title">Payload</h4><pre class="jwt-part-content">${JSON.stringify(result.payload, null, 2)}</pre></div>`;
                 if(result.extra) { html += `<div class="jwt-part"><h4 class="jwt-part-title">Verificação</h4><pre class="jwt-part-content">Expiração: ${result.extra.expiracao}\nStatus: <span class="jwt-status ${result.extra.status.toLowerCase()}">${result.extra.status}</span></pre></div>`; }
                 resultBox.innerHTML = html; addToHistory('JWT Decodificado', token);
             }
         });
 
-        const regexPattern = document.getElementById('regex-pattern');
-        const regexFlags = document.getElementById('regex-flags');
-        const regexTestString = document.getElementById('regex-test-string');
+        const regexPattern = document.getElementById('regex-pattern'), regexFlags = document.getElementById('regex-flags'), regexTestString = document.getElementById('regex-test-string');
         function runRegexTest() {
             const result = RegexTester.test(regexPattern.value, regexFlags.value, regexTestString.value);
-            const highlightBox = document.getElementById('resultado-regex-highlight');
-            const matchesBox = document.getElementById('resultado-regex-matches');
-            if (result.error) {
-                highlightBox.innerHTML = `<span class="jwt-error">${result.error}</span>`;
-                matchesBox.textContent = 'Erro na expressão.';
-            } else {
-                highlightBox.innerHTML = result.highlightedHtml || '<span>Aguardando texto...</span>';
-                matchesBox.textContent = `Correspondências encontradas: ${result.matchCount}\n\n${result.matches.slice(0, 100).join('\n')}`;
-            }
+            const highlightBox = document.getElementById('resultado-regex-highlight'), matchesBox = document.getElementById('resultado-regex-matches');
+            if (result.error) { highlightBox.innerHTML = `<span class="jwt-error">${result.error}</span>`; matchesBox.textContent = 'Erro na expressão.'; } 
+            else { highlightBox.innerHTML = result.highlightedHtml || '<span>Aguardando texto...</span>'; matchesBox.textContent = `Correspondências: ${result.matchCount}\n\n${result.matches.slice(0, 100).join('\n')}`; }
         }
-        regexPattern.addEventListener('input', runRegexTest);
-        regexFlags.addEventListener('input', runRegexTest);
-        regexTestString.addEventListener('input', runRegexTest);
+        regexPattern.addEventListener('input', runRegexTest); regexFlags.addEventListener('input', runRegexTest); regexTestString.addEventListener('input', runRegexTest);
         
         document.getElementById('url-encode-btn').addEventListener('click', () => { const input = document.getElementById('url-encoder-input').value; renderResult('resultado-url-encoder', UrlEncoder.encode(input), true); addToHistory('URL (Codificado)', input); });
         document.getElementById('url-decode-btn').addEventListener('click', () => { const input = document.getElementById('url-encoder-input').value; renderResult('resultado-url-encoder', UrlEncoder.decode(input), true); addToHistory('URL (Decodificado)', input); });
@@ -336,8 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cronInput = document.getElementById('cron-input');
         function runCronParser() {
             const expression = cronInput.value;
-            const descResultBox = document.getElementById('resultado-cron-desc');
-            const nextResultBox = document.getElementById('resultado-cron-next');
+            const descResultBox = document.getElementById('resultado-cron-desc'), nextResultBox = document.getElementById('resultado-cron-next');
             const parsed = CronParser.parse(expression);
             if(parsed.error) {
                 descResultBox.innerHTML = `<span class="jwt-error">${parsed.error}</span>`;
@@ -345,29 +310,104 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 renderResult('resultado-cron-desc', parsed.description);
                 const nextExecutions = CronParser.getNextExecutions(expression);
-                const nextDatesString = nextExecutions.length > 0 ? nextExecutions.map(date => date.toLocaleString('pt-BR')).join('\n') : "Não foi possível calcular as próximas execuções.";
+                const nextDatesString = nextExecutions.length > 0 ? "Próximas 5 execuções:\n" + nextExecutions.map(date => date.toLocaleString('pt-BR')).join('\n') : "Não foi possível calcular as próximas execuções.";
                 renderResult('resultado-cron-next', nextDatesString, true);
-                addToHistory('Expressão Cron', expression);
+                if(expression.trim().split(/\s+/).length === 5) addToHistory('Expressão Cron', expression);
             }
         }
-        cronInput.addEventListener('input', runCronParser);
-        if(cronInput.value) runCronParser();
+        cronInput.addEventListener('input', runCronParser); if(cronInput.value) runCronParser();
+
+        document.getElementById('format-code-btn').addEventListener('click', () => {
+            const language = document.getElementById('code-language-select').value;
+            const code = document.getElementById('code-input').value;
+            showSpinner(document.getElementById('format-code-btn'));
+            setTimeout(() => {
+                const result = CodeFormatter.format(code, language);
+                if (result.error) { renderResult('resultado-code-formatter', result.error); document.querySelector('#resultado-code-formatter span').classList.add('jwt-error'); } 
+                else { renderResult('resultado-code-formatter', result.formattedCode, true); addToHistory(`Código ${language.toUpperCase()} Formatado`, "...", false); }
+                hideSpinner(document.getElementById('format-code-btn'));
+            }, 50);
+        });
+
+        document.getElementById('generate-hash-btn').addEventListener('click', () => {
+            const text = document.getElementById('hash-input').value;
+            const algo = document.getElementById('hash-algorithm-select').value;
+            const hash = HashGenerator.generate(text, algo);
+            renderResult('resultado-hash', hash, true);
+            addToHistory(`Hash ${algo}`, text);
+        });
+
+        const humanDateInput = document.getElementById('human-date-input');
+        const timestampInput = document.getElementById('timestamp-input');
+        const utcResultBox = document.getElementById('resultado-timestamp-utc');
+        humanDateInput.addEventListener('input', () => {
+            const ts = TimestampConverter.toTimestamp(humanDateInput.value);
+            timestampInput.value = ts;
+            if(ts) utcResultBox.textContent = `UTC: ${new Date(ts * 1000).toUTCString()}`;
+        });
+        timestampInput.addEventListener('input', () => {
+            const dateStr = TimestampConverter.fromTimestamp(timestampInput.value);
+            humanDateInput.value = dateStr;
+            if(dateStr) utcResultBox.textContent = `UTC: ${new Date(parseInt(timestampInput.value) * 1000).toUTCString()}`;
+        });
+        document.getElementById('timestamp-now-btn').addEventListener('click', () => {
+            const nowTs = TimestampConverter.now();
+            timestampInput.value = nowTs;
+            timestampInput.dispatchEvent(new Event('input'));
+        });
+
+        const colorPicker = document.getElementById('color-picker-input');
+        const hexInput = document.getElementById('hex-color-input');
+        const rgbInput = document.getElementById('rgb-color-input');
+        const swatchBox = document.getElementById('resultado-color-swatch');
+        function updateColors(source, value) {
+            let r, g, b, hex;
+            if (source === 'picker' || source === 'hex') {
+                hex = value; if(!/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(hex)) return;
+                const rgbArr = ColorConverter.parseRgbString(ColorConverter.hexToRgb(hex));
+                if (!rgbArr) return; [r, g, b] = rgbArr;
+            } else if (source === 'rgb') {
+                const rgbArr = ColorConverter.parseRgbString(value);
+                if (!rgbArr || rgbArr.some(c => c > 255)) return; [r, g, b] = rgbArr;
+                hex = ColorConverter.rgbToHex(r, g, b);
+            } else { return; }
+            if (source !== 'picker') colorPicker.value = hex;
+            if (source !== 'hex') hexInput.value = hex;
+            if (source !== 'rgb') rgbInput.value = `rgb(${r}, ${g}, ${b})`;
+            const hsl = ColorConverter.rgbToHsl(r, g, b);
+            swatchBox.style.backgroundColor = hex;
+            swatchBox.innerHTML = `<div class="color-value">${hex}</div><div class="color-value">rgb(${r}, ${g}, ${b})</div><div class="color-value">${hsl}</div>`;
+        }
+        colorPicker.addEventListener('input', (e) => updateColors('picker', e.target.value));
+        hexInput.addEventListener('input', (e) => updateColors('hex', e.target.value));
+        rgbInput.addEventListener('input', (e) => updateColors('rgb', e.target.value));
+        updateColors('picker', colorPicker.value);
 
         document.getElementById('historico-content').addEventListener('click', (e) => {
             const copyBtn = e.target.closest('[data-history-copy-index]');
             const addBtn = e.target.closest('[data-history-add-index]');
             if (copyBtn) {
-                const index = parseInt(copyBtn.dataset.historyCopyIndex, 10);
-                const item = state.history[index];
+                const item = state.history[parseInt(copyBtn.dataset.historyCopyIndex, 10)];
                 const contentToCopy = typeof item.data === 'object' ? Object.entries(item.data).map(([k,v])=>`${k}: ${v}`).join('\n') : item.data;
                 copyToClipboard(contentToCopy, copyBtn);
             }
             if (addBtn) {
-                const index = parseInt(addBtn.dataset.historyAddIndex, 10);
-                const item = state.history[index];
+                const item = state.history[parseInt(addBtn.dataset.historyAddIndex, 10)];
                 lastGeneratedData[item.type.toLowerCase()] = item.data;
                 addToScenario(item.type.toLowerCase());
             }
+        });
+        
+        document.querySelectorAll('.explanation-toggle').forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
+                e.preventDefault(); 
+                const content = document.getElementById(e.target.dataset.target);
+                if (content) {
+                    e.target.classList.toggle('active');
+                    const isVisible = content.style.maxHeight && content.style.maxHeight !== "0px";
+                    content.style.maxHeight = isVisible ? "0px" : content.scrollHeight + "px";
+                }
+            });
         });
     }
 
