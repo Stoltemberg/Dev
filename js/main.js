@@ -1,29 +1,192 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- LÓGICA DO TEMA ---
-    const themeSwitcher = document.getElementById('theme-switcher');
-    const body = document.body;
-
-    const applyTheme = (theme) => {
-        if (theme === 'light') {
-            body.classList.add('light-mode');
-            themeSwitcher.innerHTML = '🌙';
-        } else {
-            body.classList.remove('light-mode');
-            themeSwitcher.innerHTML = '☀️';
-        }
+    // =================================================================================
+    // ESTADO GLOBAL E INICIALIZAÇÃO
+    // =================================================================================
+    let state = {
+        currentScenario: {},
+        history: [],
+        savedScenarios: []
     };
+    let lastGeneratedData = {};
 
-    const currentTheme = localStorage.getItem('theme') || 'dark';
-    applyTheme(currentTheme);
+    function initialize() {
+        setupTheme();
+        setupWorkspaceUI();
+        setupTabs();
+        setupEventListeners();
+        loadState();
+    }
 
-    themeSwitcher.addEventListener('click', () => {
-        const newTheme = body.classList.contains('light-mode') ? 'dark' : 'light';
-        localStorage.setItem('theme', newTheme);
-        applyTheme(newTheme);
-    });
+    // =================================================================================
+    // LÓGICA DE TEMA
+    // =================================================================================
+    function setupTheme() {
+        const themeSwitcher = document.getElementById('theme-switcher');
+        const body = document.body;
+        const applyTheme = (theme) => {
+            if (theme === 'light') {
+                body.classList.add('light-mode');
+                themeSwitcher.innerHTML = '🌙';
+            } else {
+                body.classList.remove('light-mode');
+                themeSwitcher.innerHTML = '☀️';
+            }
+        };
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        applyTheme(currentTheme);
+        themeSwitcher.addEventListener('click', () => {
+            const newTheme = body.classList.contains('light-mode') ? 'dark' : 'light';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        });
+    }
 
-    // --- FUNÇÕES AUXILIARES ---
-    const copyToClipboard = (str, button) => {
+    // =================================================================================
+    // LÓGICA DO WORKSPACE E HISTÓRICO
+    // =================================================================================
+    function setupWorkspaceUI() {
+        const workspace = document.getElementById('workspace');
+        const openBtn = document.getElementById('workspace-toggle-btn');
+        const closeBtn = document.getElementById('workspace-close-btn');
+        openBtn.addEventListener('click', () => workspace.classList.add('open'));
+        closeBtn.addEventListener('click', () => workspace.classList.remove('open'));
+
+        document.querySelectorAll('.workspace-tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.workspace-tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.workspace-pane').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.target).classList.add('active');
+            });
+        });
+
+        document.getElementById('clear-cenario-btn').addEventListener('click', () => {
+            if (confirm("Tem certeza que deseja limpar o cenário atual?")) {
+                state.currentScenario = {};
+                saveState();
+                renderAll();
+            }
+        });
+
+        document.getElementById('save-cenario-btn').addEventListener('click', () => {
+            if (Object.keys(state.currentScenario).length > 0) {
+                const scenarioName = prompt("Digite um nome para este cenário:", "Cenário " + (state.savedScenarios.length + 1));
+                if (scenarioName) {
+                    state.savedScenarios.unshift({ name: scenarioName, data: { ...state.currentScenario } });
+                    state.currentScenario = {};
+                    saveState();
+                    renderAll();
+                }
+            } else {
+                alert("O cenário atual está vazio.");
+            }
+        });
+    }
+
+    function saveState() {
+        localStorage.setItem('devtools_state', JSON.stringify(state));
+    }
+
+    function loadState() {
+        const savedState = localStorage.getItem('devtools_state');
+        if (savedState) {
+            state = JSON.parse(savedState);
+        }
+        renderAll();
+    }
+
+    function renderAll() {
+        renderCurrentScenario();
+        renderHistory();
+    }
+
+    function renderCurrentScenario() {
+        const container = document.getElementById('cenario-content');
+        container.innerHTML = '';
+        if (Object.keys(state.currentScenario).length === 0) {
+            container.innerHTML = '<p class="empty-state">Gere dados e clique em "Adicionar ao Cenário" para começar.</p>';
+            return;
+        }
+        for (const [key, data] of Object.entries(state.currentScenario)) {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'cenario-item';
+            const title = key.charAt(0).toUpperCase() + key.slice(1);
+            const content = typeof data === 'object' ? Object.entries(data).map(([k, v]) => `${k}: ${v}`).join('\n') : data;
+            itemDiv.innerHTML = `<h4>${title}</h4><pre>${content}</pre>`;
+            container.appendChild(itemDiv);
+        }
+    }
+
+    function renderHistory() {
+        const container = document.getElementById('historico-content');
+        container.innerHTML = '';
+        if (state.history.length === 0 && state.savedScenarios.length === 0) {
+            container.innerHTML = '<p class="empty-state">Seu histórico e cenários salvos aparecerão aqui.</p>';
+            return;
+        }
+
+        if (state.savedScenarios.length > 0) {
+            const savedTitle = document.createElement('h4');
+            savedTitle.textContent = 'Cenários Salvos';
+            container.appendChild(savedTitle);
+            state.savedScenarios.forEach((scenario, index) => {
+                const content = Object.entries(scenario.data).map(([k, v]) => (typeof v === 'object' ? `${k}:\n  ${Object.entries(v).map(([sk,sv])=>`${sk}: ${sv}`).join('\n  ')}` : `${k}: ${v}`)).join('\n');
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'historico-item';
+                itemDiv.innerHTML = `<h4>${scenario.name} <button class="btn-danger" title="Excluir cenário" style="padding: 2px 8px; font-size: 0.8rem;" onclick="removeScenario(${index})">X</button></h4><pre>${content}</pre>`;
+                container.appendChild(itemDiv);
+            });
+        }
+        
+         if (state.history.length > 0) {
+            const historyTitle = document.createElement('h4');
+            historyTitle.style.marginTop = '1.5rem';
+            historyTitle.textContent = 'Últimos Itens Gerados';
+            container.appendChild(historyTitle);
+            state.history.forEach(item => {
+                 const content = typeof item.data === 'object' ? Object.entries(item.data).map(([k,v])=>`${k}: ${v}`).join('\n') : item.data;
+                 const itemDiv = document.createElement('div');
+                 itemDiv.className = 'historico-item';
+                 itemDiv.innerHTML = `<h4>${item.type}</h4><pre>${content}</pre>`;
+                 container.appendChild(itemDiv);
+            });
+         }
+    }
+    
+    function addToHistory(type, data) {
+        state.history.unshift({ type, data, timestamp: new Date() });
+        if (state.history.length > 15) state.history.pop();
+        saveState();
+        renderHistory();
+    }
+    
+    window.removeScenario = function(index) {
+        if (confirm(`Tem certeza que deseja excluir o cenário "${state.savedScenarios[index].name}"?`)) {
+            state.savedScenarios.splice(index, 1);
+            saveState();
+            renderHistory();
+        }
+    }
+
+    function addToScenario(type) {
+        if(lastGeneratedData[type]) {
+            let key = type;
+            // Se já existe uma pessoa no cenário, tentamos associar o novo item a ela
+            if(state.currentScenario.pessoa && (type === 'cnpj' || type === 'cnh' || type === 'cartao')) {
+                 key = `${type} (${state.currentScenario.pessoa['Nome']})`;
+            }
+            state.currentScenario[key] = lastGeneratedData[type];
+            saveState();
+            renderCurrentScenario();
+            workspace.classList.add('open');
+            document.querySelector('.workspace-tab-btn[data-target="workspace-cenario"]').click();
+        }
+    }
+
+    // =================================================================================
+    // FUNÇÕES DE GERAÇÃO E EVENTOS
+    // =================================================================================
+    function copyToClipboard(str, button) {
         navigator.clipboard.writeText(str).then(() => {
             const originalText = button.innerHTML;
             button.innerHTML = '✅';
@@ -33,16 +196,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 button.classList.remove('copied');
             }, 1500);
         });
-    };
+    }
     
-    const renderResult = (elementId, content, isPreformatted = false) => {
+    function renderResult(elementId, content, isPreformatted = false) {
         const resultBox = document.getElementById(elementId);
         resultBox.innerHTML = '';
         const textElement = document.createElement(isPreformatted ? 'pre' : 'span');
         textElement.textContent = content;
-        
         const hasContent = content && !content.toLowerCase().includes("clique em") && !content.toLowerCase().includes("aguardando")  && !content.toLowerCase().includes("selecione um arquivo");
-
         if (hasContent) {
             const copyButton = document.createElement('button');
             copyButton.className = 'copy-btn';
@@ -50,142 +211,95 @@ document.addEventListener('DOMContentLoaded', () => {
             copyButton.onclick = () => copyToClipboard(content, copyButton);
             resultBox.appendChild(copyButton);
         }
-        
         resultBox.appendChild(textElement);
-    };
+    }
 
-    // --- LÓGICA DAS ABAS ---
-    const tabs = document.querySelectorAll('.tab-button');
-    const contents = document.querySelectorAll('.tab-content');
-
-    tabs.forEach(tab => {
-        tab.addEventListener('click', (e) => {
-            e.preventDefault();
-            tabs.forEach(item => item.classList.remove('active'));
-            contents.forEach(content => content.classList.remove('active'));
-            tab.classList.add('active');
-            const target = document.getElementById(tab.dataset.tab);
-            target.classList.add('active');
+    function setupTabs() {
+        const tabs = document.querySelectorAll('.tab-button');
+        const contents = document.querySelectorAll('.tab-content');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                tabs.forEach(item => item.classList.remove('active'));
+                contents.forEach(content => content.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
         });
-    });
+    }
 
-    // --- EVENT LISTENERS DE TODAS AS 13 FERRAMENTAS ---
-
-    document.getElementById('gerar-cpf').addEventListener('click', () => {
-        const comPontos = document.getElementById('cpf-pontuacao').checked;
-        renderResult('resultado-cpf', Cpf.generate(comPontos));
-    });
-
-    document.getElementById('gerar-cnpj').addEventListener('click', () => {
-        const comPontos = document.getElementById('cnpj-pontuacao').checked;
-        const dadosEmpresa = Cnpj.generate(comPontos);
-        const resultadoFormatado = Object.entries(dadosEmpresa).map(([chave, valor]) => `${chave}: ${valor}`).join('\n');
-        renderResult('resultado-cnpj', resultadoFormatado, true);
-    });
+    function handleSimpleGeneration(toolType, generatorFn, resultBoxId, isPreformatted = false) {
+        const data = generatorFn();
+        renderResult(resultBoxId, data, isPreformatted);
+        addToHistory(toolType.charAt(0).toUpperCase() + toolType.slice(1), data);
+    }
     
-    document.getElementById('gerar-cnh').addEventListener('click', () => {
-        const comFormatacao = document.getElementById('cnh-formatacao').checked;
-        const dadosCnh = Cnh.generate(comFormatacao);
-        const resultadoFormatado = Object.entries(dadosCnh).map(([chave, valor]) => `${chave}: ${valor}`).join('\n');
-        renderResult('resultado-cnh', resultadoFormatado, true);
-    });
+    function handleScenarioGeneration(toolType, generatorFn, resultBoxId) {
+        const data = generatorFn();
+        lastGeneratedData[toolType] = data;
+        const content = typeof data === 'object' ? Object.entries(data).map(([k,v])=>`${k}: ${v}`).join('\n') : data;
+        renderResult(resultBoxId, content, true);
+        addToHistory(toolType.charAt(0).toUpperCase() + toolType.slice(1), data);
+        const addButton = document.getElementById(`add-${toolType}-to-cenario`);
+        if(addButton) addButton.style.display = 'block';
+    }
 
-    const idadeCheckbox = document.getElementById('pessoa-idade-especifica-check');
-    const idadeInput = document.getElementById('pessoa-idade');
-    idadeCheckbox.addEventListener('change', () => { idadeInput.disabled = !idadeCheckbox.checked; });
-    document.getElementById('gerar-pessoa').addEventListener('click', () => {
-        let idade;
-        if (idadeCheckbox.checked) {
-            idade = parseInt(idadeInput.value, 10) || 25;
-        } else {
-            idade = Math.floor(Math.random() * (60 - 18 + 1)) + 18;
-        }
-        const pessoaGerada = Pessoa.generate(idade);
-        const resultadoFormatado = Object.entries(pessoaGerada).map(([k, v]) => `${k}: ${v}`).join('\n');
-        renderResult('resultado-pessoa', resultadoFormatado, true);
-    });
-    
-    document.getElementById('gerar-senha').addEventListener('click', () => {
-        const length = document.getElementById('senha-tamanho').value;
-        const useMaiusculas = document.getElementById('senha-maiusculas').checked;
-        const useMinusculas = document.getElementById('senha-minusculas').checked;
-        const useNumeros = document.getElementById('senha-numeros').checked;
-        const useSimbolos = document.getElementById('senha-simbolos').checked;
-        renderResult('resultado-senha', Senha.generate(length, useMaiusculas, useMinusculas, useNumeros, useSimbolos));
-    });
+    function setupEventListeners() {
+        // Ferramentas que podem fazer parte de um cenário
+        document.getElementById('gerar-pessoa').addEventListener('click', () => handleScenarioGeneration('pessoa', () => Pessoa.generate(document.getElementById('pessoa-idade-especifica-check').checked ? parseInt(document.getElementById('pessoa-idade').value, 10) || 25 : Math.floor(Math.random() * (60-18+1))+18), 'resultado-pessoa'));
+        document.getElementById('gerar-cnpj').addEventListener('click', () => handleScenarioGeneration('cnpj', () => Cnpj.generate(document.getElementById('cnpj-pontuacao').checked), 'resultado-cnpj'));
+        document.getElementById('gerar-cnh').addEventListener('click', () => handleScenarioGeneration('cnh', () => Cnh.generate(document.getElementById('cnh-formatacao').checked), 'resultado-cnh'));
+        document.getElementById('gerar-cartao').addEventListener('click', () => handleScenarioGeneration('cartao', () => Cartao.generate(document.getElementById('cartao-bandeira').value), 'resultado-cartao'));
 
-    document.getElementById('gerar-cartao').addEventListener('click', () => {
-        const bandeira = document.getElementById('cartao-bandeira').value;
-        const dadosCartao = Cartao.generate(bandeira);
-        const resultadoFormatado = `Número: ${dadosCartao.numero}\nNome do Titular: ${dadosCartao.nome}\nValidade: ${dadosCartao.validade}\nCVV: ${dadosCartao.cvv}`;
-        renderResult('resultado-cartao', resultadoFormatado, true);
-    });
+        document.getElementById('add-pessoa-to-cenario').addEventListener('click', () => addToScenario('pessoa'));
+        document.getElementById('add-cnpj-to-cenario').addEventListener('click', () => addToScenario('cnpj'));
+        document.getElementById('add-cnh-to-cenario').addEventListener('click', () => addToScenario('cnh'));
+        document.getElementById('add-cartao-to-cenario').addEventListener('click', () => addToScenario('cartao'));
 
-    document.getElementById('gerar-lorem').addEventListener('click', () => {
-        const count = document.getElementById('lorem-paragrafos').value;
-        renderResult('resultado-lorem', Lorem.generate(count), true);
-    });
-    
-    document.getElementById('gerar-qrcode').addEventListener('click', () => {
-        const text = document.getElementById('qrcode-texto').value;
-        QrCodeGenerator.generate(text, 'resultado-qrcode');
-    });
+        // Ferramentas simples
+        document.getElementById('gerar-cpf').addEventListener('click', () => handleSimpleGeneration('CPF', () => Cpf.generate(document.getElementById('cpf-pontuacao').checked), 'resultado-cpf'));
+        document.getElementById('gerar-senha').addEventListener('click', () => handleSimpleGeneration('Senha', () => Senha.generate(document.getElementById('senha-tamanho').value, document.getElementById('senha-maiusculas').checked, document.getElementById('senha-minusculas').checked, document.getElementById('senha-numeros').checked, document.getElementById('senha-simbolos').checked), 'resultado-senha'));
+        document.getElementById('gerar-uuid').addEventListener('click', () => handleSimpleGeneration('UUID', Uuid.generate, 'resultado-uuid'));
+        document.getElementById('gerar-lorem').addEventListener('click', () => handleSimpleGeneration('Lorem Ipsum', () => Lorem.generate(document.getElementById('lorem-paragrafos').value), 'resultado-lorem', true));
 
-    document.getElementById('base64-codificar').addEventListener('click', () => {
-        const input = document.getElementById('base64-input').value;
-        renderResult('resultado-base64', Base64.encode(input), true);
-    });
-    document.getElementById('base64-decodificar').addEventListener('click', () => {
-        const input = document.getElementById('base64-input').value;
-        renderResult('resultado-base64', Base64.decode(input), true);
-    });
-    
-    const contadorInput = document.getElementById('contador-input');
-    const resultadoContador = document.querySelector('#resultado-contador span');
-    contadorInput.addEventListener('input', () => {
-        const stats = Contador.count(contadorInput.value);
-        resultadoContador.textContent = `Caracteres: ${stats.caracteres} | Palavras: ${stats.palavras} | Linhas: ${stats.linhas}`;
-    });
+        // Ferramentas interativas
+        document.getElementById('gerar-qrcode').addEventListener('click', () => QrCodeGenerator.generate(document.getElementById('qrcode-texto').value, 'resultado-qrcode'));
+        document.getElementById('base64-codificar').addEventListener('click', () => renderResult('resultado-base64', Base64.encode(document.getElementById('base64-input').value), true));
+        document.getElementById('base64-decodificar').addEventListener('click', () => renderResult('resultado-base64', Base64.decode(document.getElementById('base64-input').value), true));
+        
+        const contadorInput = document.getElementById('contador-input');
+        contadorInput.addEventListener('input', () => {
+            const stats = Contador.count(contadorInput.value);
+            document.querySelector('#resultado-contador span').textContent = `Caracteres: ${stats.caracteres} | Palavras: ${stats.palavras} | Linhas: ${stats.linhas}`;
+        });
 
-    document.getElementById('convert-pdf').addEventListener('click', () => {
-        const fileInput = document.getElementById('image-input');
-        if (fileInput.files.length > 0) {
-            ImageToPdf.convert(fileInput.files[0], 'resultado-pdf');
-        } else {
-            renderResult('resultado-pdf', 'Por favor, selecione um arquivo primeiro.');
-        }
-    });
+        // Ferramentas de arquivo
+        document.getElementById('convert-pdf').addEventListener('click', () => {
+            const fileInput = document.getElementById('image-input');
+            if (fileInput.files.length > 0) ImageToPdf.convert(fileInput.files[0], 'resultado-pdf');
+            else renderResult('resultado-pdf', 'Por favor, selecione um arquivo primeiro.');
+        });
 
-    document.getElementById('analyze-video').addEventListener('click', () => {
-        const fileInput = document.getElementById('video-input');
-        if (fileInput.files.length > 0) {
-            VideoInfo.analyze(fileInput.files[0], 'resultado-video-info');
-        } else {
-            renderResult('resultado-video-info', 'Por favor, selecione um arquivo primeiro.');
-        }
-    });
+        document.getElementById('analyze-video').addEventListener('click', () => {
+            const fileInput = document.getElementById('video-input');
+            if (fileInput.files.length > 0) VideoInfo.analyze(fileInput.files[0], 'resultado-video-info');
+            else renderResult('resultado-video-info', 'Por favor, selecione um arquivo primeiro.');
+        });
 
-    document.getElementById('gerar-uuid').addEventListener('click', () => {
-        renderResult('resultado-uuid', Uuid.generate());
-    });
-    
-    // --- LÓGICA PARA AS EXPLICAÇÕES "COMO FUNCIONA" ---
-    document.querySelectorAll('.explanation-toggle').forEach(toggle => {
-        toggle.addEventListener('click', (e) => {
-            e.preventDefault(); 
-            const targetId = e.target.dataset.target;
-            const content = document.getElementById(targetId);
-            
-            if (content) {
-                e.target.classList.toggle('active');
-                content.classList.toggle('visible');
-
-                if (content.classList.contains('visible')) {
-                    content.style.maxHeight = content.scrollHeight + "px";
-                } else {
-                    content.style.maxHeight = "0px";
+        // Explicações
+        document.querySelectorAll('.explanation-toggle').forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
+                e.preventDefault(); 
+                const content = document.getElementById(e.target.dataset.target);
+                if (content) {
+                    e.target.classList.toggle('active');
+                    const isVisible = content.style.maxHeight && content.style.maxHeight !== "0px";
+                    content.style.maxHeight = isVisible ? "0px" : content.scrollHeight + "px";
                 }
-            }
+            });
         });
-    });
+    }
+
+    // --- INICIA A APLICAÇÃO ---
+    initialize();
 });
