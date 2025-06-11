@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DevTools: Workspace Interativo e Geradores de Dados</title>
-    <meta name="description" content="Eleve seus testes com nosso Workspace. Gere e gerencie cenários completos com CPF, CNPJ, CNH e mais. Uma plataforma indispensável para desenvolvedores.">
+    <meta name="description" content="Eleve seus testes com nosso Workspace. Gere, salve, exporte e importe cenários completos com CPF, CNPJ, CNH e mais. Uma plataforma indispensável para desenvolvedores.">
     <meta name="keywords" content="gerador de cnh, gerador de cpf, gerador de cnpj, gerador de senha, gerador de cartão de crédito, devtools, ferramentas para desenvolvedores, online, gratuito, uuid, lorem ipsum, qrcode">
     <link rel="canonical" href="https://www.seusite.com.br/">
     <meta property="og:title" content="DevTools: Workspace, Gerador de CPF, CNPJ, CNH e Ferramentas Online">
@@ -21,8 +21,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.js"></script>
 </head>
 <body>
     <button id="workspace-toggle-btn" class="workspace-toggle-btn">Área de Trabalho</button>
@@ -40,9 +38,12 @@
             <div id="workspace-cenario" class="workspace-pane active">
                 <div id="cenario-content" class="cenario-content-area"></div>
                 <div class="cenario-actions">
-                    <button id="save-cenario-btn" class="btn-secondary">Salvar Cenário</button>
+                    <button id="import-cenario-btn" class="btn-secondary">Importar</button>
+                    <button id="export-cenario-btn" class="btn-secondary">Exportar</button>
+                    <button id="save-cenario-btn" class="btn-secondary">Salvar</button>
                     <button id="clear-cenario-btn" class="btn-danger">Limpar</button>
                 </div>
+                <input type="file" id="import-file-input" accept=".json" style="display: none;">
             </div>
             <div id="workspace-historico" class="workspace-pane">
                 <div id="historico-content" class="historico-content-area"></div>
@@ -79,7 +80,7 @@
                 <p class="description">Gere números de CPF válidos para testes de software.</p>
                 <div class="options"><label><input type="checkbox" id="cpf-pontuacao" checked> Usar pontuação</label></div>
                 <button id="gerar-cpf" class="btn-generate">Gerar CPF</button>
-                <div class="result-box" id="resultado-cpf"><span>...</span></div>
+                <div class="result-box" id="resultado-cpf"><span>Clique em "Gerar".</span></div>
                 <div class="explanation-container"><a href="#" class="explanation-toggle" data-target="cpf-explanation">Como funciona?</a><div id="cpf-explanation" class="explanation-content"><h4>Por Dentro do Gerador de CPF</h4><p>Um CPF válido não é apenas um número aleatório. Ele é composto por 9 dígitos base + 2 dígitos verificadores (DV). Nosso gerador cria os 9 dígitos base e, em seguida, calcula os DVs usando o algoritmo <strong>Módulo 11</strong>.</p><ol><li><strong>Cálculo do 1º DV:</strong> Multiplicamos os 9 dígitos por uma sequência de pesos (10, 9, 8, ..., 2), somamos tudo e calculamos o resto da divisão por 11. Se o resto for 0 ou 1, o DV é 0. Caso contrário, o DV é 11 menos o resto.</li><li><strong>Cálculo do 2º DV:</strong> Repetimos o processo, mas desta vez usando os 9 dígitos base mais o 1º DV já calculado, e os pesos vão de 11 a 2.</li></ol></div></div>
             </div>
 
@@ -89,8 +90,8 @@
                 <div class="options"><label><input type="checkbox" id="cnpj-pontuacao" checked> Usar pontuação</label></div>
                 <button id="gerar-cnpj" class="btn-generate">Gerar Empresa</button>
                 <button id="add-cnpj-to-cenario" class="btn-add-to-cenario" style="display: none;">Adicionar ao Cenário</button>
-                <div class="result-box wide" id="resultado-cnpj"><span>...</span></div>
-                <div class="explanation-container"><a href="#" class="explanation-toggle" data-target="cnpj-explanation">Como funciona?</a><div id="cnpj-explanation" class="explanation-content"><h4>Por Dentro do Gerador de CNPJ</h4><p>O CNPJ (12 dígitos base + 2 DVs) também usa o algoritmo <strong>Módulo 11</strong>, mas com uma sequência de pesos diferente.</p><ol><li><strong>Cálculo do 1º DV:</strong> Multiplicamos os 12 dígitos base por uma sequência de pesos (5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2).</li><li><strong>Cálculo do 2º DV:</strong> O processo é repetido com os 12 dígitos base mais o 1º DV, usando uma nova sequência de pesos (6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2).</li></ol></div></div>
+                <div class="result-box wide" id="resultado-cnpj"><span>Clique em "Gerar".</span></div>
+                 <div class="explanation-container"><a href="#" class="explanation-toggle" data-target="cnpj-explanation">Como funciona?</a><div id="cnpj-explanation" class="explanation-content"><h4>Por Dentro do Gerador de CNPJ</h4><p>O CNPJ (12 dígitos base + 2 DVs) também usa o algoritmo <strong>Módulo 11</strong>, mas com uma sequência de pesos diferente.</p><ol><li><strong>Cálculo do 1º DV:</strong> Multiplicamos os 12 dígitos base por uma sequência de pesos (5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2).</li><li><strong>Cálculo do 2º DV:</strong> O processo é repetido com os 12 dígitos base mais o 1º DV, usando uma nova sequência de pesos (6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2).</li></ol></div></div>
             </div>
             
             <div id="cnh" class="tab-content">
@@ -99,7 +100,7 @@
                 <div class="options"><label><input type="checkbox" id="cnh-formatacao" checked> Formatar número</label></div>
                 <button id="gerar-cnh" class="btn-generate">Gerar CNH</button>
                 <button id="add-cnh-to-cenario" class="btn-add-to-cenario" style="display: none;">Adicionar ao Cenário</button>
-                <div class="result-box wide" id="resultado-cnh"><span>...</span></div>
+                <div class="result-box wide" id="resultado-cnh"><span>Clique em "Gerar".</span></div>
             </div>
 
             <div id="pessoa" class="tab-content">
@@ -108,7 +109,7 @@
                 <div class="options"><label><input type="checkbox" id="pessoa-idade-especifica-check"> Idade específica:</label><input type="number" id="pessoa-idade" min="1" max="120" value="25" disabled></div>
                 <button id="gerar-pessoa" class="btn-generate">Gerar Pessoa</button>
                 <button id="add-pessoa-to-cenario" class="btn-add-to-cenario" style="display: none;">Adicionar ao Cenário</button>
-                <div class="result-box wide" id="resultado-pessoa"><span>...</span></div>
+                <div class="result-box wide" id="resultado-pessoa"><span>Clique em "Gerar".</span></div>
             </div>
             
             <div id="senha" class="tab-content">
@@ -116,7 +117,7 @@
                 <p class="description">Crie senhas fortes e personalizadas.</p>
                 <div class="options-grid"><label>Tamanho: <input type="number" id="senha-tamanho" value="16" min="4" max="128"></label><label><input type="checkbox" id="senha-maiusculas" checked> Maiúsculas (ABC)</label><label><input type="checkbox" id="senha-minusculas" checked> Minúsculas (abc)</label><label><input type="checkbox" id="senha-numeros" checked> Números (123)</label><label><input type="checkbox" id="senha-simbolos" checked> Símbolos (!@#)</label></div>
                 <button id="gerar-senha" class="btn-generate">Gerar Senha</button>
-                <div class="result-box" id="resultado-senha"><span>...</span></div>
+                <div class="result-box" id="resultado-senha"><span>Clique em "Gerar".</span></div>
             </div>
 
             <div id="cartao" class="tab-content">
@@ -126,7 +127,7 @@
                 <p class="warning">Atenção: Use estes números apenas para testes.</p>
                 <button id="gerar-cartao" class="btn-generate">Gerar Cartão</button>
                 <button id="add-cartao-to-cenario" class="btn-add-to-cenario" style="display: none;">Adicionar ao Cenário</button>
-                <div class="result-box wide" id="resultado-cartao"><span>...</span></div>
+                <div class="result-box wide" id="resultado-cartao"><span>Clique em "Gerar".</span></div>
                 <div class="explanation-container"><a href="#" class="explanation-toggle" data-target="cartao-explanation">Como funciona?</a><div id="cartao-explanation" class="explanation-content"><h4>Por Dentro do Gerador de Cartão</h4><p>Cartões de crédito válidos seguem o <strong>Algoritmo de Luhn (Módulo 10)</strong>. É um sistema de verificação diferente do CPF/CNPJ.</p><ol><li><strong>Prefixo (BIN):</strong> Os primeiros dígitos identificam a bandeira (ex: 4 para Visa, 51-55 para Mastercard).</li><li><strong>Dígito Verificador:</strong> O algoritmo percorre o número, dobrando valores e somando dígitos para validar o número final, garantindo que seja um múltiplo de 10.</li></ol></div></div>
             </div>
 
@@ -135,7 +136,7 @@
                 <p class="description">Gere parágrafos de texto para preenchimento de layouts.</p>
                 <div class="options"><label>Parágrafos: <input type="number" id="lorem-paragrafos" value="3" min="1" max="50"></label></div>
                 <button id="gerar-lorem" class="btn-generate">Gerar Texto</button>
-                <div class="result-box wide" id="resultado-lorem"><span>...</span></div>
+                <div class="result-box wide" id="resultado-lorem"><span>Clique em "Gerar".</span></div>
             </div>
             
             <div id="qrcode" class="tab-content">
@@ -166,7 +167,7 @@
                 <p class="description">Selecione uma imagem (JPG, PNG) para convertê-la em um PDF.</p>
                 <div class="options"><input type="file" id="image-input" accept="image/png, image/jpeg"></div>
                 <button id="convert-pdf" class="btn-generate">Converter para PDF</button>
-                <div class="result-box" id="resultado-pdf"><span>...</span></div>
+                <div class="result-box" id="resultado-pdf"><span>Aguardando arquivo...</span></div>
             </div>
 
             <div id="video-info" class="tab-content">
@@ -174,14 +175,14 @@
                 <p class="description">Veja informações como resolução e duração de um vídeo.</p>
                 <div class="options"><input type="file" id="video-input" accept="video/mp4, video/webm, video/ogg"></div>
                 <button id="analyze-video" class="btn-generate">Analisar Vídeo</button>
-                <div class="result-box wide" id="resultado-video-info"><span>...</span></div>
+                <div class="result-box wide" id="resultado-video-info"><span>Aguardando arquivo...</span></div>
             </div>
 
              <div id="uuid" class="tab-content">
                 <h2>Gerador de UUID (v4)</h2>
                 <p class="description">Gere um Identificador Único Universal (UUID) v4.</p>
                 <button id="gerar-uuid" class="btn-generate">Gerar UUID</button>
-                <div class="result-box" id="resultado-uuid"><span>...</span></div>
+                <div class="result-box" id="resultado-uuid"><span>Clique em "Gerar".</span></div>
             </div>
         </main>
 
@@ -190,6 +191,8 @@
         </footer>
     </div>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.js"></script>
     <script src="js/tools/cpf.js"></script>
     <script src="js/tools/cnpj.js"></script>
     <script src="js/tools/cnh.js"></script>

@@ -69,7 +69,12 @@ footer { text-align: center; margin-top: 3rem; color: var(--on-surface-secondary
 .cenario-item, .historico-item { background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
 .cenario-item h4, .historico-item h4 { color: var(--secondary-color); margin-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; font-size: 1rem; display: flex; justify-content: space-between; align-items: center; }
 .cenario-item pre, .historico-item pre { white-space: pre-wrap; word-wrap: break-word; font-size: 0.9rem; color: var(--on-surface-color); }
-.cenario-actions { display: flex; gap: 1rem; margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem; }
+.cenario-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem; }
 .btn-danger { background-color: var(--danger-color); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; flex-grow: 1; }
 .btn-add-to-cenario { width: 100%; padding: 10px; margin-top: -1rem; margin-bottom: 1.5rem; background-color: var(--secondary-color); color: var(--bg-color); border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: background-color 0.2s; }
 .btn-add-to-cenario:hover { background-color: #02b3a3; }
+.spinner { width: 20px; height: 20px; border: 3px solid rgba(255, 255, 255, 0.3); border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; }
+body.light-mode .spinner { border-color: rgba(0, 0, 0, 0.2); border-top-color: var(--on-surface-color); }
+.btn-loading { position: relative; cursor: wait; color: transparent !important; }
+.btn-loading .spinner { position: absolute; top: 50%; left: 50%; margin-top: -10px; margin-left: -10px; }
+@keyframes spin { to { transform: rotate(360deg); } }

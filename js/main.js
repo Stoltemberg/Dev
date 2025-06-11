@@ -1,12 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // =================================================================================
-    // ESTADO GLOBAL E INICIALIZAÇÃO
-    // =================================================================================
-    let state = {
-        currentScenario: {},
-        history: [],
-        savedScenarios: []
-    };
+    let state = { currentScenario: {}, history: [], savedScenarios: [] };
     let lastGeneratedData = {};
 
     function initialize() {
@@ -17,20 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
         loadState();
     }
 
-    // =================================================================================
-    // LÓGICA DE TEMA
-    // =================================================================================
     function setupTheme() {
         const themeSwitcher = document.getElementById('theme-switcher');
         const body = document.body;
         const applyTheme = (theme) => {
-            if (theme === 'light') {
-                body.classList.add('light-mode');
-                themeSwitcher.innerHTML = '🌙';
-            } else {
-                body.classList.remove('light-mode');
-                themeSwitcher.innerHTML = '☀️';
-            }
+            body.classList.toggle('light-mode', theme === 'light');
+            themeSwitcher.innerHTML = theme === 'light' ? '🌙' : '☀️';
         };
         const currentTheme = localStorage.getItem('theme') || 'dark';
         applyTheme(currentTheme);
@@ -41,20 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // =================================================================================
-    // LÓGICA DO WORKSPACE E HISTÓRICO
-    // =================================================================================
     function setupWorkspaceUI() {
         const workspace = document.getElementById('workspace');
-        const openBtn = document.getElementById('workspace-toggle-btn');
-        const closeBtn = document.getElementById('workspace-close-btn');
-        openBtn.addEventListener('click', () => workspace.classList.add('open'));
-        closeBtn.addEventListener('click', () => workspace.classList.remove('open'));
+        document.getElementById('workspace-toggle-btn').addEventListener('click', () => workspace.classList.add('open'));
+        document.getElementById('workspace-close-btn').addEventListener('click', () => workspace.classList.remove('open'));
 
         document.querySelectorAll('.workspace-tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.workspace-tab-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.workspace-pane').forEach(p => p.classList.remove('active'));
+                document.querySelectorAll('.workspace-tab-btn, .workspace-pane').forEach(el => el.classList.remove('active'));
                 btn.classList.add('active');
                 document.getElementById(btn.dataset.target).classList.add('active');
             });
@@ -77,29 +56,55 @@ document.addEventListener('DOMContentLoaded', () => {
                     saveState();
                     renderAll();
                 }
-            } else {
-                alert("O cenário atual está vazio.");
+            } else { alert("O cenário atual está vazio."); }
+        });
+
+        document.getElementById('export-cenario-btn').addEventListener('click', () => {
+            if (Object.keys(state.currentScenario).length === 0) {
+                alert("O cenário atual está vazio. Adicione itens antes de exportar.");
+                return;
             }
+            const dataStr = JSON.stringify(state.currentScenario, null, 2);
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `cenario-devtools-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        const importFileInput = document.getElementById('import-file-input');
+        document.getElementById('import-cenario-btn').addEventListener('click', () => importFileInput.click());
+        importFileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const importedScenario = JSON.parse(e.target.result);
+                    if (confirm("Isso substituirá seu cenário atual. Deseja continuar?")) {
+                        state.currentScenario = importedScenario;
+                        saveState();
+                        renderAll();
+                        document.getElementById('workspace').classList.add('open');
+                    }
+                } catch (error) { alert("Erro ao ler o arquivo. Por favor, verifique se é um arquivo JSON válido."); }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
         });
     }
 
-    function saveState() {
-        localStorage.setItem('devtools_state', JSON.stringify(state));
-    }
-
+    function saveState() { localStorage.setItem('devtools_state', JSON.stringify(state)); }
     function loadState() {
         const savedState = localStorage.getItem('devtools_state');
-        if (savedState) {
-            state = JSON.parse(savedState);
-        }
+        if (savedState) state = JSON.parse(savedState);
         renderAll();
     }
 
-    function renderAll() {
-        renderCurrentScenario();
-        renderHistory();
-    }
-
+    function renderAll() { renderCurrentScenario(); renderHistory(); }
+    
     function renderCurrentScenario() {
         const container = document.getElementById('cenario-content');
         container.innerHTML = '';
@@ -124,40 +129,20 @@ document.addEventListener('DOMContentLoaded', () => {
             container.innerHTML = '<p class="empty-state">Seu histórico e cenários salvos aparecerão aqui.</p>';
             return;
         }
-
         if (state.savedScenarios.length > 0) {
-            const savedTitle = document.createElement('h4');
-            savedTitle.textContent = 'Cenários Salvos';
-            container.appendChild(savedTitle);
+            container.innerHTML += `<h4>Cenários Salvos</h4>`;
             state.savedScenarios.forEach((scenario, index) => {
                 const content = Object.entries(scenario.data).map(([k, v]) => (typeof v === 'object' ? `${k}:\n  ${Object.entries(v).map(([sk,sv])=>`${sk}: ${sv}`).join('\n  ')}` : `${k}: ${v}`)).join('\n');
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'historico-item';
-                itemDiv.innerHTML = `<h4>${scenario.name} <button class="btn-danger" title="Excluir cenário" style="padding: 2px 8px; font-size: 0.8rem;" onclick="removeScenario(${index})">X</button></h4><pre>${content}</pre>`;
-                container.appendChild(itemDiv);
+                container.innerHTML += `<div class="historico-item"><h4>${scenario.name} <button class="btn-danger" title="Excluir cenário" style="padding: 2px 8px; font-size: 0.8rem;" onclick="removeScenario(${index})">X</button></h4><pre>${content}</pre></div>`;
             });
         }
-        
-         if (state.history.length > 0) {
-            const historyTitle = document.createElement('h4');
-            historyTitle.style.marginTop = '1.5rem';
-            historyTitle.textContent = 'Últimos Itens Gerados';
-            container.appendChild(historyTitle);
+        if (state.history.length > 0) {
+            container.innerHTML += `<h4 style="margin-top: 1.5rem;">Últimos Itens Gerados</h4>`;
             state.history.forEach(item => {
-                 const content = typeof item.data === 'object' ? Object.entries(item.data).map(([k,v])=>`${k}: ${v}`).join('\n') : item.data;
-                 const itemDiv = document.createElement('div');
-                 itemDiv.className = 'historico-item';
-                 itemDiv.innerHTML = `<h4>${item.type}</h4><pre>${content}</pre>`;
-                 container.appendChild(itemDiv);
+                const content = typeof item.data === 'object' ? Object.entries(item.data).map(([k,v])=>`${k}: ${v}`).join('\n') : item.data;
+                container.innerHTML += `<div class="historico-item"><h4>${item.type}</h4><pre>${content}</pre></div>`;
             });
-         }
-    }
-    
-    function addToHistory(type, data) {
-        state.history.unshift({ type, data, timestamp: new Date() });
-        if (state.history.length > 15) state.history.pop();
-        saveState();
-        renderHistory();
+        }
     }
     
     window.removeScenario = function(index) {
@@ -167,25 +152,31 @@ document.addEventListener('DOMContentLoaded', () => {
             renderHistory();
         }
     }
-
+    
+    function addToHistory(type, data) {
+        state.history.unshift({ type, data });
+        if (state.history.length > 15) state.history.pop();
+        saveState();
+        renderHistory();
+    }
+    
     function addToScenario(type) {
-        if(lastGeneratedData[type]) {
+        if (lastGeneratedData[type]) {
             let key = type;
-            // Se já existe uma pessoa no cenário, tentamos associar o novo item a ela
-            if(state.currentScenario.pessoa && (type === 'cnpj' || type === 'cnh' || type === 'cartao')) {
-                 key = `${type} (${state.currentScenario.pessoa['Nome']})`;
+            if (state.currentScenario.pessoa && ['cnpj', 'cnh', 'cartao'].includes(type)) {
+                 const nome = state.currentScenario.pessoa.Nome.split(' ')[0];
+                 key = `${type.charAt(0).toUpperCase() + type.slice(1)} de ${nome}`;
             }
             state.currentScenario[key] = lastGeneratedData[type];
             saveState();
             renderCurrentScenario();
-            workspace.classList.add('open');
+            document.getElementById('workspace').classList.add('open');
             document.querySelector('.workspace-tab-btn[data-target="workspace-cenario"]').click();
+        } else {
+            alert("Gere um dado primeiro antes de adicionar ao cenário.");
         }
     }
 
-    // =================================================================================
-    // FUNÇÕES DE GERAÇÃO E EVENTOS
-    // =================================================================================
     function copyToClipboard(str, button) {
         navigator.clipboard.writeText(str).then(() => {
             const originalText = button.innerHTML;
@@ -197,21 +188,34 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 1500);
         });
     }
-    
+
     function renderResult(elementId, content, isPreformatted = false) {
         const resultBox = document.getElementById(elementId);
         resultBox.innerHTML = '';
         const textElement = document.createElement(isPreformatted ? 'pre' : 'span');
         textElement.textContent = content;
-        const hasContent = content && !content.toLowerCase().includes("clique em") && !content.toLowerCase().includes("aguardando")  && !content.toLowerCase().includes("selecione um arquivo");
+        const hasContent = content && !String(content).toLowerCase().includes("clique em") && !String(content).toLowerCase().includes("aguardando") && !String(content).toLowerCase().includes("selecione");
         if (hasContent) {
             const copyButton = document.createElement('button');
             copyButton.className = 'copy-btn';
             copyButton.innerHTML = '📋';
-            copyButton.onclick = () => copyToClipboard(content, copyButton);
+            copyButton.onclick = () => copyToClipboard(content);
             resultBox.appendChild(copyButton);
         }
         resultBox.appendChild(textElement);
+    }
+    
+    function showSpinner(button) {
+        button.disabled = true;
+        button.dataset.originalText = button.innerHTML;
+        button.innerHTML = '<div class="spinner"></div>';
+        button.classList.add('btn-loading');
+    }
+
+    function hideSpinner(button) {
+        button.disabled = false;
+        button.innerHTML = button.dataset.originalText || 'Gerar';
+        button.classList.remove('btn-loading');
     }
 
     function setupTabs() {
@@ -231,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleSimpleGeneration(toolType, generatorFn, resultBoxId, isPreformatted = false) {
         const data = generatorFn();
         renderResult(resultBoxId, data, isPreformatted);
-        addToHistory(toolType.charAt(0).toUpperCase() + toolType.slice(1), data);
+        addToHistory(toolType, data);
     }
     
     function handleScenarioGeneration(toolType, generatorFn, resultBoxId) {
@@ -240,13 +244,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const content = typeof data === 'object' ? Object.entries(data).map(([k,v])=>`${k}: ${v}`).join('\n') : data;
         renderResult(resultBoxId, content, true);
         addToHistory(toolType.charAt(0).toUpperCase() + toolType.slice(1), data);
-        const addButton = document.getElementById(`add-${toolType}-to-cenario`);
-        if(addButton) addButton.style.display = 'block';
+        document.getElementById(`add-${toolType}-to-cenario`).style.display = 'block';
     }
 
     function setupEventListeners() {
-        // Ferramentas que podem fazer parte de um cenário
-        document.getElementById('gerar-pessoa').addEventListener('click', () => handleScenarioGeneration('pessoa', () => Pessoa.generate(document.getElementById('pessoa-idade-especifica-check').checked ? parseInt(document.getElementById('pessoa-idade').value, 10) || 25 : Math.floor(Math.random() * (60-18+1))+18), 'resultado-pessoa'));
+        // Cenário
+        document.getElementById('gerar-pessoa').addEventListener('click', () => handleScenarioGeneration('pessoa', () => Pessoa.generate(document.getElementById('pessoa-idade-especifica-check').checked ? parseInt(document.getElementById('pessoa-idade').value, 10) || 25 : Math.floor(Math.random()*(60-18+1))+18), 'resultado-pessoa'));
         document.getElementById('gerar-cnpj').addEventListener('click', () => handleScenarioGeneration('cnpj', () => Cnpj.generate(document.getElementById('cnpj-pontuacao').checked), 'resultado-cnpj'));
         document.getElementById('gerar-cnh').addEventListener('click', () => handleScenarioGeneration('cnh', () => Cnh.generate(document.getElementById('cnh-formatacao').checked), 'resultado-cnh'));
         document.getElementById('gerar-cartao').addEventListener('click', () => handleScenarioGeneration('cartao', () => Cartao.generate(document.getElementById('cartao-bandeira').value), 'resultado-cartao'));
@@ -256,34 +259,38 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('add-cnh-to-cenario').addEventListener('click', () => addToScenario('cnh'));
         document.getElementById('add-cartao-to-cenario').addEventListener('click', () => addToScenario('cartao'));
 
-        // Ferramentas simples
+        // Simples
         document.getElementById('gerar-cpf').addEventListener('click', () => handleSimpleGeneration('CPF', () => Cpf.generate(document.getElementById('cpf-pontuacao').checked), 'resultado-cpf'));
         document.getElementById('gerar-senha').addEventListener('click', () => handleSimpleGeneration('Senha', () => Senha.generate(document.getElementById('senha-tamanho').value, document.getElementById('senha-maiusculas').checked, document.getElementById('senha-minusculas').checked, document.getElementById('senha-numeros').checked, document.getElementById('senha-simbolos').checked), 'resultado-senha'));
         document.getElementById('gerar-uuid').addEventListener('click', () => handleSimpleGeneration('UUID', Uuid.generate, 'resultado-uuid'));
         document.getElementById('gerar-lorem').addEventListener('click', () => handleSimpleGeneration('Lorem Ipsum', () => Lorem.generate(document.getElementById('lorem-paragrafos').value), 'resultado-lorem', true));
 
-        // Ferramentas interativas
+        // Interativos
         document.getElementById('gerar-qrcode').addEventListener('click', () => QrCodeGenerator.generate(document.getElementById('qrcode-texto').value, 'resultado-qrcode'));
         document.getElementById('base64-codificar').addEventListener('click', () => renderResult('resultado-base64', Base64.encode(document.getElementById('base64-input').value), true));
         document.getElementById('base64-decodificar').addEventListener('click', () => renderResult('resultado-base64', Base64.decode(document.getElementById('base64-input').value), true));
         
-        const contadorInput = document.getElementById('contador-input');
-        contadorInput.addEventListener('input', () => {
-            const stats = Contador.count(contadorInput.value);
+        document.getElementById('contador-input').addEventListener('input', (e) => {
+            const stats = Contador.count(e.target.value);
             document.querySelector('#resultado-contador span').textContent = `Caracteres: ${stats.caracteres} | Palavras: ${stats.palavras} | Linhas: ${stats.linhas}`;
         });
 
-        // Ferramentas de arquivo
-        document.getElementById('convert-pdf').addEventListener('click', () => {
+        // Arquivos
+        const convertPdfBtn = document.getElementById('convert-pdf');
+        convertPdfBtn.addEventListener('click', () => {
             const fileInput = document.getElementById('image-input');
-            if (fileInput.files.length > 0) ImageToPdf.convert(fileInput.files[0], 'resultado-pdf');
-            else renderResult('resultado-pdf', 'Por favor, selecione um arquivo primeiro.');
+            if (fileInput.files.length > 0) {
+                showSpinner(convertPdfBtn);
+                setTimeout(() => ImageToPdf.convert(fileInput.files[0], 'resultado-pdf', () => hideSpinner(convertPdfBtn)), 50);
+            } else { renderResult('resultado-pdf', 'Por favor, selecione um arquivo primeiro.'); }
         });
-
-        document.getElementById('analyze-video').addEventListener('click', () => {
+        const analyzeVideoBtn = document.getElementById('analyze-video');
+        analyzeVideoBtn.addEventListener('click', () => {
             const fileInput = document.getElementById('video-input');
-            if (fileInput.files.length > 0) VideoInfo.analyze(fileInput.files[0], 'resultado-video-info');
-            else renderResult('resultado-video-info', 'Por favor, selecione um arquivo primeiro.');
+            if (fileInput.files.length > 0) {
+                showSpinner(analyzeVideoBtn);
+                setTimeout(() => VideoInfo.analyze(fileInput.files[0], 'resultado-video-info', () => hideSpinner(analyzeVideoBtn)), 50);
+            } else { renderResult('resultado-video-info', 'Por favor, selecione um arquivo primeiro.'); }
         });
 
         // Explicações
@@ -300,6 +307,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- INICIA A APLICAÇÃO ---
     initialize();
 });
