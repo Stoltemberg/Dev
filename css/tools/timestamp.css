@@ -1,41 +1,25 @@
-.live-clock {
-    background-color: var(--surface-color);
-    border: 1px solid var(--border-color);
-    padding: 1.5rem 2rem;
-    border-radius: 12px;
-    text-align: center;
-    margin-bottom: 2rem;
-}
-.live-clock .live-timestamp-value {
-    font-family: 'Roboto Mono', monospace;
-    font-size: 2rem;
-    color: var(--primary-color);
-    font-weight: 700;
-    letter-spacing: 1px;
-}
-.live-clock .live-timestamp-label {
-    color: var(--on-surface-secondary-color);
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    margin-top: 0.25rem;
-}
 .converter-section {
     background-color: var(--surface-color);
-    padding: 2rem;
-    border-radius: 12px;
+    padding: 2.5rem;
+    border-radius: 16px;
     border: 1px solid var(--border-color);
     margin-bottom: 2rem;
 }
+
 .converter-section h3 {
     color: var(--secondary-color);
     margin-bottom: 1.5rem;
     font-size: 1.5rem;
+    font-weight: 600;
 }
+
 .timestamp-unit-selector {
     display: flex;
     gap: 1.5rem;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
 }
+
 .date-output-group {
     display: flex;
     flex-direction: column;
@@ -45,13 +29,17 @@
     padding: 1.5rem;
     border-radius: 8px;
 }
+
 .date-output-group p {
     font-family: 'Roboto Mono', monospace;
     font-size: 1.1rem;
     display: flex;
+    flex-wrap: wrap;
 }
+
 .date-output-group strong {
     color: var(--on-surface-secondary-color);
     min-width: 110px;
     display: inline-block;
+    margin-right: 1rem;
 }

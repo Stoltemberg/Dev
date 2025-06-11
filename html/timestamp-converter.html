@@ -5,66 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Conversor de Timestamp Unix Online | NextDevs</title>
     <meta name="description" content="Converta Timestamp Unix (em segundos ou milissegundos) para datas legíveis (Local, UTC) e vice-versa. Ferramenta essencial para desenvolvedores.">
+    
     <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/tools/timestamp.css">
     <link rel="icon" href="../favicon.ico" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
-<body>
-    <nav id="main-nav" class="main-nav">
-        <div class="nav-content">
-            <a href="/index.html" class="nav-brand">NextDevs</a>
-            <div id="nav-menu" class="nav-menu" role="menu">
-                 <div class="nav-item dropdown">
-                    <button class="dropdown-toggle">Utilitários</button>
-                    <div class="dropdown-menu">
-                        <a href="/html/timestamp-converter.html" class="dropdown-item">Conversor de Timestamp</a>
-                        </div>
-                </div>
-            </div>
-            <div class="nav-actions">
-                <button id="workspace-toggle-btn" class="nav-icon-btn" title="Área de Trabalho" aria-label="Abrir área de trabalho">💼</button>
-                <button id="theme-switcher" class="nav-icon-btn" title="Mudar Tema" aria-label="Mudar tema de cores">☀️</button>
-            </div>
-            <button id="mobile-menu-toggle" class="nav-icon-btn mobile-only" aria-label="Abrir menu de navegação">☰</button>
-        </div>
-    </nav>
-
-    <aside id="workspace" class="workspace" role="complementary" aria-labelledby="workspace-title">
-        </aside>
+<body data-page-id="timestamp-converter">
+    <header id="navbar-placeholder"></header>
+    <aside id="workspace-placeholder"></aside>
 
     <main class="container">
         <div class="tool-header">
             <h2>Conversor de Timestamp Unix</h2>
-            <p>Converta entre datas e timestamps em tempo real.</p>
+            <p>Converta entre datas e timestamps com precisão.</p>
         </div>
-        <div id="live-timestamp" class="live-clock">
-            <div id="live-timestamp-value">...</div>
-            <div class="live-timestamp-label">Timestamp Atual (em segundos)</div>
-        </div>
+        
         <div class="tool-grid">
             <div class="converter-section">
                 <h3>Timestamp para Data</h3>
-                <div class="options"><label for="ts-to-date-input">Timestamp:</label><input type="number" id="ts-to-date-input" placeholder="Cole o timestamp aqui"></div>
-                <div class="timestamp-unit-selector"><label><input type="radio" name="ts-unit" value="s" checked> Segundos</label><label><input type="radio" name="ts-unit" value="ms"> Milissegundos</label></div>
-                <div id="date-output-group" class="date-output-group" style="display:none;"><p><strong>Data Local:</strong> <span id="output-local-date"></span></p><p><strong>Data UTC:</strong> <span id="output-utc-date"></span></p><p><strong>Relativo:</strong> <span id="output-relative-date"></span></p></div>
+                <div class="options">
+                    <label for="ts-to-date-input">Timestamp:</label>
+                    <input type="number" id="ts-to-date-input" placeholder="Cole o timestamp aqui">
+                </div>
+                <div class="timestamp-unit-selector">
+                    <label><input type="radio" name="ts-unit" value="s" checked> Segundos</label>
+                    <label><input type="radio" name="ts-unit" value="ms"> Milissegundos</label>
+                </div>
+                <button id="convert-ts-to-date-btn" class="btn-generate" style="margin-top:1rem;">Converter</button>
+                <div id="date-output-group" class="date-output-group" style="visibility: hidden;">
+                    <p><strong>Data Local:</strong> <span id="output-local-date"></span></p>
+                    <p><strong>Data UTC:</strong> <span id="output-utc-date"></span></p>
+                    <p><strong>Relativo:</strong> <span id="output-relative-date"></span></p>
+                </div>
             </div>
+
             <div class="converter-section">
                 <h3>Data para Timestamp</h3>
-                <div class="options"><label for="date-to-ts-input">Data e Hora:</label><input type="datetime-local" id="date-to-ts-input"></div>
-                <button id="timestamp-now-btn" class="btn-secondary" style="width:100%; margin-top:1rem;">Usar Data e Hora Atuais</button>
-                <div id="timestamp-output-group" class="result-box wide" style="margin-top: 1rem;"><span>Aguardando data...</span></div>
+                <div class="options">
+                    <label for="date-to-ts-input">Data e Hora:</label>
+                    <input type="datetime-local" id="date-to-ts-input">
+                </div>
+                <button id="timestamp-now-btn" class="btn-secondary" style="width:100%; margin: 1rem 0;">Usar Data e Hora Atuais</button>
+                <button id="convert-date-to-ts-btn" class="btn-generate">Converter</button>
+                <div id="timestamp-output-group" class="result-box wide" style="margin-top: 1rem;">
+                    <span>O resultado aparecerá aqui.</span>
+                </div>
             </div>
         </div>
     </main>
     
-    <footer>
-        <p>&copy; 2025 NextDevs. Construído para acelerar o desenvolvimento.</p>
-    </footer>
+    <footer id="footer-placeholder"></footer>
 
-    <script src="../js/tools/timestamp_converter.js"></script>
-    <script src="../js/pages/timestamp.js"></script>
+    <script src="../js/shared/main-controller.js" type="module"></script>
+    <script src="../js/pages/timestamp-converter.js" type="module"></script>
 </body>
 </html>

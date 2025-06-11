@@ -24,7 +24,7 @@ export const tools = [
 
     // Categoria: Utilitários
     { id: 'hash-generator', name: 'Gerador de Hash', desc: 'Calcule hashes (MD5, SHA-256) para qualquer texto.', url: 'html/hash-generator.html', category: 'Utilitários', tags: ['segurança', 'criptografia'] },
-    // d: 'timestamp-converter', name: 'Conversor de Timestamp', desc: 'Converta entre datas legíveis e Timestamp Unix.', url: 'html/timestamp-converter.html', category: 'Utilitários', tags: ['data', 'api', 'unix'] },
+    // { id: 'timestamp-converter', name: 'Conversor de Timestamp', desc: 'Converta entre datas legíveis e Timestamp Unix.', url: 'html/timestamp-converter.html', category: 'Utilitários', tags: ['data', 'api', 'unix'] },
     { id: 'color-converter', name: 'Conversor de Cores', desc: 'Converta cores entre os formatos HEX, RGB e HSL.', url: 'html/color-converter.html', category: 'Utilitários', tags: ['css', 'design', 'front-end'] },
     { id: 'calculadora', name: 'Calculadora de Porcentagem', desc: 'Cálculos de porcentagem rápidos e fáceis.', url: 'html/calculadora-porcentagem.html', category: 'Utilitários', tags: ['matemática', 'cálculo'] },
     { id: 'img-to-pdf', name: 'Imagem para PDF', desc: 'Converta arquivos de imagem em um documento PDF.', url: 'html/img-to-pdf.html', category: 'Utilitários', tags: ['arquivo', 'conversor'] },
