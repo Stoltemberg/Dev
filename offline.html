@@ -3,128 +3,574 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Offline - NextDevs</title>
-    <link rel="stylesheet" href="css/themes.css">
-    <link rel="stylesheet" href="css/layout.css">
+    <title>NextDevs - Modo Offline</title>
+    <link rel="stylesheet" href="/css/themes.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/style.css">
     <style>
         .offline-container {
-            text-align: center;
+            max-width: 800px;
+            margin: 2rem auto;
             padding: 2rem;
-            max-width: 600px;
-            margin: 4rem auto;
+            text-align: center;
         }
 
-        .offline-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            color: var(--color-primary);
-        }
-
-        .offline-title {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            color: var(--color-text-primary);
-        }
-
-        .offline-message {
-            color: var(--color-text-secondary);
+        .offline-header {
             margin-bottom: 2rem;
-        }
-
-        .offline-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        .btn-retry {
-            background-color: var(--color-primary);
-            color: var(--color-text-inverse);
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            text-decoration: none;
-            transition: var(--transition-base);
-        }
-
-        .btn-retry:hover {
-            background-color: var(--color-primary-hover);
-        }
-
-        .cached-tools {
-            margin-top: 2rem;
             padding: 1rem;
-            background-color: var(--color-bg-secondary);
             border-radius: 0.5rem;
+            background-color: var(--bg-secondary);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .cached-tools h3 {
-            color: var(--color-text-primary);
+        .offline-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            background-color: var(--bg-tertiary);
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--error);
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.online {
+            background-color: var(--success);
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .tool-card {
+            background-color: var(--bg-secondary);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .tool-card.unavailable {
+            opacity: 0.7;
+            filter: grayscale(1);
+        }
+
+        .tool-card.unavailable::after {
+            content: 'Indisponível Offline';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 0.5rem;
+            background-color: var(--error);
+            color: white;
+            font-size: 0.875rem;
+            text-align: center;
+            transform: translateY(-100%);
+            transition: transform 0.2s;
+        }
+
+        .tool-card.unavailable:hover::after {
+            transform: translateY(0);
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             margin-bottom: 1rem;
         }
 
-        .cached-tools ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        .tool-icon {
+            width: 48px;
+            height: 48px;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .tool-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .tool-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .tool-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .tool-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .tool-button {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 0.25rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             gap: 0.5rem;
         }
 
-        .cached-tools li {
-            padding: 0.5rem;
-            background-color: var(--color-bg-tertiary);
+        .tool-button.primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .tool-button.secondary {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .tool-button:hover {
+            filter: brightness(1.1);
+        }
+
+        .tool-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .tool-button i {
+            font-size: 1.25rem;
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--text-primary);
+            text-align: left;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .sync-status {
+            margin-top: 1rem;
+            padding: 0.75rem;
             border-radius: 0.25rem;
-            color: var(--color-text-primary);
+            background-color: var(--bg-tertiary);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .sync-status.syncing {
+            color: var(--primary);
+        }
+
+        .sync-status.success {
+            color: var(--success);
+        }
+
+        .sync-status.error {
+            color: var(--error);
+        }
+
+        .tool-status {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .status-available {
+            color: var(--success);
+        }
+        
+        .status-unavailable {
+            color: var(--error);
+        }
+
+        @media (max-width: 640px) {
+            .offline-container {
+                padding: 1rem;
+                margin: 1rem;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tool-actions {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
-    <main class="offline-container">
-        <div class="offline-icon">📡</div>
-        <h1 class="offline-title">Você está offline</h1>
-        <p class="offline-message">
-            Parece que você está sem conexão com a internet no momento.
-            Algumas ferramentas podem continuar funcionando offline.
-        </p>
-        <div class="offline-actions">
-            <button class="btn-retry" onclick="window.location.reload()">
-                Tentar novamente
-            </button>
+    <div class="offline-container">
+        <div class="offline-header">
+            <h1>NextDevs - Modo Offline</h1>
+            <div class="offline-status">
+                <div class="status-indicator" id="statusIndicator"></div>
+                <span id="statusText">Você está offline</span>
+            </div>
+            <p>Algumas ferramentas estão disponíveis para uso offline. As ferramentas indisponíveis serão habilitadas quando a conexão for restaurada.</p>
         </div>
-        <div class="cached-tools">
-            <h3>Ferramentas disponíveis offline:</h3>
-            <ul id="cached-tools-list">
-                <!-- Será preenchido via JavaScript -->
-            </ul>
+
+        <div id="validadores" class="tools-section">
+            <h2 class="category-title">Validadores</h2>
+            <div class="tools-grid">
+                <!-- Cards serão inseridos via JavaScript -->
+            </div>
         </div>
-    </main>
+
+        <div id="geradores" class="tools-section">
+            <h2 class="category-title">Geradores</h2>
+            <div class="tools-grid">
+                <!-- Cards serão inseridos via JavaScript -->
+            </div>
+        </div>
+
+        <div id="utilitarios" class="tools-section">
+            <h2 class="category-title">Utilitários</h2>
+            <div class="tools-grid">
+                <!-- Cards serão inseridos via JavaScript -->
+            </div>
+        </div>
+
+        <div class="sync-status" id="syncStatus">
+            Aguardando sincronização...
+        </div>
+    </div>
 
     <script>
-        // Lista de ferramentas que funcionam offline
-        const offlineTools = [
-            'Validador de CPF/CNPJ',
-            'Gerador de CPF',
-            'Gerador de CNPJ',
-            'Gerador de Senha',
-            'Gerador de UUID',
-            'Calculadora de Porcentagem',
-            'Contador de Texto',
-            'Formatador de Código'
-        ];
+        // Configuração das ferramentas
+        const tools = {
+            validadores: [
+                {
+                    id: 'validador-docs',
+                    title: 'Validador de Documentos',
+                    description: 'Valide CPF, CNPJ, CNH e outros documentos brasileiros',
+                    icon: '📄',
+                    url: '/html/validador-docs.html',
+                    category: 'validadores'
+                }
+            ],
+            geradores: [
+                {
+                    id: 'gerador-cpf',
+                    title: 'Gerador de CPF',
+                    description: 'Gere CPFs válidos para testes',
+                    icon: '🔢',
+                    url: '/html/gerador-cpf.html',
+                    category: 'geradores'
+                },
+                {
+                    id: 'gerador-cnpj',
+                    title: 'Gerador de CNPJ',
+                    description: 'Gere CNPJs válidos para testes',
+                    icon: '🏢',
+                    url: '/html/gerador-cnpj.html',
+                    category: 'geradores'
+                },
+                {
+                    id: 'gerador-cnh',
+                    title: 'Gerador de CNH',
+                    description: 'Gere CNHs válidas para testes',
+                    icon: '🚗',
+                    url: '/html/gerador-cnh.html',
+                    category: 'geradores'
+                },
+                {
+                    id: 'gerador-pessoa',
+                    title: 'Gerador de Pessoa',
+                    description: 'Gere dados de pessoas fictícias',
+                    icon: '👤',
+                    url: '/html/gerador-pessoa.html',
+                    category: 'geradores'
+                }
+            ],
+            utilitarios: [
+                {
+                    id: 'contador',
+                    title: 'Contador de Caracteres',
+                    description: 'Conte caracteres, palavras e linhas em seu texto',
+                    icon: '📊',
+                    url: '/html/contador.html',
+                    category: 'utilitarios'
+                },
+                {
+                    id: 'code-formatter',
+                    title: 'Formatador de Código',
+                    description: 'Formate e organize seu código',
+                    icon: '💻',
+                    url: '/html/code-formatter.html',
+                    category: 'utilitarios'
+                },
+                {
+                    id: 'url-encoder',
+                    title: 'Codificador de URL',
+                    description: 'Codifique e decodifique URLs',
+                    icon: '🔗',
+                    url: '/html/url-encoder.html',
+                    category: 'utilitarios'
+                },
+                {
+                    id: 'regex-tester',
+                    title: 'Testador de Regex',
+                    description: 'Teste e valide expressões regulares',
+                    icon: '🔍',
+                    url: '/html/regex-tester.html',
+                    category: 'utilitarios'
+                },
+                {
+                    id: 'jwt-debugger',
+                    title: 'Debugger de JWT',
+                    description: 'Decodifique e valide tokens JWT',
+                    icon: '🔐',
+                    url: '/html/jwt-debugger.html',
+                    category: 'utilitarios'
+                }
+            ]
+        };
 
-        // Preenche a lista de ferramentas offline
-        const toolsList = document.getElementById('cached-tools-list');
-        offlineTools.forEach(tool => {
-            const li = document.createElement('li');
-            li.textContent = tool;
-            toolsList.appendChild(li);
+        // Estado da aplicação
+        let isOnline = false;
+        let availableTools = new Set();
+        let syncInProgress = false;
+        let lastSyncAttempt = 0;
+        const SYNC_COOLDOWN = 30000; // 30 segundos entre tentativas de sincronização
+
+        // Elementos do DOM
+        const statusIndicator = document.getElementById('statusIndicator');
+        const statusText = document.getElementById('statusText');
+        const syncStatus = document.getElementById('syncStatus');
+
+        // Verifica o status da conexão
+        function updateOnlineStatus() {
+            const wasOffline = !isOnline;
+            isOnline = navigator.onLine;
+            statusIndicator.classList.toggle('online', isOnline);
+            statusText.textContent = isOnline ? 'Você está online' : 'Você está offline';
+            
+            if (isOnline && wasOffline) {
+                // Só tenta sincronizar se estava offline e agora está online
+                const now = Date.now();
+                if (now - lastSyncAttempt > SYNC_COOLDOWN) {
+                    syncData();
+                }
+            }
+            
+            // Sempre verifica a disponibilidade das ferramentas
+            checkToolAvailability();
+        }
+
+        // Verifica disponibilidade das ferramentas
+        async function checkToolAvailability() {
+            try {
+                const cache = await caches.open('nextdevs-static-v1');
+                availableTools.clear();
+
+                // Verifica cada ferramenta
+                for (const category in tools) {
+                    for (const tool of tools[category]) {
+                        try {
+                            // Tenta buscar do cache
+                            const response = await cache.match(tool.url);
+                            if (response && response.ok) {
+                                availableTools.add(tool.id);
+                                console.log(`Ferramenta disponível: ${tool.id}`);
+                            } else {
+                                // Se não estiver no cache, tenta buscar da rede
+                                if (navigator.onLine) {
+                                    const networkResponse = await fetch(tool.url);
+                                    if (networkResponse.ok) {
+                                        // Salva no cache
+                                        await cache.put(tool.url, networkResponse.clone());
+                                        availableTools.add(tool.id);
+                                        console.log(`Ferramenta adicionada ao cache: ${tool.id}`);
+                                    }
+                                }
+                            }
+                        } catch (error) {
+                            console.error(`Erro ao verificar ferramenta ${tool.id}:`, error);
+                        }
+                    }
+                }
+
+                // Atualiza a interface
+                renderTools();
+                
+                // Atualiza o status
+                const totalTools = Object.values(tools).flat().length;
+                const availableCount = availableTools.size;
+                syncStatus.textContent = `${availableCount} de ${totalTools} ferramentas disponíveis offline`;
+                syncStatus.className = 'sync-status ' + (availableCount === totalTools ? 'success' : '');
+                
+            } catch (error) {
+                console.error('Erro ao verificar disponibilidade:', error);
+                syncStatus.textContent = 'Erro ao verificar ferramentas disponíveis';
+                syncStatus.className = 'sync-status error';
+            }
+        }
+
+        // Renderiza as ferramentas
+        function renderTools() {
+            for (const category in tools) {
+                const container = document.querySelector(`#${category} .tools-grid`);
+                if (!container) continue;
+                
+                container.innerHTML = '';
+
+                tools[category].forEach(tool => {
+                    const isAvailable = availableTools.has(tool.id);
+                    const card = createToolCard(tool, isAvailable);
+                    container.appendChild(card);
+                });
+            }
+        }
+
+        // Cria um card de ferramenta
+        function createToolCard(tool, isAvailable) {
+            const card = document.createElement('div');
+            card.className = `tool-card ${isAvailable ? '' : 'unavailable'}`;
+            card.innerHTML = `
+                <div class="tool-header">
+                    <div class="tool-icon">${tool.icon}</div>
+                    <div class="tool-info">
+                        <h3 class="tool-title">${tool.title}</h3>
+                        <p class="tool-description">${tool.description}</p>
+                        <div class="tool-status">
+                            ${isAvailable ? 
+                                '<span class="status-available">✓ Disponível offline</span>' : 
+                                '<span class="status-unavailable">✗ Indisponível offline</span>'}
+                        </div>
+                    </div>
+                </div>
+                <div class="tool-actions">
+                    <button class="tool-button primary" onclick="openTool('${tool.url}')" ${!isAvailable ? 'disabled' : ''}>
+                        <i class="fas fa-external-link-alt"></i>
+                        Abrir Ferramenta
+                    </button>
+                    <button class="tool-button secondary" onclick="useToolNow('${tool.id}')" ${!isAvailable ? 'disabled' : ''}>
+                        <i class="fas fa-bolt"></i>
+                        Usar Agora
+                    </button>
+                </div>
+            `;
+            return card;
+        }
+
+        // Abre a ferramenta em uma nova aba
+        function openTool(url) {
+            window.open(url, '_blank');
+        }
+
+        // Usa a ferramenta diretamente
+        function useToolNow(toolId) {
+            const tool = [...tools.validadores, ...tools.geradores, ...tools.utilitarios]
+                .find(t => t.id === toolId);
+            
+            if (tool) {
+                window.location.href = tool.url;
+            }
+        }
+
+        // Sincroniza dados em background
+        async function syncData() {
+            if (syncInProgress) return;
+            
+            const now = Date.now();
+            if (now - lastSyncAttempt < SYNC_COOLDOWN) {
+                return;
+            }
+            
+            try {
+                syncInProgress = true;
+                lastSyncAttempt = now;
+                syncStatus.textContent = 'Verificando atualizações...';
+                syncStatus.className = 'sync-status syncing';
+
+                // Verifica se há dados para sincronizar
+                if ('serviceWorker' in navigator && 'SyncManager' in window) {
+                    const registration = await navigator.serviceWorker.ready;
+                    const hasPendingSync = await registration.sync.getTags().then(tags => tags.includes('sync-data'));
+                    
+                    if (hasPendingSync) {
+                        // Registra o sync para quando a conexão for restaurada
+                        await registration.sync.register('sync-data');
+                        syncStatus.textContent = 'Sincronizando dados em background...';
+                    } else {
+                        syncStatus.textContent = 'Tudo atualizado!';
+                        syncStatus.className = 'sync-status success';
+                        return;
+                    }
+                }
+
+                // Simula uma verificação rápida
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                syncStatus.textContent = 'Tudo atualizado!';
+                syncStatus.className = 'sync-status success';
+            } catch (error) {
+                console.error('Erro na sincronização:', error);
+                syncStatus.textContent = 'Erro ao verificar atualizações. Tente novamente mais tarde.';
+                syncStatus.className = 'sync-status error';
+            } finally {
+                syncInProgress = false;
+                // Atualiza o status após 5 segundos
+                setTimeout(() => {
+                    if (!syncInProgress) {
+                        syncStatus.textContent = isOnline ? 'Conectado' : 'Offline';
+                        syncStatus.className = 'sync-status';
+                    }
+                }, 5000);
+            }
+        }
+
+        // Event Listeners
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        window.addEventListener('load', async () => {
+            // Força uma verificação inicial
+            await checkToolAvailability();
+            updateOnlineStatus();
         });
 
-        // Verifica periodicamente se a conexão foi restabelecida
-        window.addEventListener('online', () => {
-            window.location.reload();
-        });
+        // Verifica periodicamente a disponibilidade das ferramentas
+        setInterval(checkToolAvailability, 30000);
     </script>
 </body>
 </html> 

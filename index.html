@@ -6,7 +6,23 @@
     <title>NextDevs - A Suíte de Ferramentas para Desenvolvedores</title>
     <link rel="stylesheet" href="css/layout.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    </head>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <script>
+        // Registra o Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('Service Worker registrado com sucesso:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.error('Erro ao registrar o Service Worker:', error);
+                    });
+            });
+        }
+    </script>
+</head>
 <body>
     <header id="navbar-placeholder"></header>
     <aside id="workspace-placeholder"></aside>
