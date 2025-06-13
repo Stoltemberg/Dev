@@ -2,14 +2,8 @@ const CACHE_NAME = 'nextdevs-v1';
 const STATIC_CACHE = 'nextdevs-static-v1';
 const DYNAMIC_CACHE = 'nextdevs-dynamic-v1';
 
-// Recursos que devem ser cacheados na instalação
-const STATIC_ASSETS = [
-    // Páginas principais
-    '/',
-    '/index.html',
-    '/offline.html',
-    
-    // Páginas de ferramentas offline
+// Lista de ferramentas que funcionam offline
+const OFFLINE_TOOLS = [
     '/html/validador-docs.html',
     '/html/gerador-cpf.html',
     '/html/gerador-cnpj.html',
@@ -19,7 +13,23 @@ const STATIC_ASSETS = [
     '/html/code-formatter.html',
     '/html/url-encoder.html',
     '/html/regex-tester.html',
-    '/html/jwt-debugger.html',
+    '/html/jwt-debugger.html'
+];
+
+// Função para verificar se a URL é uma ferramenta offline
+function isOfflineTool(url) {
+    return OFFLINE_TOOLS.some(tool => url.endsWith(tool));
+}
+
+// Recursos que devem ser cacheados na instalação
+const STATIC_ASSETS = [
+    // Páginas principais
+    '/',
+    '/index.html',
+    '/offline.html',
+    
+    // Páginas de ferramentas offline
+    ...OFFLINE_TOOLS,
     
     // Recursos compartilhados
     '/css/layout.css',
@@ -102,7 +112,43 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // Estratégia: Cache First com fallback para rede
+    // Se for uma navegação
+    if (request.mode === 'navigate') {
+        event.respondWith(
+            (async () => {
+                try {
+                    // Tenta buscar da rede primeiro
+                    const response = await fetch(request);
+                    
+                    // Se for uma ferramenta offline, salva no cache
+                    if (isOfflineTool(request.url)) {
+                        const cache = await caches.open(STATIC_CACHE);
+                        await cache.put(request, response.clone());
+                    }
+                    
+                    return response;
+                } catch (error) {
+                    // Se estiver offline
+                    if (!navigator.onLine) {
+                        // Se for uma ferramenta offline, verifica se está no cache
+                        if (isOfflineTool(request.url)) {
+                            const cache = await caches.open(STATIC_CACHE);
+                            const cachedResponse = await cache.match(request);
+                            if (cachedResponse) {
+                                return cachedResponse;
+                            }
+                        }
+                        // Se não for uma ferramenta offline ou não estiver no cache, redireciona para offline.html
+                        return caches.match('/offline.html');
+                    }
+                    throw error;
+                }
+            })()
+        );
+        return;
+    }
+
+    // Para outros recursos, usa Cache First com fallback para rede
     event.respondWith(
         caches.match(request)
             .then(cachedResponse => {

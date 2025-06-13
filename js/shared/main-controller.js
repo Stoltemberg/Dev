@@ -94,7 +94,21 @@ async function initializeLayout() {
 // Garante que o objeto global NextDevs exista
 window.NextDevs = window.NextDevs || {};
 
-// Controlador de estado offline simplificado
+// Lista de ferramentas que funcionam offline
+const OFFLINE_TOOLS = [
+    '/html/validador-docs.html',
+    '/html/gerador-cpf.html',
+    '/html/gerador-cnpj.html',
+    '/html/gerador-cnh.html',
+    '/html/gerador-pessoa.html',
+    '/html/contador.html',
+    '/html/code-formatter.html',
+    '/html/url-encoder.html',
+    '/html/regex-tester.html',
+    '/html/jwt-debugger.html'
+];
+
+// Controlador de estado offline
 class OfflineController {
     constructor() {
         this.init();
@@ -119,10 +133,30 @@ class OfflineController {
         this.handleOnlineStatus(navigator.onLine);
     }
 
+    isOfflineTool(url) {
+        return OFFLINE_TOOLS.some(tool => url.endsWith(tool));
+    }
+
     async handleOnlineStatus(isOnline) {
-        if (!isOnline && window.location.pathname !== '/offline.html') {
-            // Se estiver offline e não estiver na página offline, redireciona
-            window.location.href = '/offline.html';
+        if (!isOnline) {
+            const currentPath = window.location.pathname;
+            
+            // Se não estiver na página offline e não for uma ferramenta offline
+            if (currentPath !== '/offline.html' && !this.isOfflineTool(currentPath)) {
+                // Verifica se a ferramenta está no cache
+                try {
+                    const cache = await caches.open('nextdevs-static-v1');
+                    const response = await cache.match(currentPath);
+                    
+                    // Se não estiver no cache, redireciona para offline.html
+                    if (!response) {
+                        window.location.href = '/offline.html';
+                    }
+                } catch (error) {
+                    console.error('Erro ao verificar cache:', error);
+                    window.location.href = '/offline.html';
+                }
+            }
         }
     }
 }
