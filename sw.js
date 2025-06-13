@@ -18,7 +18,15 @@ const OFFLINE_TOOLS = [
 
 // Função para verificar se a URL é uma ferramenta offline
 function isOfflineTool(url) {
-    return OFFLINE_TOOLS.some(tool => url.endsWith(tool));
+    // Remove parâmetros de query e hash para comparação
+    const cleanUrl = url.split('?')[0].split('#')[0];
+    return OFFLINE_TOOLS.some(tool => cleanUrl.endsWith(tool));
+}
+
+// Função para verificar se é uma requisição de navegação
+function isNavigationRequest(request) {
+    return request.mode === 'navigate' || 
+           (request.headers.get('accept') || '').includes('text/html');
 }
 
 // Recursos que devem ser cacheados na instalação
@@ -70,7 +78,20 @@ self.addEventListener('install', (event) => {
         caches.open(STATIC_CACHE)
             .then(cache => {
                 console.log('Cache estático aberto');
-                return cache.addAll(STATIC_ASSETS);
+                // Usa Promise.allSettled para continuar mesmo se alguns recursos falharem
+                return Promise.allSettled(
+                    STATIC_ASSETS.map(url => 
+                        fetch(url, { credentials: 'same-origin' })
+                            .then(response => {
+                                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                                return cache.put(url, response);
+                            })
+                            .catch(error => {
+                                console.error(`Erro ao fazer cache de ${url}:`, error);
+                                return null;
+                            })
+                    )
+                );
             })
             .then(() => {
                 console.log('Recursos estáticos cacheados');
@@ -113,12 +134,17 @@ self.addEventListener('fetch', (event) => {
     }
 
     // Se for uma navegação
-    if (request.mode === 'navigate') {
+    if (isNavigationRequest(request)) {
         event.respondWith(
             (async () => {
                 try {
                     // Tenta buscar da rede primeiro
-                    const response = await fetch(request);
+                    const response = await fetch(request, { 
+                        credentials: 'same-origin',
+                        headers: {
+                            'Cache-Control': 'no-cache'
+                        }
+                    });
                     
                     // Se for uma ferramenta offline, salva no cache
                     if (isOfflineTool(request.url)) {
@@ -139,7 +165,26 @@ self.addEventListener('fetch', (event) => {
                             }
                         }
                         // Se não for uma ferramenta offline ou não estiver no cache, redireciona para offline.html
-                        return caches.match('/offline.html');
+                        const offlinePage = await caches.match('/offline.html');
+                        if (offlinePage) {
+                            return offlinePage;
+                        }
+                        // Se a página offline não estiver no cache, tenta buscar
+                        try {
+                            const response = await fetch('/offline.html', { 
+                                credentials: 'same-origin',
+                                headers: {
+                                    'Cache-Control': 'no-cache'
+                                }
+                            });
+                            if (response.ok) {
+                                const cache = await caches.open(STATIC_CACHE);
+                                await cache.put('/offline.html', response.clone());
+                                return response;
+                            }
+                        } catch (e) {
+                            console.error('Erro ao buscar página offline:', e);
+                        }
                     }
                     throw error;
                 }
@@ -154,7 +199,12 @@ self.addEventListener('fetch', (event) => {
             .then(cachedResponse => {
                 if (cachedResponse) {
                     // Atualiza o cache em background
-                    fetch(request)
+                    fetch(request, { 
+                        credentials: 'same-origin',
+                        headers: {
+                            'Cache-Control': 'no-cache'
+                        }
+                    })
                         .then(response => {
                             if (response.ok) {
                                 caches.open(DYNAMIC_CACHE)
@@ -168,7 +218,12 @@ self.addEventListener('fetch', (event) => {
                 }
 
                 // Se não estiver no cache, tenta buscar da rede
-                return fetch(request)
+                return fetch(request, { 
+                    credentials: 'same-origin',
+                    headers: {
+                        'Cache-Control': 'no-cache'
+                    }
+                })
                     .then(response => {
                         // Se a resposta for válida, salva no cache
                         if (response.ok) {
@@ -180,7 +235,7 @@ self.addEventListener('fetch', (event) => {
                     })
                     .catch(error => {
                         // Se for uma navegação e falhar, retorna a página offline
-                        if (request.mode === 'navigate') {
+                        if (isNavigationRequest(request)) {
                             return caches.match('/offline.html');
                         }
                         throw error;

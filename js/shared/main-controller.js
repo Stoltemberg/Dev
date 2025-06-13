@@ -111,6 +111,8 @@ const OFFLINE_TOOLS = [
 // Controlador de estado offline
 class OfflineController {
     constructor() {
+        this.isOffline = !navigator.onLine;
+        this.currentPath = window.location.pathname;
         this.init();
     }
 
@@ -118,7 +120,24 @@ class OfflineController {
         // Verifica se o Service Worker está registrado
         if ('serviceWorker' in navigator) {
             try {
-                const registration = await navigator.serviceWorker.register('/sw.js');
+                const registration = await navigator.serviceWorker.register('/sw.js', {
+                    scope: '/',
+                    updateViaCache: 'none'
+                });
+                
+                // Verifica se há uma nova versão do Service Worker
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            // Nova versão disponível
+                            if (confirm('Uma nova versão está disponível. Deseja atualizar agora?')) {
+                                window.location.reload();
+                            }
+                        }
+                    });
+                });
+
                 console.log('Service Worker registrado:', registration.scope);
             } catch (error) {
                 console.error('Erro ao registrar Service Worker:', error);
@@ -129,28 +148,77 @@ class OfflineController {
         window.addEventListener('online', () => this.handleOnlineStatus(true));
         window.addEventListener('offline', () => this.handleOnlineStatus(false));
 
+        // Adiciona listener para mudanças de visibilidade (importante para mobile)
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                this.checkOnlineStatus();
+            }
+        });
+
         // Verifica estado inicial
         this.handleOnlineStatus(navigator.onLine);
     }
 
     isOfflineTool(url) {
-        return OFFLINE_TOOLS.some(tool => url.endsWith(tool));
+        // Remove parâmetros de query e hash para comparação
+        const cleanUrl = url.split('?')[0].split('#')[0];
+        return OFFLINE_TOOLS.some(tool => cleanUrl.endsWith(tool));
+    }
+
+    async checkOnlineStatus() {
+        try {
+            // Tenta fazer uma requisição leve para verificar a conexão
+            const response = await fetch('/favicon.ico', {
+                method: 'HEAD',
+                cache: 'no-cache'
+            });
+            this.handleOnlineStatus(response.ok);
+        } catch (error) {
+            this.handleOnlineStatus(false);
+        }
     }
 
     async handleOnlineStatus(isOnline) {
+        this.isOffline = !isOnline;
+        
+        // Atualiza o estado visual se necessário
+        if (document.body) {
+            document.body.classList.toggle('offline', !isOnline);
+        }
+
         if (!isOnline) {
             const currentPath = window.location.pathname;
             
             // Se não estiver na página offline e não for uma ferramenta offline
             if (currentPath !== '/offline.html' && !this.isOfflineTool(currentPath)) {
-                // Verifica se a ferramenta está no cache
                 try {
+                    // Verifica se a página está no cache
                     const cache = await caches.open('nextdevs-static-v1');
                     const response = await cache.match(currentPath);
                     
                     // Se não estiver no cache, redireciona para offline.html
                     if (!response) {
-                        window.location.href = '/offline.html';
+                        // Verifica se a página offline está no cache
+                        const offlinePage = await cache.match('/offline.html');
+                        if (offlinePage) {
+                            window.location.href = '/offline.html';
+                        } else {
+                            // Se a página offline não estiver no cache, tenta buscar
+                            try {
+                                const offlineResponse = await fetch('/offline.html', {
+                                    credentials: 'same-origin',
+                                    headers: {
+                                        'Cache-Control': 'no-cache'
+                                    }
+                                });
+                                if (offlineResponse.ok) {
+                                    await cache.put('/offline.html', offlineResponse.clone());
+                                    window.location.href = '/offline.html';
+                                }
+                            } catch (error) {
+                                console.error('Erro ao buscar página offline:', error);
+                            }
+                        }
                     }
                 } catch (error) {
                     console.error('Erro ao verificar cache:', error);
