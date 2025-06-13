@@ -1,34 +1,201 @@
+// Estado da aplicação com gerenciamento de memória otimizado
+const AppState = {
+    currentScenario: {},
+    history: [],
+    savedScenarios: [],
+    lastGeneratedData: {},
+    
+    // Métodos para manipulação do estado
+    saveState() {
+        try {
+            const stateToSave = {
+                currentScenario: this.currentScenario,
+                savedScenarios: this.savedScenarios,
+                history: this.history.slice(-50) // Mantém apenas os últimos 50 itens
+            };
+            localStorage.setItem('devtools_state', JSON.stringify(stateToSave));
+        } catch (error) {
+            console.warn('Erro ao salvar estado:', error);
+        }
+    },
+    
+    loadState() {
+        try {
+            const savedState = localStorage.getItem('devtools_state');
+            if (savedState) {
+                const parsed = JSON.parse(savedState);
+                this.currentScenario = parsed.currentScenario || {};
+                this.savedScenarios = parsed.savedScenarios || [];
+                this.history = parsed.history || [];
+            }
+        } catch (error) {
+            console.warn('Erro ao carregar estado:', error);
+            this.resetState();
+        }
+    },
+    
+    resetState() {
+        this.currentScenario = {};
+        this.history = [];
+        this.savedScenarios = [];
+        this.lastGeneratedData = {};
+    },
+    
+    addToHistory(type, data, isScenarioData = false) {
+        const entry = {
+            type,
+            data,
+            timestamp: Date.now(),
+            isScenarioData
+        };
+        this.history.unshift(entry);
+        if (this.history.length > 50) this.history.pop();
+        this.saveState();
+    }
+};
+
+// Inicialização otimizada
 document.addEventListener("DOMContentLoaded", () => {
-  let state = { currentScenario: {}, history: [], savedScenarios: [] };
-  let lastGeneratedData = {};
+    // Carrega o estado inicial
+    AppState.loadState();
+    
+    // Configuração inicial otimizada
+    const initPromises = [
+        setupTheme(),
+        setupWorkspaceUI(),
+        setupNavigation(),
+        loadPasswordOptions(),
+        setupEventListeners()
+    ];
+    
+    // Executa todas as configurações em paralelo
+    Promise.all(initPromises)
+        .then(() => {
+            renderAll();
+            // Notifica que a aplicação está pronta
+            document.documentElement.classList.add('app-ready');
+        })
+        .catch(error => {
+            console.error('Erro na inicialização:', error);
+        });
+});
 
-  function initialize() {
-    setupTheme();
-    setupWorkspaceUI();
-    setupNavigation();
-    loadPasswordOptions();
-    setupEventListeners();
-    loadState();
-  }
-
-  function setupTheme() {
+// Funções de UI otimizadas
+function setupTheme() {
     const themeSwitcher = document.getElementById("theme-switcher");
     const body = document.body;
-    const applyTheme = (theme) => {
-      body.classList.toggle("light-mode", theme === "light");
-      body.classList.toggle("dark-mode", theme !== "light");
-      themeSwitcher.innerHTML = theme === "light" ? "🌙" : "☀️";
+    
+    // Usa requestAnimationFrame para transições suaves
+    const applyTheme = theme => {
+        requestAnimationFrame(() => {
+            body.classList.toggle("light-mode", theme === "light");
+            body.classList.toggle("dark-mode", theme !== "light");
+            themeSwitcher.innerHTML = theme === "light" ? "🌙" : "☀️";
+        });
     };
+    
+    // Carrega tema salvo
     const currentTheme = localStorage.getItem("theme") || "dark";
     applyTheme(currentTheme);
+    
+    // Event listener otimizado
     themeSwitcher.addEventListener("click", () => {
-      const newTheme = body.classList.contains("light-mode") ? "dark" : "light";
-      localStorage.setItem("theme", newTheme);
-      applyTheme(newTheme);
+        const newTheme = body.classList.contains("light-mode") ? "dark" : "light";
+        localStorage.setItem("theme", newTheme);
+        applyTheme(newTheme);
     });
-  }
+}
 
-  function setupWorkspaceUI() {
+// Funções de renderização otimizadas
+function renderAll() {
+    requestAnimationFrame(() => {
+        renderCurrentScenario();
+        renderHistory();
+    });
+}
+
+function renderCurrentScenario() {
+    const container = document.getElementById("current-scenario");
+    if (!container) return;
+    
+    // Usa DocumentFragment para melhor performance
+    const fragment = document.createDocumentFragment();
+    
+    if (Object.keys(AppState.currentScenario).length === 0) {
+        fragment.appendChild(createEmptyStateMessage());
+    } else {
+        Object.entries(AppState.currentScenario).forEach(([type, data]) => {
+            fragment.appendChild(createScenarioItem(type, data));
+        });
+    }
+    
+    // Limpa e atualiza o container
+    container.innerHTML = '';
+    container.appendChild(fragment);
+}
+
+// Funções de utilidade otimizadas
+function copyToClipboard(str, button) {
+    if (!navigator.clipboard) {
+        // Fallback para navegadores antigos
+        const textArea = document.createElement('textarea');
+        textArea.value = str;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            showCopySuccess(button);
+        } catch (err) {
+            console.error('Erro ao copiar:', err);
+        }
+        document.body.removeChild(textArea);
+        return;
+    }
+    
+    // Usa a API moderna
+    navigator.clipboard.writeText(str)
+        .then(() => showCopySuccess(button))
+        .catch(err => console.error('Erro ao copiar:', err));
+}
+
+function showCopySuccess(button) {
+    const originalText = button.textContent;
+    button.textContent = '✓ Copiado!';
+    button.disabled = true;
+    
+    setTimeout(() => {
+        button.textContent = originalText;
+        button.disabled = false;
+    }, 2000);
+}
+
+// Funções de geração otimizadas
+function handleSimpleGeneration(toolType, generatorFn, resultBoxId, isPreformatted = false) {
+    return async (event) => {
+        event.preventDefault();
+        const button = event.target;
+        
+        try {
+            showSpinner(button);
+            const result = await generatorFn();
+            AppState.lastGeneratedData[toolType] = result;
+            
+            renderResult(resultBoxId, result, isPreformatted);
+            AppState.addToHistory(toolType, result);
+            
+            if (document.getElementById("add-to-scenario").checked) {
+                AppState.addToScenario(toolType);
+            }
+        } catch (error) {
+            console.error(`Erro ao gerar ${toolType}:`, error);
+            renderResult(resultBoxId, 'Erro ao gerar. Tente novamente.', false);
+        } finally {
+            hideSpinner(button);
+        }
+    };
+}
+
+function setupWorkspaceUI() {
     const workspace = document.getElementById("workspace");
     document
       .getElementById("workspace-toggle-btn")
@@ -51,29 +218,29 @@ document.addEventListener("DOMContentLoaded", () => {
       .getElementById("clear-cenario-btn")
       .addEventListener("click", () => {
         if (
-          Object.keys(state.currentScenario).length > 0 &&
+          Object.keys(AppState.currentScenario).length > 0 &&
           confirm("Tem certeza que deseja limpar o cenário atual?")
         ) {
-          state.currentScenario = {};
-          saveState();
+          AppState.currentScenario = {};
+          AppState.saveState();
           renderAll();
         }
       });
     document
       .getElementById("save-cenario-btn")
       .addEventListener("click", () => {
-        if (Object.keys(state.currentScenario).length > 0) {
+        if (Object.keys(AppState.currentScenario).length > 0) {
           const scenarioName = prompt(
             "Digite um nome para este cenário:",
-            "Cenário " + (state.savedScenarios.length + 1)
+            "Cenário " + (AppState.savedScenarios.length + 1)
           );
           if (scenarioName) {
-            state.savedScenarios.unshift({
+            AppState.savedScenarios.unshift({
               name: scenarioName,
-              data: { ...state.currentScenario },
+              data: { ...AppState.currentScenario },
             });
-            state.currentScenario = {};
-            saveState();
+            AppState.currentScenario = {};
+            AppState.saveState();
             renderAll();
           }
         } else {
@@ -83,11 +250,11 @@ document.addEventListener("DOMContentLoaded", () => {
     document
       .getElementById("export-cenario-btn")
       .addEventListener("click", () => {
-        if (Object.keys(state.currentScenario).length === 0) {
+        if (Object.keys(AppState.currentScenario).length === 0) {
           alert("O cenário atual está vazio.");
           return;
         }
-        const dataStr = JSON.stringify(state.currentScenario, null, 2);
+        const dataStr = JSON.stringify(AppState.currentScenario, null, 2);
         const blob = new Blob([dataStr], { type: "application/json" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -110,8 +277,8 @@ document.addEventListener("DOMContentLoaded", () => {
           if (
             confirm("Isso substituirá seu cenário atual. Deseja continuar?")
           ) {
-            state.currentScenario = importedScenario;
-            saveState();
+            AppState.currentScenario = importedScenario;
+            AppState.saveState();
             renderAll();
             workspace.classList.add("open");
           }
@@ -124,9 +291,9 @@ document.addEventListener("DOMContentLoaded", () => {
       reader.readAsText(file);
       event.target.value = "";
     });
-  }
+}
 
-  function setupNavigation() {
+function setupNavigation() {
     const toolLinks = document.querySelectorAll("[data-tool]");
     const toolPanes = document.querySelectorAll(".tool-pane");
     const navMenu = document.getElementById("nav-menu");
@@ -168,9 +335,9 @@ document.addEventListener("DOMContentLoaded", () => {
           .forEach((d) => d.classList.remove("active"));
       }
     });
-  }
+}
 
-  function savePasswordOptions() {
+function savePasswordOptions() {
     const options = {
       length: document.getElementById("senha-tamanho").value,
       useMaiusculas: document.getElementById("senha-maiusculas").checked,
@@ -184,8 +351,8 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       saveBtn.textContent = "Salvar Opções";
     }, 2000);
-  }
-  function loadPasswordOptions() {
+}
+function loadPasswordOptions() {
     const savedOptions = localStorage.getItem("devtools_password_options");
     if (savedOptions) {
       const options = JSON.parse(savedOptions);
@@ -199,73 +366,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function saveState() {
-    localStorage.setItem("devtools_state", JSON.stringify(state));
-  }
-  function loadState() {
-    const savedState = localStorage.getItem("devtools_state");
-    if (savedState) {
-      try {
-        state = JSON.parse(savedState);
-        if (!state.savedScenarios) state.savedScenarios = [];
-      } catch {
-        state = { currentScenario: {}, history: [], savedScenarios: [] };
-      }
-    }
-    renderAll();
-  }
-
-  function renderAll() {
-    renderCurrentScenario();
-    renderHistory();
-  }
-  function formatTimeAgo(date) {
-    const now = new Date();
-    const seconds = Math.floor((now - new Date(date)) / 1000);
-    if (seconds < 60) return "agora mesmo";
-    const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) return `${minutes} min atrás`;
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours}h atrás`;
-    const days = Math.floor(hours / 24);
-    return `${days}d atrás`;
-  }
-  function renderCurrentScenario() {
-    const container = document.getElementById("cenario-content");
-    container.innerHTML = "";
-    if (Object.keys(state.currentScenario).length === 0) {
-      container.innerHTML =
-        '<p class="empty-state">Gere dados e clique em "Adicionar ao Cenário" para começar.</p>';
-      return;
-    }
-    for (const [key, data] of Object.entries(state.currentScenario)) {
-      const itemDiv = document.createElement("div");
-      itemDiv.className = "cenario-item";
-      const title = key.charAt(0).toUpperCase() + key.slice(1);
-      const content =
-        typeof data === "object"
-          ? Object.entries(data)
-              .map(([k, v]) => `${k}: ${v}`)
-              .join("\n")
-          : data;
-      itemDiv.innerHTML = `<h4>${title}</h4><pre>${content}</pre>`;
-      container.appendChild(itemDiv);
-    }
-  }
-  function renderHistory() {
+function renderHistory() {
     const container = document.getElementById("historico-content");
     container.innerHTML = "";
     if (
-      (!state.history || state.history.length === 0) &&
-      (!state.savedScenarios || state.savedScenarios.length === 0)
+      (!AppState.history || AppState.history.length === 0) &&
+      (!AppState.savedScenarios || AppState.savedScenarios.length === 0)
     ) {
       container.innerHTML =
         '<p class="empty-state">Seu histórico e cenários salvos aparecerão aqui.</p>';
       return;
     }
-    if (state.savedScenarios && state.savedScenarios.length > 0) {
+    if (AppState.savedScenarios && AppState.savedScenarios.length > 0) {
       let savedHtml = `<h4>Cenários Salvos</h4>`;
-      state.savedScenarios.forEach((scenario, index) => {
+      AppState.savedScenarios.forEach((scenario, index) => {
         const content = Object.entries(scenario.data)
           .map(([k, v]) =>
             typeof v === "object"
@@ -279,9 +393,9 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       container.innerHTML += savedHtml;
     }
-    if (state.history && state.history.length > 0) {
+    if (AppState.history && AppState.history.length > 0) {
       let historyHtml = `<h4 style="margin-top: 1.5rem;">Últimos Itens Gerados</h4>`;
-      state.history.forEach((item, index) => {
+      AppState.history.forEach((item, index) => {
         const content =
           typeof item.data === "object"
             ? Object.entries(item.data)
@@ -304,38 +418,26 @@ document.addEventListener("DOMContentLoaded", () => {
   window.removeScenario = function (index) {
     if (
       confirm(
-        `Tem certeza que deseja excluir o cenário "${state.savedScenarios[index].name}"?`
+        `Tem certeza que deseja excluir o cenário "${AppState.savedScenarios[index].name}"?`
       )
     ) {
-      state.savedScenarios.splice(index, 1);
-      saveState();
+      AppState.savedScenarios.splice(index, 1);
+      AppState.saveState();
       renderHistory();
     }
   };
-  function addToHistory(type, data, isScenarioData = false) {
-    if (!state.history) state.history = [];
-    state.history.unshift({
-      type,
-      data,
-      isScenarioData,
-      timestamp: new Date(),
-    });
-    if (state.history.length > 20) state.history.pop();
-    saveState();
-    renderHistory();
-  }
   function addToScenario(type) {
-    if (lastGeneratedData[type]) {
+    if (AppState.lastGeneratedData[type]) {
       let key = type.charAt(0).toUpperCase() + type.slice(1);
       if (
-        state.currentScenario.Pessoa &&
+        AppState.currentScenario.Pessoa &&
         ["cnpj", "cnh", "cartao"].includes(type)
       ) {
-        const nome = state.currentScenario.Pessoa.Nome.split(" ")[0];
+        const nome = AppState.currentScenario.Pessoa.Nome.split(" ")[0];
         key = `${key} de ${nome}`;
       }
-      state.currentScenario[key] = lastGeneratedData[type];
-      saveState();
+      AppState.currentScenario[key] = AppState.lastGeneratedData[type];
+      AppState.saveState();
       renderCurrentScenario();
       document.getElementById("workspace").classList.add("open");
       document
@@ -344,15 +446,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       alert("Gere um dado primeiro antes de adicionar ao cenário.");
     }
-  }
-  function copyToClipboard(str, button) {
-    navigator.clipboard.writeText(str).then(() => {
-      const originalText = button.textContent;
-      button.textContent = "Copiado!";
-      setTimeout(() => {
-        button.textContent = originalText;
-      }, 1500);
-    });
   }
   function renderResult(elementId, content, isPreformatted = false) {
     const resultBox = document.getElementById(elementId);
@@ -400,11 +493,11 @@ document.addEventListener("DOMContentLoaded", () => {
     ) => {
       const data = generatorFn();
       renderResult(resultBoxId, data, isPreformatted);
-      addToHistory(toolType, data, false);
+      AppState.addToHistory(toolType, data, false);
     };
     const handleScenarioGeneration = (toolType, generatorFn, resultBoxId) => {
       const data = generatorFn();
-      lastGeneratedData[toolType] = data;
+      AppState.lastGeneratedData[toolType] = data;
       const content =
         typeof data === "object"
           ? Object.entries(data)
@@ -412,7 +505,7 @@ document.addEventListener("DOMContentLoaded", () => {
               .join("\n")
           : data;
       renderResult(resultBoxId, content, true);
-      addToHistory(
+      AppState.addToHistory(
         toolType.charAt(0).toUpperCase() + toolType.slice(1),
         data,
         true
@@ -498,7 +591,7 @@ document.addEventListener("DOMContentLoaded", () => {
       );
       const resultString = bulkResults.join("\n");
       renderResult("resultado-cpf", resultString, true);
-      addToHistory(`${quantity} CPFs Gerados`, resultString, false);
+      AppState.addToHistory(`${quantity} CPFs Gerados`, resultString, false);
     });
 
     document
@@ -551,14 +644,14 @@ document.addEventListener("DOMContentLoaded", () => {
       .addEventListener("click", () => {
         const text = document.getElementById("base64-input").value;
         renderResult("resultado-base64", Base64.encode(text), true);
-        addToHistory("Base64 (Codificado)", text);
+        AppState.addToHistory("Base64 (Codificado)", text);
       });
     document
       .getElementById("base64-decodificar")
       .addEventListener("click", () => {
         const text = document.getElementById("base64-input").value;
         renderResult("resultado-base64", Base64.decode(text), true);
-        addToHistory("Base64 (Decodificado)", text);
+        AppState.addToHistory("Base64 (Decodificado)", text);
       });
 
     document.getElementById("contador-input").addEventListener("input", (e) => {
@@ -637,7 +730,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }</span></pre></div>`;
         }
         resultBox.innerHTML = html;
-        addToHistory("JWT Decodificado", token);
+        AppState.addToHistory("JWT Decodificado", token);
       }
     });
 
@@ -670,12 +763,12 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("url-encode-btn").addEventListener("click", () => {
       const input = document.getElementById("url-encoder-input").value;
       renderResult("resultado-url-encoder", UrlEncoder.encode(input), true);
-      addToHistory("URL (Codificado)", input);
+      AppState.addToHistory("URL (Codificado)", input);
     });
     document.getElementById("url-decode-btn").addEventListener("click", () => {
       const input = document.getElementById("url-encoder-input").value;
       renderResult("resultado-url-encoder", UrlEncoder.decode(input), true);
-      addToHistory("URL (Decodificado)", input);
+      AppState.addToHistory("URL (Decodificado)", input);
     });
 
     const cronInput = document.getElementById("cron-input");
@@ -699,7 +792,7 @@ document.addEventListener("DOMContentLoaded", () => {
             : "Não foi possível calcular as próximas execuções.";
         renderResult("resultado-cron-next", nextDatesString, true);
         if (expression.trim().split(/\s+/).length === 5)
-          addToHistory("Expressão Cron", expression);
+          AppState.addToHistory("Expressão Cron", expression);
       }
     }
     cronInput.addEventListener("input", runCronParser);
@@ -718,7 +811,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .classList.add("jwt-error");
         } else {
           renderResult("resultado-code-formatter", result.formattedCode, true);
-          addToHistory(
+          AppState.addToHistory(
             `Código ${language.toUpperCase()} Formatado`,
             "...",
             false
@@ -735,7 +828,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const algo = document.getElementById("hash-algorithm-select").value;
         const hash = HashGenerator.generate(text, algo);
         renderResult("resultado-hash", hash, true);
-        addToHistory(`Hash ${algo}`, text);
+        AppState.addToHistory(`Hash ${algo}`, text);
       });
 
     const humanDateInput = document.getElementById("human-date-input");
@@ -810,7 +903,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const addBtn = e.target.closest("[data-history-add-index]");
         if (copyBtn) {
           const item =
-            state.history[parseInt(copyBtn.dataset.historyCopyIndex, 10)];
+            AppState.history[parseInt(copyBtn.dataset.historyCopyIndex, 10)];
           const contentToCopy =
             typeof item.data === "object"
               ? Object.entries(item.data)
@@ -821,8 +914,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if (addBtn) {
           const item =
-            state.history[parseInt(addBtn.dataset.historyAddIndex, 10)];
-          lastGeneratedData[item.type.toLowerCase()] = item.data;
+            AppState.history[parseInt(addBtn.dataset.historyAddIndex, 10)];
+          AppState.lastGeneratedData[item.type.toLowerCase()] = item.data;
           addToScenario(item.type.toLowerCase());
         }
       });
@@ -842,6 +935,3 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
-
-  initialize();
-});
