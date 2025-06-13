@@ -117,24 +117,30 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// Limpeza periódica do cache dinâmico
-async function cleanupDynamicCache() {
+// Nova estratégia de cache: Stale-While-Revalidate
+async function staleWhileRevalidate(request) {
     const cache = await caches.open(DYNAMIC_CACHE);
-    const requests = await cache.keys();
-    const now = Date.now();
+    const cachedResponse = await cache.match(request);
     
-    // Remove itens mais antigos que 7 dias
-    const weekAgo = now - (7 * 24 * 60 * 60 * 1000);
-    
-    await Promise.all(
-        requests.map(async (request) => {
-            const response = await cache.match(request);
-            const date = response.headers.get('date');
-            if (date && new Date(date).getTime() < weekAgo) {
-                return cache.delete(request);
-            }
-        })
-    );
+    // Retorna imediatamente o cache se disponível
+    const fetchPromise = fetch(request).then(async (response) => {
+        if (response.ok) {
+            await cache.put(request, response.clone());
+        }
+        return response;
+    }).catch(() => {
+        // Em caso de erro na rede, mantém o cache
+        return cachedResponse;
+    });
+
+    // Se tiver cache, retorna ele imediatamente enquanto atualiza em background
+    if (cachedResponse) {
+        fetchPromise.catch(() => {}); // Ignora erros do fetch em background
+        return cachedResponse;
+    }
+
+    // Se não tiver cache, espera a resposta da rede
+    return fetchPromise;
 }
 
 // Estratégia de cache: Cache First com fallback para rede
@@ -190,7 +196,7 @@ async function networkFirstWithCacheFallback(request) {
     }
 }
 
-// Interceptação de requisições
+// Atualiza a interceptação de requisições
 self.addEventListener('fetch', (event) => {
     const request = event.request;
     
@@ -202,8 +208,7 @@ self.addEventListener('fetch', (event) => {
     // URLs que devem usar Network First
     const networkFirstUrls = [
         '/api/',
-        '/search',
-        '/tools/'
+        '/search'
     ];
 
     // URLs que devem usar Cache First
@@ -212,8 +217,14 @@ self.addEventListener('fetch', (event) => {
         '/js/',
         '/images/',
         '/icons/',
-        '/fonts/',
-        '/html/'  // Adicionado para garantir que as páginas HTML usem Cache First
+        '/fonts/'
+    ];
+
+    // URLs que devem usar Stale-While-Revalidate
+    const staleWhileRevalidateUrls = [
+        '/html/',
+        '/tools/',
+        '/'
     ];
 
     // Determina a estratégia de cache baseado na URL
@@ -221,12 +232,14 @@ self.addEventListener('fetch', (event) => {
         event.respondWith(networkFirstWithCacheFallback(request));
     } else if (cacheFirstUrls.some(url => request.url.includes(url))) {
         event.respondWith(cacheFirstWithNetworkFallback(request));
+    } else if (staleWhileRevalidateUrls.some(url => request.url.includes(url))) {
+        event.respondWith(staleWhileRevalidate(request));
     } else {
-        // Estratégia padrão: Cache First para navegação, Network First para outros recursos
+        // Estratégia padrão: Stale-While-Revalidate para navegação, Cache First para outros recursos
         if (request.mode === 'navigate') {
-            event.respondWith(cacheFirstWithNetworkFallback(request));
+            event.respondWith(staleWhileRevalidate(request));
         } else {
-            event.respondWith(networkFirstWithCacheFallback(request));
+            event.respondWith(cacheFirstWithNetworkFallback(request));
         }
     }
 });
@@ -324,4 +337,46 @@ function openDB() {
             }
         };
     });
+}
+
+// Melhoria na limpeza do cache dinâmico
+async function cleanupDynamicCache() {
+    const cache = await caches.open(DYNAMIC_CACHE);
+    const requests = await cache.keys();
+    const now = Date.now();
+    
+    // Remove itens mais antigos que 7 dias
+    const weekAgo = now - (7 * 24 * 60 * 60 * 1000);
+    
+    // Limita o tamanho total do cache
+    const MAX_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
+    let totalSize = 0;
+    const cacheEntries = [];
+    
+    for (const request of requests) {
+        const response = await cache.match(request);
+        if (!response) continue;
+        
+        const date = response.headers.get('date');
+        const size = response.headers.get('content-length') || 0;
+        
+        cacheEntries.push({
+            request,
+            date: date ? new Date(date).getTime() : 0,
+            size: parseInt(size, 10)
+        });
+        
+        totalSize += parseInt(size, 10);
+    }
+    
+    // Ordena por data (mais antigos primeiro)
+    cacheEntries.sort((a, b) => a.date - b.date);
+    
+    // Remove itens até que o cache esteja dentro do limite
+    for (const entry of cacheEntries) {
+        if (entry.date < weekAgo || totalSize > MAX_CACHE_SIZE) {
+            await cache.delete(entry.request);
+            totalSize -= entry.size;
+        }
+    }
 } 

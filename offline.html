@@ -189,24 +189,78 @@
         }
 
         .sync-status {
-            margin-top: 1rem;
-            padding: 0.75rem;
-            border-radius: 0.25rem;
+            margin-top: 2rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: var(--bg-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .sync-status.syncing {
+            background-color: var(--primary);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .sync-status.success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .sync-status.error {
+            background-color: var(--error);
+            color: white;
+        }
+
+        .offline-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+            padding: 1rem;
+            background-color: var(--bg-secondary);
+            border-radius: 0.5rem;
+        }
+
+        .stat-card {
+            padding: 1rem;
+            text-align: center;
             background-color: var(--bg-tertiary);
+            border-radius: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
             font-size: 0.875rem;
             color: var(--text-secondary);
         }
 
-        .sync-status.syncing {
-            color: var(--primary);
+        .cache-status {
+            margin-top: 1rem;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            background-color: var(--bg-tertiary);
+            font-size: 0.875rem;
         }
 
-        .sync-status.success {
-            color: var(--success);
+        .cache-progress {
+            height: 4px;
+            background-color: var(--bg-tertiary);
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
         }
 
-        .sync-status.error {
-            color: var(--error);
+        .cache-progress-bar {
+            height: 100%;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
         }
 
         .tool-status {
@@ -249,6 +303,21 @@
             <p>Algumas ferramentas estão disponíveis para uso offline. As ferramentas indisponíveis serão habilitadas quando a conexão for restaurada.</p>
         </div>
 
+        <div class="offline-stats">
+            <div class="stat-card">
+                <div class="stat-value" id="availableToolsCount">0</div>
+                <div class="stat-label">Ferramentas Disponíveis</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="cacheSize">0 MB</div>
+                <div class="stat-label">Tamanho do Cache</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="lastSync">-</div>
+                <div class="stat-label">Última Sincronização</div>
+            </div>
+        </div>
+
         <div id="validadores" class="tools-section">
             <h2 class="category-title">Validadores</h2>
             <div class="tools-grid">
@@ -267,6 +336,13 @@
             <h2 class="category-title">Utilitários</h2>
             <div class="tools-grid">
                 <!-- Cards serão inseridos via JavaScript -->
+            </div>
+        </div>
+
+        <div class="cache-status">
+            <div>Status do Cache</div>
+            <div class="cache-progress">
+                <div class="cache-progress-bar" id="cacheProgress" style="width: 0%"></div>
             </div>
         </div>
 
@@ -542,6 +618,10 @@
                 // Simula uma verificação rápida
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 
+                // Salva a data da última sincronização
+                localStorage.setItem('lastSyncDate', new Date().toISOString());
+                await updateStats();
+
                 syncStatus.textContent = 'Tudo atualizado!';
                 syncStatus.className = 'sync-status success';
             } catch (error) {
@@ -550,7 +630,6 @@
                 syncStatus.className = 'sync-status error';
             } finally {
                 syncInProgress = false;
-                // Atualiza o status após 5 segundos
                 setTimeout(() => {
                     if (!syncInProgress) {
                         syncStatus.textContent = isOnline ? 'Conectado' : 'Offline';
@@ -560,12 +639,51 @@
             }
         }
 
+        // Função para atualizar estatísticas
+        async function updateStats() {
+            try {
+                const cache = await caches.open('nextdevs-static-v1');
+                const requests = await cache.keys();
+                
+                // Atualiza contagem de ferramentas
+                const availableCount = availableTools.size;
+                document.getElementById('availableToolsCount').textContent = availableCount;
+                
+                // Calcula tamanho do cache
+                let totalSize = 0;
+                for (const request of requests) {
+                    const response = await cache.match(request);
+                    if (response) {
+                        const size = response.headers.get('content-length') || 0;
+                        totalSize += parseInt(size, 10);
+                    }
+                }
+                const sizeInMB = (totalSize / (1024 * 1024)).toFixed(2);
+                document.getElementById('cacheSize').textContent = `${sizeInMB} MB`;
+                
+                // Atualiza barra de progresso do cache
+                const maxCacheSize = 50 * 1024 * 1024; // 50MB
+                const progress = (totalSize / maxCacheSize) * 100;
+                document.getElementById('cacheProgress').style.width = `${Math.min(progress, 100)}%`;
+                
+                // Atualiza última sincronização
+                const lastSyncDate = localStorage.getItem('lastSyncDate');
+                if (lastSyncDate) {
+                    const date = new Date(lastSyncDate);
+                    document.getElementById('lastSync').textContent = date.toLocaleString();
+                }
+            } catch (error) {
+                console.error('Erro ao atualizar estatísticas:', error);
+            }
+        }
+
         // Event Listeners
         window.addEventListener('online', updateOnlineStatus);
         window.addEventListener('offline', updateOnlineStatus);
         window.addEventListener('load', async () => {
             // Força uma verificação inicial
             await checkToolAvailability();
+            await updateStats();
             updateOnlineStatus();
         });
 
