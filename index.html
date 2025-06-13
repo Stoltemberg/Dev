@@ -9,15 +9,15 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#2563eb">
     <script>
-        // Registra o Service Worker
+        // Registra o Service Worker de forma simples
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
                     .then(registration => {
-                        console.log('Service Worker registrado com sucesso:', registration.scope);
+                        console.log('Service Worker registrado:', registration.scope);
                     })
                     .catch(error => {
-                        console.error('Erro ao registrar o Service Worker:', error);
+                        console.error('Erro ao registrar Service Worker:', error);
                     });
             });
         }

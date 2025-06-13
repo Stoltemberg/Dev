@@ -22,7 +22,6 @@ const STATIC_ASSETS = [
     '/html/jwt-debugger.html',
     
     // Recursos compartilhados
-    '/css/themes.css',
     '/css/layout.css',
     '/css/style.css',
     '/css/tools/validator.css',
@@ -36,7 +35,6 @@ const STATIC_ASSETS = [
     '/css/tools/jwt.css',
     
     // Scripts
-    '/js/shared/theme-controller.js',
     '/js/shared/main-controller.js',
     '/js/shared/workspace-logic.js',
     '/js/pages/home.js',
@@ -59,38 +57,18 @@ const STATIC_ASSETS = [
 // Instalação do Service Worker
 self.addEventListener('install', (event) => {
     event.waitUntil(
-        Promise.all([
-            // Cache dos recursos estáticos
-            caches.open(STATIC_CACHE).then(async (cache) => {
+        caches.open(STATIC_CACHE)
+            .then(cache => {
                 console.log('Cache estático aberto');
-                // Tenta fazer cache de todos os recursos
-                const results = await Promise.allSettled(
-                    STATIC_ASSETS.map(url => 
-                        fetch(url)
-                            .then(response => {
-                                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                                return cache.put(url, response);
-                            })
-                            .catch(error => {
-                                console.error(`Erro ao fazer cache de ${url}:`, error);
-                                return null;
-                            })
-                    )
-                );
-                
-                // Log dos resultados
-                const successful = results.filter(r => r.status === 'fulfilled').length;
-                const failed = results.filter(r => r.status === 'rejected').length;
-                console.log(`Cache concluído: ${successful} sucessos, ${failed} falhas`);
-                
-                return cache;
-            }),
-            // Cache dinâmico vazio
-            caches.open(DYNAMIC_CACHE)
-        ]).then(() => {
-            console.log('Service Worker instalado e caches criados');
-            return self.skipWaiting();
-        })
+                return cache.addAll(STATIC_ASSETS);
+            })
+            .then(() => {
+                console.log('Recursos estáticos cacheados');
+                return self.skipWaiting();
+            })
+            .catch(error => {
+                console.error('Erro ao fazer cache dos recursos:', error);
+            })
     );
 });
 
@@ -99,9 +77,9 @@ self.addEventListener('activate', (event) => {
     event.waitUntil(
         Promise.all([
             // Limpa caches antigos
-            caches.keys().then((cacheNames) => {
+            caches.keys().then(cacheNames => {
                 return Promise.all(
-                    cacheNames.map((cacheName) => {
+                    cacheNames.map(cacheName => {
                         if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
                             console.log('Cache antigo removido:', cacheName);
                             return caches.delete(cacheName);
@@ -110,138 +88,59 @@ self.addEventListener('activate', (event) => {
                 );
             }),
             // Toma controle de todas as páginas abertas
-            self.clients.claim(),
-            // Limpa o cache dinâmico periodicamente
-            cleanupDynamicCache()
+            self.clients.claim()
         ])
     );
 });
 
-// Nova estratégia de cache: Stale-While-Revalidate
-async function staleWhileRevalidate(request) {
-    const cache = await caches.open(DYNAMIC_CACHE);
-    const cachedResponse = await cache.match(request);
-    
-    // Retorna imediatamente o cache se disponível
-    const fetchPromise = fetch(request).then(async (response) => {
-        if (response.ok) {
-            await cache.put(request, response.clone());
-        }
-        return response;
-    }).catch(() => {
-        // Em caso de erro na rede, mantém o cache
-        return cachedResponse;
-    });
-
-    // Se tiver cache, retorna ele imediatamente enquanto atualiza em background
-    if (cachedResponse) {
-        fetchPromise.catch(() => {}); // Ignora erros do fetch em background
-        return cachedResponse;
-    }
-
-    // Se não tiver cache, espera a resposta da rede
-    return fetchPromise;
-}
-
-// Estratégia de cache: Cache First com fallback para rede
-async function cacheFirstWithNetworkFallback(request) {
-    const cachedResponse = await caches.match(request);
-    if (cachedResponse) {
-        // Atualiza o cache em background
-        fetch(request).then(async (response) => {
-            if (response.ok) {
-                const cache = await caches.open(DYNAMIC_CACHE);
-                await cache.put(request, response.clone());
-            }
-        }).catch(() => {
-            // Ignora erros de fetch em background
-        });
-        return cachedResponse;
-    }
-
-    try {
-        const response = await fetch(request);
-        if (response.ok) {
-            const cache = await caches.open(DYNAMIC_CACHE);
-            await cache.put(request, response.clone());
-        }
-        return response;
-    } catch (error) {
-        // Se for uma navegação, retorna a página offline
-        if (request.mode === 'navigate') {
-            return caches.match('/offline.html');
-        }
-        throw error;
-    }
-}
-
-// Estratégia de cache: Network First com fallback para cache
-async function networkFirstWithCacheFallback(request) {
-    try {
-        const response = await fetch(request);
-        if (response.ok) {
-            const cache = await caches.open(DYNAMIC_CACHE);
-            await cache.put(request, response.clone());
-        }
-        return response;
-    } catch (error) {
-        const cachedResponse = await caches.match(request);
-        if (cachedResponse) {
-            return cachedResponse;
-        }
-        if (request.mode === 'navigate') {
-            return caches.match('/offline.html');
-        }
-        throw error;
-    }
-}
-
-// Atualiza a interceptação de requisições
+// Interceptação de requisições
 self.addEventListener('fetch', (event) => {
     const request = event.request;
-    
+
     // Ignora requisições não GET
     if (request.method !== 'GET') {
         return;
     }
 
-    // URLs que devem usar Network First
-    const networkFirstUrls = [
-        '/api/',
-        '/search'
-    ];
+    // Estratégia: Cache First com fallback para rede
+    event.respondWith(
+        caches.match(request)
+            .then(cachedResponse => {
+                if (cachedResponse) {
+                    // Atualiza o cache em background
+                    fetch(request)
+                        .then(response => {
+                            if (response.ok) {
+                                caches.open(DYNAMIC_CACHE)
+                                    .then(cache => cache.put(request, response));
+                            }
+                        })
+                        .catch(() => {
+                            // Ignora erros de fetch em background
+                        });
+                    return cachedResponse;
+                }
 
-    // URLs que devem usar Cache First
-    const cacheFirstUrls = [
-        '/css/',
-        '/js/',
-        '/images/',
-        '/icons/',
-        '/fonts/'
-    ];
-
-    // URLs que devem usar Stale-While-Revalidate
-    const staleWhileRevalidateUrls = [
-        '/html/',
-        '/tools/',
-        '/'
-    ];
-
-    // Determina a estratégia de cache baseado na URL
-    if (networkFirstUrls.some(url => request.url.includes(url))) {
-        event.respondWith(networkFirstWithCacheFallback(request));
-    } else if (cacheFirstUrls.some(url => request.url.includes(url))) {
-        event.respondWith(cacheFirstWithNetworkFallback(request));
-    } else if (staleWhileRevalidateUrls.some(url => request.url.includes(url))) {
-        event.respondWith(staleWhileRevalidate(request));
-    } else {
-        // Estratégia padrão: Stale-While-Revalidate para navegação, Cache First para outros recursos
-        if (request.mode === 'navigate') {
-            event.respondWith(staleWhileRevalidate(request));
-        } else {
-            event.respondWith(cacheFirstWithNetworkFallback(request));
-        }
-    }
+                // Se não estiver no cache, tenta buscar da rede
+                return fetch(request)
+                    .then(response => {
+                        // Se a resposta for válida, salva no cache
+                        if (response.ok) {
+                            const responseToCache = response.clone();
+                            caches.open(DYNAMIC_CACHE)
+                                .then(cache => cache.put(request, responseToCache));
+                        }
+                        return response;
+                    })
+                    .catch(error => {
+                        // Se for uma navegação e falhar, retorna a página offline
+                        if (request.mode === 'navigate') {
+                            return caches.match('/offline.html');
+                        }
+                        throw error;
+                    });
+            })
+    );
 });
 
 // Sincronização em background

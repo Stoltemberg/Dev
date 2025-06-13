@@ -94,5 +94,41 @@ async function initializeLayout() {
 // Garante que o objeto global NextDevs exista
 window.NextDevs = window.NextDevs || {};
 
+// Controlador de estado offline simplificado
+class OfflineController {
+    constructor() {
+        this.init();
+    }
+
+    async init() {
+        // Verifica se o Service Worker está registrado
+        if ('serviceWorker' in navigator) {
+            try {
+                const registration = await navigator.serviceWorker.register('/sw.js');
+                console.log('Service Worker registrado:', registration.scope);
+            } catch (error) {
+                console.error('Erro ao registrar Service Worker:', error);
+            }
+        }
+
+        // Adiciona listeners para eventos online/offline
+        window.addEventListener('online', () => this.handleOnlineStatus(true));
+        window.addEventListener('offline', () => this.handleOnlineStatus(false));
+
+        // Verifica estado inicial
+        this.handleOnlineStatus(navigator.onLine);
+    }
+
+    async handleOnlineStatus(isOnline) {
+        if (!isOnline && window.location.pathname !== '/offline.html') {
+            // Se estiver offline e não estiver na página offline, redireciona
+            window.location.href = '/offline.html';
+        }
+    }
+}
+
+// Inicializa o controlador offline
+const offlineController = new OfflineController();
+
 // Executa tudo quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', initializeLayout);
