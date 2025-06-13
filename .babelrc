@@ -1,0 +1,29 @@
+{
+    "presets": [
+        ["@babel/preset-env", {
+            "targets": {
+                "browsers": [
+                    ">0.2%",
+                    "not dead",
+                    "not ie <= 11",
+                    "not op_mini all"
+                ]
+            },
+            "useBuiltIns": "usage",
+            "corejs": 3,
+            "modules": false,
+            "loose": true
+        }]
+    ],
+    "env": {
+        "test": {
+            "presets": [
+                ["@babel/preset-env", {
+                    "targets": {
+                        "node": "current"
+                    }
+                }]
+            ]
+        }
+    }
+} 
