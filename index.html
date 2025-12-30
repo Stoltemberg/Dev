@@ -1,34 +1,35 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NextDevs - A Suíte de Ferramentas para Desenvolvedores</title>
-    
-    <!-- Preload de recursos críticos -->
+
     <link rel="preload" href="css/layout.css" as="style">
     <link rel="preload" href="js/shared/main-controller.js" as="script">
     <link rel="preload" href="js/pages/home.js" as="script">
-    
+
     <!-- Preconnect para recursos externos -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
+
     <!-- Meta tags otimizadas -->
-    <meta name="description" content="Suíte completa de ferramentas online para desenvolvedores. CPF, CNPJ, JWT, Regex e muito mais.">
+    <meta name="description"
+        content="Suíte completa de ferramentas online para desenvolvedores. CPF, CNPJ, JWT, Regex e muito mais.">
     <meta name="keywords" content="ferramentas desenvolvedor, CPF, CNPJ, JWT, Regex, desenvolvedor, dev tools">
     <meta name="author" content="NextDevs Team">
-    
+
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7091846622317288"
-     crossorigin="anonymous"></script>
-    
+        crossorigin="anonymous"></script>
+
     <!-- PWA -->
     <link rel="stylesheet" href="css/layout.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#2563eb">
-    
+
     <!-- Service Worker com carregamento otimizado -->
     <script>
         if ('serviceWorker' in navigator) {
@@ -36,7 +37,7 @@
             const swPromise = navigator.serviceWorker.register('/sw.js', {
                 scope: '/'
             });
-            
+
             // Trata erros sem bloquear o carregamento
             swPromise.catch(error => {
                 console.warn('Service Worker não registrado:', error);
@@ -44,6 +45,7 @@
         }
     </script>
 </head>
+
 <body>
     <header id="navbar-placeholder"></header>
     <aside id="workspace-placeholder"></aside>
@@ -52,7 +54,8 @@
         <div class="welcome-card">
             <h1>A Caixa de Ferramentas Definitiva</h1>
             <p>Construída por devs, para devs. Rápida, intuitiva e sem distrações.</p>
-            <input type="search" id="tool-search-bar" placeholder="🔎 Buscar por uma ferramenta... (ex: CPF, JWT, Cor)" autocomplete="off">
+            <input type="search" id="tool-search-bar" placeholder="🔎 Buscar por uma ferramenta... (ex: CPF, JWT, Cor)"
+                autocomplete="off">
         </div>
         <div id="tool-hub-grid" class="tool-hub-grid"></div>
     </main>
@@ -63,4 +66,5 @@
     <script src="js/shared/main-controller.js" type="module" defer></script>
     <script src="js/pages/home.js" type="module" defer></script>
 </body>
+
 </html>
