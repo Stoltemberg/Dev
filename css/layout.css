@@ -1546,6 +1546,57 @@ select:focus {
   }
 }
 
+/* ==========================================================================
+   8. GLOBAL OVERRIDES FOR TOOLS
+   ========================================================================== */
+
+/* Enforce Glassmorphism on Tool Control Options */
+.tool-grid .tool-controls .options,
+.tool-controls .options {
+  background: rgba(35, 35, 43, 0.6) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .tool-grid .tool-controls .options,
+body.light-mode .tool-controls .options {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Enforce Glassmorphism on Result Box */
+.tool-results .result-box,
+.result-box {
+  background: rgba(35, 35, 43, 0.6) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+body.light-mode .tool-results .result-box,
+body.light-mode .result-box {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Scenario Items and History Cards */
+.cenario-item,
+.history-card {
+  background: rgba(35, 35, 43, 0.6) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+body.light-mode .cenario-item,
+body.light-mode .history-card {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
 /* Melhorias para impressão */
 @media print {
 
