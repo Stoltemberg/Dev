@@ -2,56 +2,70 @@
    1. DEFINIÇÕES GLOBAIS E VARIÁVEIS DE TEMA
    ========================================================================== */
 :root {
-  /* Tema Escuro (Padrão) */
-  --bg-color: #18181b;
-  --surface-color: #23232b;
-  --surface-light: #2a2a2e;
-  --primary-color: #a855f7;
-  --primary-variant-color: #9333ea;
-  --secondary-color: #2dd4bf;
-  --on-surface-color: #e5e7eb;
-  --on-surface-secondary-color: #9ca3af;
-  --border-color: #374151;
-  --danger-color: #f43f5e;
-  --success-color: #2ecc71;
-  --btn-text-color: #ffffff;
-  --input-bg-color: #1f2937;
-  --input-border-color: #4b5563;
-  --focus-ring-color: rgba(163, 122, 234, 0.25);
+  /* Apple Design Tokens (Dark Mode Padrão) */
+  --primary: #0066cc;
+  --primary-focus: #0071e3;
+  --primary-on-dark: #2997ff;
+  --ink: #ffffff;
+  --body-muted: #cccccc;
+  --divider-soft: rgba(255, 255, 255, 0.1);
+  --hairline: rgba(255, 255, 255, 0.08);
+  --canvas: #1d1d1f;
+  --canvas-parchment: #000000;
+  --surface-pearl: #272729;
+  --surface-tile-1: #2a2a2c;
+  --surface-tile-2: #252527;
+  --on-primary: #ffffff;
+
+  /* Aliasing old variables */
+  --bg-color: var(--canvas-parchment);
+  --surface-color: var(--canvas);
+  --surface-light: var(--surface-pearl);
+  --primary-color: var(--primary-on-dark);
+  --primary-variant-color: var(--primary-focus);
+  --secondary-color: var(--primary-on-dark);
+  --on-surface-color: var(--ink);
+  --on-surface-secondary-color: var(--body-muted);
+  --border-color: var(--hairline);
+  --danger-color: #ff3b30;
+  --success-color: #34c759;
+  --btn-text-color: var(--on-primary);
+  --input-bg-color: var(--surface-tile-1);
+  --input-border-color: var(--hairline);
+  --focus-ring-color: rgba(41, 151, 255, 0.25);
+  
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
   --ripple-color: rgba(255, 255, 255, 0.2);
-  --hover-overlay: rgba(0, 0, 0, 0.05);
-  --active-overlay: rgba(0, 0, 0, 0.1);
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
-  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.14);
-  --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.16);
-  /* Acessibilidade */
-  --focus-ring-width: 3px;
+  --hover-overlay: rgba(255, 255, 255, 0.05);
+  --active-overlay: rgba(255, 255, 255, 0.1);
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: 0 4px 16px rgba(0, 0, 0, 0.22); /* Somente para renders de produto */
+  --focus-ring-width: 2px;
   --focus-ring-offset: 2px;
   --min-touch-target: 44px;
-  --min-tap-highlight: rgba(0, 0, 0, 0.1);
 }
 
 body.light-mode {
-  /* Tema Claro */
-  --bg-color: #f7fafc;
-  --surface-color: #ffffff;
-  --surface-light: #fdfdff;
-  --primary-color: #7e22ce;
-  --primary-variant-color: #6b21a8;
-  --secondary-color: #0d9488;
-  --on-surface-color: #111827;
-  --on-surface-secondary-color: #4b5563;
-  --border-color: #d1d5db;
-  --danger-color: #be123c;
-  --success-color: #27ae60;
-  --btn-text-color: #ffffff;
-  --input-bg-color: #ffffff;
-  --input-border-color: #d1d5db;
-  --focus-ring-color: rgba(126, 34, 206, 0.25);
+  /* Tema Claro (Apple Light) */
+  --ink: #1d1d1f;
+  --body-muted: #7a7a7a;
+  --divider-soft: rgba(0, 0, 0, 0.04);
+  --hairline: #e0e0e0;
+  --canvas: #ffffff;
+  --canvas-parchment: #f5f5f7;
+  --surface-pearl: #fafafc;
+  --surface-tile-1: #ffffff;
+  --primary-color: var(--primary);
+  --secondary-color: var(--primary);
+  --input-bg-color: var(--canvas);
+  --input-border-color: rgba(0, 0, 0, 0.08);
+  --focus-ring-color: rgba(0, 102, 204, 0.25);
+  --hover-overlay: rgba(0, 0, 0, 0.05);
+  --active-overlay: rgba(0, 0, 0, 0.1);
 }
 
 /* ==========================================================================
@@ -66,55 +80,30 @@ body.light-mode {
 html {
   scroll-behavior: smooth;
   font-size: 16px;
-  /* Define a base para unidades 'rem' */
 }
 
 body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  font-family: "Inter", sans-serif;
+  font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
   color: var(--on-surface-color);
-  padding-top: 70px;
-  line-height: 1.6;
-
-  /* Animated Background */
-  background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #1e1b4b);
-  background-size: 400% 400%;
-  animation: gradientBG 15s ease infinite;
+  padding-top: 44px; /* Altura exata da nav Apple */
+  line-height: 1.47;
+  font-size: 17px; /* Assinatura da tipografia Apple para leitura (17px não 16px) */
+  letter-spacing: -0.374px;
+  background-color: var(--bg-color);
 }
 
-@keyframes gradientBG {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* Glassmorphism Classes */
+/* Glassmorphism Classes - Substituído por cores chapadas ou backdrops */
 .glass {
-  background: rgba(35, 35, 43, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-body.light-mode {
-  background: linear-gradient(-45deg, #f0f9ff, #e0f2fe, #bfdbfe, #e0f2fe);
-  background-size: 400% 400%;
-  animation: gradientBG 15s ease infinite;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
 }
 
 body.light-mode .glass {
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
 }
 
 h1,
@@ -123,8 +112,10 @@ h3,
 h4,
 h5,
 h6 {
-  font-weight: 700;
-  line-height: 1.3;
+  font-family: "SF Pro Display", system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.28px; /* Negative letter spacing p/ display */
 }
 
 .sr-only {
@@ -167,19 +158,18 @@ h6 {
   top: 0;
   left: 0;
   width: 100%;
-  background: rgba(24, 24, 27, 0.85);
-  /* Slightly more opaque for readability */
+  background: rgba(0, 0, 0, 0.85); /* Apple's surface-black with slight blur */
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: none;
   z-index: 1000;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s, border-color 0.3s;
+  box-shadow: none;
+  transition: background-color 0.3s;
 }
 
 body.light-mode .main-nav {
-  background: rgba(255, 255, 255, 0.85);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.85); /* Global nav is always black */
+  border-bottom: none;
 }
 
 .nav-content {
@@ -189,13 +179,13 @@ body.light-mode .main-nav {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
-  height: 70px;
+  height: 44px; /* Apple's exact nav height */
 }
 
 .nav-brand {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--primary-color);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
   text-decoration: none;
   cursor: pointer;
 }
@@ -404,39 +394,31 @@ footer {
 }
 
 .welcome-card {
-  background: rgba(35, 35, 43, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
   padding: 5rem 2rem;
   text-align: center;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
   animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 body.light-mode .welcome-card {
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
-/* Typography Gradient */
+/* Typography Apple */
 .welcome-card h1 {
-  font-size: 3.5rem;
+  font-size: 56px;
   margin-bottom: 1rem;
-  background: linear-gradient(135deg, #fff 0%, #a855f7 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  letter-spacing: -0.02em;
+  color: var(--on-surface-color);
+  letter-spacing: -0.28px;
+  font-weight: 600;
 }
 
 body.light-mode .welcome-card h1 {
-  background: linear-gradient(135deg, #1e293b 0%, #7e22ce 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--on-surface-color);
 }
 
 #tool-search-bar {
@@ -445,8 +427,10 @@ body.light-mode .welcome-card h1 {
   margin-left: auto;
   margin-right: auto;
   display: block;
-  padding: 18px 24px;
-  font-size: 1.2rem;
+  padding: 12px 20px;
+  font-size: 17px;
+  border-radius: 9999px; /* full pill */
+  height: 44px;
 }
 
 /* O grid do hub já é responsivo por natureza, ótimo trabalho! */
@@ -460,37 +444,36 @@ body.light-mode .welcome-card h1 {
 .tool-card {
   display: flex;
   flex-direction: column;
-  background: rgba(35, 35, 43, 0.5);
-  /* Semi-transparent */
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 2rem;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 18px; /* {rounded.lg} */
+  padding: 24px;
   text-decoration: none;
   color: var(--on-surface-color);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: 0;
   animation: fadeIn 0.5s ease-out forwards;
-  will-change: transform, box-shadow;
 }
 
 .tool-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+  transform: scale(0.99); /* subtle apple scale */
   border-color: var(--primary-color);
 }
 
 .tool-card h3 {
-  color: var(--secondary-color);
-  font-size: 1.25rem;
+  color: var(--on-surface-color); /* Utility card uses body-strong */
+  font-size: 17px;
+  font-weight: 600;
   margin-bottom: 0.5rem;
+  letter-spacing: -0.374px;
 }
 
 .tool-card p {
   color: var(--on-surface-secondary-color);
-  font-size: 0.95rem;
+  font-size: 17px;
+  line-height: 1.47;
   flex-grow: 1;
+  letter-spacing: -0.374px;
 }
 
 /* Atrasos de animação mantidos */
@@ -630,41 +613,38 @@ body.light-mode select {
 
 .btn-generate {
   width: 100%;
-  padding: 1rem;
-  font-size: 1.2rem;
-  font-weight: 600;
+  padding: 11px 22px;
+  font-size: 17px;
+  font-weight: 400;
   cursor: pointer;
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-variant-color));
+  background: var(--primary-color);
   color: var(--btn-text-color);
   border: none;
-  border-radius: 12px;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  position: relative;
-  overflow: hidden;
-  will-change: transform, box-shadow;
+  border-radius: 9999px; /* Apple signature pill */
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
 
 .btn-generate:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 10px 20px -10px rgba(168, 85, 247, 0.5);
+  /* No hover effects per Apple guideline */
 }
 
 .btn-generate:active {
-  transform: translateY(0);
-  box-shadow: var(--shadow-sm);
+  transform: scale(0.95); /* System-wide micro-interaction */
+  box-shadow: none;
 }
 
 .btn-secondary {
   flex-grow: 1;
-  padding: 12px;
-  font-size: 1rem;
-  font-weight: 500;
+  padding: 8px 15px;
+  font-size: 14px;
+  font-weight: 400;
   cursor: pointer;
   background-color: var(--surface-light);
   color: var(--on-surface-secondary-color);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  transition: all var(--transition-normal);
+  border-radius: 8px; /* {rounded.sm} */
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-secondary:hover {
@@ -672,15 +652,19 @@ body.light-mode select {
   color: var(--on-surface-color);
 }
 
+.btn-secondary:active {
+  transform: scale(0.95);
+}
+
 .btn-danger {
   background-color: transparent;
   color: var(--danger-color);
   border: 1px solid var(--danger-color);
-  padding: 10px;
+  padding: 8px 15px;
   border-radius: 8px;
   cursor: pointer;
   flex-grow: 1;
-  transition: all var(--transition-normal);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-danger:hover {
@@ -688,22 +672,31 @@ body.light-mode select {
   color: white;
 }
 
+.btn-danger:active {
+  transform: scale(0.95);
+}
+
 .btn-add-to-cenario {
   width: 100%;
-  padding: 12px;
+  padding: 8px 15px;
   margin-top: -1rem;
   background-color: transparent;
   color: var(--secondary-color);
   border: 1px solid var(--secondary-color);
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 500;
-  transition: all var(--transition-normal);
+  font-size: 14px;
+  font-weight: 400;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-add-to-cenario:hover {
   background-color: var(--secondary-color);
   color: var(--bg-color);
+}
+
+.btn-add-to-cenario:active {
+  transform: scale(0.95);
 }
 
 .result-box {

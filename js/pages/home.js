@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.innerHTML = `
                 <h3>${tool.name}</h3>
                 <p>${tool.desc}</p>
+                <span style="color: var(--primary-color); font-size: 17px; margin-top: 1rem; font-weight: 400;">Abrir ferramenta &rsaquo;</span>
             `;
             grid.appendChild(card);
         });

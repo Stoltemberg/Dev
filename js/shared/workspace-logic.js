@@ -28,19 +28,32 @@ export function renderResult(elementId, content, isPreformatted = false) {
 
     resultBox.innerHTML = '';
     const textElement = document.createElement(isPreformatted ? 'pre' : 'span');
-    textElement.textContent = content;
 
-    const hasContent = content && !String(content).toLowerCase().includes("...") && !String(content).toLowerCase().includes("aguardando") && !String(content).toLowerCase().includes("selecione");
+    const strContent = String(content);
+    const hasContent = strContent && !strContent.toLowerCase().includes("...") && !strContent.toLowerCase().includes("aguardando") && !strContent.toLowerCase().includes("selecione");
     resultBox.classList.toggle('has-content', hasContent);
 
     if (hasContent) {
+        let i = 0;
+        textElement.textContent = '';
+        function typeWriter() {
+            if (i < strContent.length) {
+                textElement.textContent += strContent.charAt(i);
+                i++;
+                setTimeout(typeWriter, 5); // velocidade da digitação
+            }
+        }
+        typeWriter();
+
         const copyButton = document.createElement('button');
         copyButton.className = 'copy-btn';
-        copyButton.innerHTML = '📋';
+        copyButton.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
         copyButton.title = "Copiar";
         copyButton.setAttribute('aria-label', 'Copiar para a área de transferência');
         copyButton.onclick = () => copyToClipboard(content, copyButton);
         resultBox.appendChild(copyButton);
+    } else {
+        textElement.textContent = strContent;
     }
     resultBox.appendChild(textElement);
 }

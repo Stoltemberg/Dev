@@ -6,7 +6,6 @@ export function initializeTheme() {
     const applyTheme = (theme) => {
         body.classList.toggle('light-mode', theme === 'light');
         body.classList.toggle('dark-mode', theme !== 'light');
-        themeSwitcher.innerHTML = theme === 'light' ? '🌙' : '☀️';
     };
 
     const currentTheme = localStorage.getItem('theme') || 'dark';
