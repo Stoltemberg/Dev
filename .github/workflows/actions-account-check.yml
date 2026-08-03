@@ -1,6 +1,8 @@
 name: Actions account check
 
 on:
+  push:
+    branches: [diagnostic/actions-account-check-v2]
   pull_request:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
