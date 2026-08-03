@@ -1,0 +1,24 @@
+name: Actions account check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  account-check:
+    name: Public standard-runner account check
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Confirm runner allocation
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "GitHub Actions runner allocated successfully."
+          echo "Repository: ${GITHUB_REPOSITORY}"
+          echo "Event: ${GITHUB_EVENT_NAME}"
+          echo "Runner OS: ${RUNNER_OS}"
