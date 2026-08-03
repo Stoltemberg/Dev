@@ -21,3 +21,4 @@ jobs:
           echo "GitHub Actions runner allocated successfully."
           echo "Repository: ${GITHUB_REPOSITORY}"
           echo "Event: ${GITHUB_EVENT_NAME}"
+          echo "Diagnostic attempt: default-branch workflow present"
